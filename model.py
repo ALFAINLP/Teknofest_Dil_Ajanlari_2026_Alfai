@@ -1,4 +1,5 @@
 import base64
+import json
 from openai import OpenAI
 
 # Videoyu yerel diskten okuyup metin formatına (base64) çeviriyoruz
@@ -10,10 +11,19 @@ video_yolu ="Videos/test2.mp4"
 base64_video = encode_video_to_base64(video_yolu)
 
 # vLLM Sunucuna Bağlan
+# Göz Modeli İstemcisi (Port 8000)
 client = OpenAI(
     api_key="TEKNOFEST-ALFAI",
     base_url="http://localhost:8000/v1",
 )
+
+# Beyin Modeli İstemcisi (Port 8001)
+client_beyin = OpenAI(
+    api_key="TEKNOFEST-ALFAI",
+    base_url="http://localhost:8001/v1"
+)
+
+BEYIN_MODEL = "meta-llama/Meta-Llama-3.1-70B-Instruct"
 
 print(f"{video_yolu} okunuyor, yapılandırılmış JSON verisi üretiliyor...")
 
@@ -61,6 +71,112 @@ response = client.chat.completions.create(
     response_format={"type": "json_object"}          
 )
 
-print("\n--- JSON ÇIKTISI ---")
-print(response.choices[0].message.content)
-print(response.choices[0].message.content)
+
+print("🧠 AŞAMA 2: Beyin modeli yapılandırılmış veriyi devralıyor, karar mekanizması çalışıyor...\n")
+
+# Ajanın alet çantası (Tools)
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "saglik_ekibini_cagir",
+            "description": "Sahada acil tıbbi müdahale gerektiren bir durum tespit edildiğinde sağlık ekibini çağırmak için kullanılır.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "sebep": {
+                        "type": "string",
+                        "description": "Sağlık ekibinin çağrılma nedeni"
+                    },
+                },
+                "required": ["sebep"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "guvenligi_uyar",
+            "description": "Sahada güvenlik personelinin müdahale etmesi gereken durumlarda kullanılır.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "mesaj": {
+                        "type": "string",
+                        "description": "Güvenlik personeline iletilecek uyarı mesajı"
+                    }
+                },
+                "required": ["mesaj"]
+            }
+        }
+    }
+]
+
+# Gözün ürettiği JSON metnini doğrudan Beynin promptuna enjekte ediyoruz
+beyin_response = client_beyin.chat.completions.create(
+    model=BEYIN_MODEL,
+    messages=[
+        {
+    "role": "system",
+    "content": """
+Sen gerçek zamanlı çalışan otonom bir karar destek ajanısın.
+
+Sana başka bir yapay zeka modeli tarafından oluşturulmuş yapılandırılmış saha analiz verisi verilecektir.
+
+Görevin;
+
+- olay akışını analiz etmek,
+- risk seviyesini değerlendirmek,
+- gerçekten müdahale gerekip gerekmediğine karar vermek,
+- gerekiyorsa uygun aracı (tool) kullanmak,
+- gerekmiyorsa kısa bir durum değerlendirmesi yapmaktır.
+
+Kurallar:
+
+- Sadece verilen analiz verisini kullan.
+- Yeni olay üretme.
+- Tahminde bulunma.
+- Video hakkında varsayım yapma.
+- Gereksiz tool çağırma.
+- Aynı olay için yalnızca gerekli olan tool'u kullan.
+- Sağlık açısından acil müdahale gerekiyorsa "saglik_ekibini_cagir" fonksiyonunu kullan.
+- Güvenlik personelinin müdahalesi gerekiyorsa "guvenligi_uyar" fonksiyonunu kullan.
+- Hiçbir aksiyon gerekmiyorsa tool kullanmadan kısa bir değerlendirme yaz.
+"""
+},
+        {
+    "role": "user",
+    "content": f"""
+Aşağıda görüntü analiz modülünden elde edilen yapılandırılmış saha verisi bulunmaktadır.
+
+Bu veriyi inceleyerek:
+
+- olay akışını değerlendir,
+- risk seviyesini göz önünde bulundur,
+- gerçekten müdahale gerekip gerekmediğine karar ver,
+- gerekiyorsa uygun tool'u kullan,
+- gerekmiyorsa kısa bir değerlendirme yap.
+
+Analiz verisi:
+
+{response.choices[0].message.content}
+"""
+	}
+    ],
+    tools=tools,
+    tool_choice="auto",
+    temperature=0.1
+)
+
+mesaj = beyin_response.choices[0].message
+
+print("--- 🎯 NİHAİ SİSTEM ÇIKTISI ---")
+if mesaj.tool_calls:
+    print("🚨 SİSTEM BİR AKSİYON TETİKLEDİ (FONKSİYON KULLANILDI) 🚨")
+    for tool in mesaj.tool_calls:
+        print(f"-> Çalıştırılan Fonksiyon: {tool.function.name}")
+        print(f"-> Üretilen Parametreler: {tool.function.arguments}")
+else:
+    print("📝 SADECE YANIT ÜRETİLDİ (Ajan tool kullanmaya gerek görmedi):")
+    print(mesaj.content)
+
