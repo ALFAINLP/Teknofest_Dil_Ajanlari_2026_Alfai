@@ -71,7 +71,26 @@ response = client.chat.completions.create(
     response_format={"type": "json_object"}          
 )
 
+vision_output = response.choices[0].message.content
 
+world_state = json.loads(vision_output)
+
+print("\n===== WORLD STATE =====")
+print(json.dumps(world_state, indent=2, ensure_ascii=False))
+
+
+state = {
+    "video_path": video_yolu,
+    "vision": world_state,
+    "context": {},
+    "memory": {},
+    "risk_analysis": {},
+    "decision": None,
+    "tool_outputs": {},
+    "final_response": None
+}
+print("\n===== STATE =====")
+print(json.dumps(state, indent=2, ensure_ascii=False))
 print("🧠 AŞAMA 2: Beyin modeli yapılandırılmış veriyi devralıyor, karar mekanizması çalışıyor...\n")
 
 # Ajanın alet çantası (Tools)
@@ -159,7 +178,7 @@ Bu veriyi inceleyerek:
 
 Analiz verisi:
 
-{response.choices[0].message.content}
+{json.dumps(world_state, ensure_ascii=False, indent=2)}
 """
 	}
     ],
@@ -167,6 +186,7 @@ Analiz verisi:
     tool_choice="auto",
     temperature=0.1
 )
+
 
 mesaj = beyin_response.choices[0].message
 
