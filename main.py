@@ -3,10 +3,24 @@ import json
 import os
 from agent.graph import app
 from tools.mock_actions import monitor_hardware_telemetry, optimize_inference_params, flag_critical_timestamps
+from model_py.services.vision_service import analyze_video
+from model_py.services.brain_service import analyze_state
 
 def main():
     # Adım 1: Video Dosyasını Belirle (Şartname girdi gereksinimi)
-    video_file_path = "data/saha_operasyon_kaydi.mp4"
+    video_file_path = "Videos/test.mp4"
+    
+    
+    print("\n[Vision] Video analiz ediliyor...")
+
+    world_state = analyze_video(video_file_path)
+
+    print("\n===== WORLD STATE =====")
+    print(json.dumps(world_state, ensure_ascii=False, indent=2))
+
+    print("\n[Brain] Karar modeli çalışıyor...")
+
+    brain_message = analyze_state(world_state)
     
     print("\n" + "="*60)
     print("TEKNOFEST ALFA-AI VİDEO ANALİZ & KARAR DESTEK SİSTEMİ BAŞLATILIYOR")
@@ -39,6 +53,7 @@ def main():
         "video_path": video_file_path,
         "current_time_segments": detected_timestamps, # Sabit değerler yerine otonom gelen saniyeler!
         "detected_events": [],
+        "vision_output": world_state,
         "risk_assessments": [],
         "actions_recommended": [],
         "final_json_output": "",

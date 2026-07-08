@@ -16,6 +16,7 @@ from tools.mock_actions import (
     query_previous_incidents,
     export_to_incident_management_system
 )
+from model_py.services.vision_service import analyze_video
 
 def extract_video_info_node(state: AgentState) -> AgentState:
     telemetry = monitor_hardware_telemetry.invoke({})
@@ -23,6 +24,10 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     optimize_inference_params.invoke({"vram_status": vram_free})
     
     video_path = state.get("video_path", "video_TEKNOFEST_2026.mp4")
+    vision_output = state.get("vision_output")
+
+    if vision_output is None:
+        vision_output = analyze_video(video_path)
     scene_meta = get_scene_metadata.invoke({"video_path": video_path})
     zone = scene_meta.get("zone_name", "Genel Saha")
     
@@ -32,16 +37,25 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     target_segments = sorted(list(set(state["current_time_segments"] + critical_seconds)))
     
     for t in target_segments:
-        motion = detect_motion_density.invoke({"start_time": t, "end_time": t+2, "video_path": video_path})
-        frame_info = get_frame.invoke({"time": t, "video_path": video_path})
-        time_str = f"00:{t}"
-        
-        detected.append({
-            "time": time_str, 
-            "event": frame_info,
-            "motion_density": motion.get("average_motion_density_percentage", 0.0),
-            "zone": zone
-        })
+    	motion = detect_motion_density.invoke({
+        	"start_time": t,
+        	"end_time": t + 2,
+        	"video_path": video_path
+    	})
+
+    	frame_info = get_frame.invoke({
+        	"time": t,
+        	"video_path": video_path
+    	})
+
+    	time_str = f"00:{t}"
+
+    	detected.append({
+        	"time": time_str,
+        	"event": frame_info,
+        	"motion_density": motion.get("average_motion_density_percentage", 0.0),
+        	"zone": zone
+    	})
     
     state["detected_events"] = detected
     state["next_step"] = "process_risk"
@@ -113,7 +127,7 @@ def compile_report_node(state: AgentState) -> AgentState:
         "actions": state["actions_recommended"]
     }
     
-    json_report = generate_final_report.invoke({"data_dict": report_data})
+    json_report = generate_final_report(report_data)
     
     export_to_incident_management_system.invoke({"report_json": json_report})
     

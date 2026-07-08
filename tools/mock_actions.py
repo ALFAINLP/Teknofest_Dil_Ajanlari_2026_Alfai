@@ -6,19 +6,29 @@ import os
 from typing import Dict, Any, List
 from datetime import datetime
 from langchain_core.tools import tool
+from model_py.services.brain_service import analyze_state
 from config.settings import settings  # Sunucu URL'si ve konfigürasyonları çekmek için 
 from schemas.output_schema import FinalReportSchema
 from tools.helpers import _format_timestamp, _call_vllm_api
+from model_py.services.vision_service import analyze_video
+from model_py.services.brain_service import analyze_state
+_world_state_cache = {}
+def _get_world_state(video_path: str):
+    if video_path not in _world_state_cache:
+        _world_state_cache[video_path] = analyze_video(video_path)
+
+    return _world_state_cache[video_path]
 
 @tool
 def get_frame(time: int, video_path: str) -> dict:
-    """Belirtilen tam saniyedeki (noktasal/anlık durum) video karesini yerel vLLM 
-    sunucusuna ileterek o andaki mekansal riskleri, KKD ihlallerini ve statik tehlikeleri 
-    nokta atışı analiz eder. Zamansal süreçler, hızlanma/yavaşlama veya hareket yoğunluğu 
-    gibi akış analizleri için DEĞİL; o saniye içindeki anlık durum tespiti için çağrılmalıdır."""
-    
+    """Belirtilen tam saniyedeki (noktasal/anlık durum) video karesini yerel vLLM
+    sunucusuna ileterek o andaki mekansal riskleri, KKD ihlallerini ve statik tehlikeleri
+    nokta atışı analiz eder. Zamansal süreçler, hızlanma/yavaşlama veya hareket yoğunluğu
+    gibi akış analizleri için DEĞİL; o saniye içindeki anlık durum tespiti için çağrılmalıdır.
+    """
+
     formatted_timestamp = _format_timestamp(time)
-    
+
     system_prompt = (
         "Sen TEKNOFEST için geliştirilmiş, saha operasyonları güvenliğinden sorumlu bir "
         "Video Analiz Yapay Zekasısın. Görevin, sana verilen videodaki tam olarak belirtilen "
@@ -26,32 +36,41 @@ def get_frame(time: int, video_path: str) -> dict:
         "mevcut nesneleri ve İSG ihlallerini net bir şekilde analiz ederek KESİNLİKLE sadece "
         "istenen JSON formatında çıktı üretmektir."
     )
-    
-    user_prompt = f"""
-    Lütfen videodaki tam olarak {formatted_timestamp} saniyesindeki anlık duruma ve kareye odaklan. 
-    O saniyede sahada gerçekleşen anlık durumu, KKD (Baret, yelek vb.) ihlallerini veya o an mevcut olan 
-    mekansal riskleri analiz et. Zamansal akış veya hareket hızına değil, tamamen o saniyedeki görünür duruma odaklan.
-    
-    Yalnızca aşağıdaki JSON formatında yanıt döndür. JSON dışında hiçbir açıklama metni veya markdown ekleme.
 
-    {{
-    "description": "Belirtilen saniyedeki anlık durumda sahada ne olduğuna dair net, gereksiz detaydan arındırılmış Türkçe açıklama.",
-    "has_risk": true/false (Eğer o saniyede bir iş güvenliği ihlali, o an gerçekleşmiş bir kaza veya tehlike durumu varsa true, yoksa false),
-    "risk_type": "Eğer has_risk true ise o anki riskin türü (Örn: 'İş Kazası', 'KKD İhlali', 'Protokol İhlali'). Risk yoksa 'Yok' yaz."
-    }}
-    """
-    
-    raw_content = _call_vllm_api(
-        system_prompt=system_prompt,
-        user_prompt=user_prompt,
-        model_name="Qwen3-VL-8B-Instruct",
-        max_tokens=300,
-        video_path=video_path
-    )
-    
+    user_prompt = f"""
+Lütfen videodaki tam olarak {formatted_timestamp} saniyesindeki anlık duruma ve kareye odaklan.
+O saniyede sahada gerçekleşen anlık durumu, KKD (Baret, yelek vb.) ihlallerini veya o an mevcut olan
+mekansal riskleri analiz et. Zamansal akış veya hareket hızına değil, tamamen o saniyedeki görünür duruma odaklan.
+
+Yalnızca aşağıdaki JSON formatında yanıt döndür. JSON dışında hiçbir açıklama metni veya markdown ekleme.
+
+{{
+  "description": "Belirtilen saniyedeki anlık durumda sahada ne olduğuna dair net, gereksiz detaydan arındırılmış Türkçe açıklama.",
+  "has_risk": true,
+  "risk_type": "İş Kazası"
+}}
+"""
+
+    world_state = _get_world_state(video_path)
+
+    description = "Olay bulunamadı."
+    has_risk = world_state.get("risk", "Düşük") != "Düşük"
+    risk_type = world_state.get("risk", "Düşük")
+
+    for event in world_state.get("events", []):
+        if event.get("time") == formatted_timestamp:
+            description = event.get("event", "")
+            break
+
+    return {
+        "frame": f"video_segment_{formatted_timestamp}",
+        "description": description,
+        "has_risk": has_risk,
+        "risk_type": risk_type
+    }
     try:
         model_json = json.loads(raw_content)
-        
+
         if "error" in model_json:
             return {
                 "frame": f"error_{formatted_timestamp}",
@@ -59,163 +78,144 @@ def get_frame(time: int, video_path: str) -> dict:
                 "has_risk": False,
                 "risk_type": "Bağlantı Hatası"
             }
-            
+
         return {
             "frame": f"video_segment_{formatted_timestamp}",
             "description": model_json.get("description", "Açıklama üretilemedi."),
             "has_risk": bool(model_json.get("has_risk", False)),
             "risk_type": model_json.get("risk_type", "Belirlenemedi")
         }
-        
-    except Exception as e:
+
+    except Exception:
         return {
             "frame": f"fallback_{formatted_timestamp}",
             "description": f"Veri ayrıştırma veya sunucu hatası: {raw_content}",
             "has_risk": False,
             "risk_type": "Sistem Hatası"
         }
-    
 @tool
 def analyze_risk(chronological_events: List[dict]) -> dict:
-    """Video boyunca kronolojik olarak toplanan tüm olay akışını bütüncül olarak inceler;
-    Lokal LLM (Llama-3.1-70B / Qwen2.5-72B) mimarisini tetikleyerek yüksek seviyeli risk çıkarımı,
-    etki analizi ve otonom derecelendirme yapar."""
-    
-    selected_model = settings.REASONING_MODEL 
-    
-    system_prompt = (
-        "Sen TEKNOFEST Türkçe Yapay Zeka Ajanları Yarışması için geliştirilmiş, saha operasyonlarında "
-        "meydana gelen olay zincirlerini ve zamansal ilişkileri bütüncül olarak analiz eden kıdemli bir "
-        "Risk Yönetim ve Strateji Yapay Zekasısın. Görevin, sana kronolojik olarak verilen olaylar listesini "
-        "incelemek, olayların birbirleriyle bağını kurmak ve KESİNLİKLE sadece istenen JSON formatında "
-        "bir kurumsal risk değerlendirme raporu üretmektir."
-    )
-    
-    events_timeline_text = ""
-    for item in chronological_events:
-        events_timeline_text += f"- Zaman Damgası: {item.get('time', 'N/A')} -> Tespit Edilen Durum: {item.get('event', '')}\n"
-
-    user_prompt = f"""
-    Aşağıda bir operasyon sahasındaki kameradan anlık olarak derlenen kronolojik olay akışı yer almaktadır:
-    
-    {events_timeline_text}
-    
-    Lütfen bu olay zincirini, sahne bütünlüğünü ve risk gelişim süreçlerini akıl yürüterek (reasoning) analiz et.
-    Yanıtını KESİNLİKLE aşağıdaki JSON şablonuna uygun olarak döndür. JSON dışında hiçbir başlangıç, açıklama veya tebrik metni ekleme.
-
-    {{
-      "overall_risk_level": "Yüksek / Orta / Düşük (Olay zincirinin ulaştığı en tehlikeli bütünsel risk seviyesi)",
-      "impact_assessment": "Olayların operasyon sahasına, personel sağlığına ve tesis güvenliğine olası etkilerini açıklayan derinlemesine Türkçe analiz.",
-      "is_emergency_protocol_triggered": true/false (Eğer acil müdahale, tahliye veya ambulans gerektiren bir kaza/zincirleme olay varsa true, yoksa false)
-    }}
     """
-    
-    raw_content = _call_vllm_api(
-        system_prompt=system_prompt,
-        user_prompt=user_prompt,
-        model_name=selected_model,
-        max_tokens=450
-    )
-    
+    Vision katmanından gelen kronolojik olayları Brain modeline göndererek
+    genel risk seviyesini belirler.
+    """
+
+    world_state = {
+        "summary": "",
+        "events": chronological_events,
+        "risk": "Düşük",
+        "actions": []
+    }
+
     try:
-        model_json = json.loads(raw_content)
-        
-        if "error" in model_json:
+        message = analyze_state(world_state)
+
+        # Model sadece yorum yaptıysa
+        if not getattr(message, "tool_calls", None):
             return {
-                "overall_risk_level": "Sistem Hatası",
-                "impact_assessment": f"Lokal risk analiz sunucusunda hata oluştu: {model_json['error']}",
+                "overall_risk_level": world_state.get("risk", "Düşük"),
+                "impact_assessment": message.content,
                 "is_emergency_protocol_triggered": False
             }
-            
+
+        # Model bir tool çağrısı oluşturduysa
         return {
-            "overall_risk_level": model_json.get("overall_risk_level", "Belirlenemedi"),
-            "impact_assessment": model_json.get("impact_assessment", "Etki analizi üretilemedi."),
-            "is_emergency_protocol_triggered": bool(model_json.get("is_emergency_protocol_triggered", False))
-        }
-        
-    except Exception as e:
-        return {
-            "overall_risk_level": "Sistem Hatası",
-            "impact_assessment": f"Lokal risk analiz sunucusundan gelen çıktı ayrıştırılamadı. Ham veri: {raw_content}",
-            "is_emergency_protocol_triggered": False
-        }
-            
-    except Exception as e:
-        return {
-            "overall_risk_level": "Sistem Hatası",
-            "impact_assessment": f"Lokal risk analiz sunucusuna bağlanılamadı veya çıktı ayrıştırılamadı. Hata: {str(e)}",
-            "is_emergency_protocol_triggered": False
+            "overall_risk_level": "Yüksek",
+            "impact_assessment": "Brain modeli müdahale gerektiren bir durum tespit etti.",
+            "is_emergency_protocol_triggered": True
         }
 
-@tool
+    except Exception as e:
+        return {
+            "overall_risk_level": "Sistem Hatası",
+            "impact_assessment": f"Brain modeli çalıştırılırken hata oluştu: {str(e)}",
+            "is_emergency_protocol_triggered": False
+        }
 def generate_final_report(data_dict: dict) -> str:
-    """Toplanan ham analiz ve risk verilerini alır, lokal büyük dil modeli (Llama-3.1-70B / Qwen2.5-72B) 
-    aracılığıyla jüri standartlarında açıklanabilir kurumsal özet ve KPI metrikleriyle zenginleştirir. 
+    """Toplanan ham analiz ve risk verilerini alır, lokal büyük dil modeli (Llama-3.1-70B / Qwen2.5-72B)
+    aracılığıyla jüri standartlarında açıklanabilir kurumsal özet ve KPI metrikleriyle zenginleştirir.
     Ardından Pydantic şema doğrulaması (Validation) uygulayarak doğrulanmış saf JSON formatında döndürür."""
-    
+
     selected_model = settings.REASONING_MODEL
-    
+
     system_prompt = (
         "Sen TEKNOFEST Türkçe Yapay Zeka Ajanları Yarışması için geliştirilmiş, operasyonel raporları "
         "kurumsal standartlara ve yapılandırılmış şemalara göre son haline getiren kıdemli bir Sistem Entegrasyon "
         "ve Raporlama Yapay Zekasısın. Görevin, sana verilen ham rapor verilerini incelemek, açıklanabilirliği "
         "en üst seviyeye çıkarmak ve KESİNLİKLE sadece istenen JSON formatında çıktı üretmektir."
     )
-    
-    user_prompt = f"""
-    Aşağıda, LangGraph iş akışı boyunca video analiz (Qwen3-VL) ve risk değerlendirme katmanlarından toplanan ham veriler yer almaktadır:
-    
-    Ham Rapor Girdisi:
-    {json.dumps(data_dict, ensure_ascii=False, indent=2)}
-    
-    Lütfen bu verileri al. 'summary' alanını operatörün ve jürinin hızlı karar almasını destekleyecek, gereksiz detaydan arındırılmış, 
-    Açıklanabilir ve çok kaliteli bir Türkçe yönetim özetine dönüştür. 
-    Ayrıca şartnamenin metrik gereksinimi uyarınca, bu işleme ait yapay zeka KPI verilerini (işlem doğruluğu, anomali durumu vb.) otonom hesapla.
-    
-    Yanıtını KESİNLİKLE aşağıdaki JSON şablonuna sadık kalarak döndür. JSON dışında hiçbir tebrik, giriş veya markdown açıklaması ekleme.
 
-    {{
-      "summary": "Senin üreteceğin ileri seviye, açıklanabilir Türkçe kurumsal yönetim özeti.",
-      "events": [ Ham girdideki zaman damgalı olaylar listesini aynen buraya aktar ],
-      "risk": "Ham girdideki genel risk seviyesini aynen koru",
-      "actions": [ Ham girdideki aksiyon önerilerini aynen koru ],
-      "kpi_metrics": {{
-        "ai_processing_status": "Başarılı / Kritik Müdahale Devrede",
-        "confidence_score": 0.96,
-        "is_schema_validated": true
-      }}
-    }}
-    """
-    
+    user_prompt = f"""
+Aşağıda, LangGraph iş akışı boyunca video analiz (Qwen3-VL) ve risk değerlendirme katmanlarından toplanan ham veriler yer almaktadır:
+
+Ham Rapor Girdisi:
+{json.dumps(data_dict, ensure_ascii=False, indent=2)}
+
+Lütfen bu verileri al. 'summary' alanını operatörün ve jürinin hızlı karar almasını destekleyecek,
+gereksiz detaydan arındırılmış, açıklanabilir ve kaliteli bir Türkçe yönetim özetine dönüştür.
+
+Ayrıca şartnamenin metrik gereksinimi uyarınca, bu işleme ait yapay zeka KPI verilerini otonom hesapla.
+
+Yanıtını KESİNLİKLE aşağıdaki JSON şablonuna sadık kalarak döndür.
+
+{{
+  "summary": "Senin üreteceğin ileri seviye Türkçe kurumsal yönetim özeti.",
+  "events": [ Ham girdideki olayları aynen aktar ],
+  "risk": "Ham girdideki risk seviyesini koru",
+  "actions": [ Ham girdideki aksiyonları aynen koru ],
+  "kpi_metrics": {{
+    "ai_processing_status": "Başarılı / Kritik Müdahale Devrede",
+    "confidence_score": 0.96,
+    "is_schema_validated": true
+  }}
+}}
+"""
+
     raw_content = _call_vllm_api(
         system_prompt=system_prompt,
         user_prompt=user_prompt,
         model_name=selected_model,
-        max_tokens=600 
+        max_tokens=600
     )
 
     try:
-        if "error" in raw_content and (raw_content.startswith("{") or raw_content.startswith("[")):
-            error_json = json.loads(raw_content)
-            if "error" in error_json:
-                fallback_report = FinalReportSchema(**data_dict)
-                return fallback_report.model_dump_json(indent=2)
+        # vLLM'den hata JSON'u dönerse fallback oluştur
+        if raw_content.startswith("{"):
+            parsed = json.loads(raw_content)
+            if isinstance(parsed, dict) and "error" in parsed:
+                raise ValueError(parsed["error"])
 
         enriched_data = json.loads(raw_content)
-        validated_report = FinalReportSchema(**enriched_data)
-        return validated_report.model_dump_json(indent=2)
-        
-    except Exception as e:
-        try:
-            fallback_report = FinalReportSchema(**data_dict)
-            return fallback_report.model_dump_json(indent=2)
-        except Exception as schema_err:
-            return json.dumps({
-                "error": "Nihai rapor oluşturulamadı ve validasyon başarısız oldu.",
-                "details": str(e),
-                "schema_error": str(schema_err)
-            }, ensure_ascii=False, indent=2)
 
+        validated_report = FinalReportSchema(**enriched_data)
+
+        return validated_report.model_dump_json(indent=2)
+
+    except Exception:
+        # Şema için eksik KPI alanını otomatik ekle
+        fallback_data = {
+            **data_dict,
+            "kpi_metrics": {
+                "ai_processing_status": "Fallback",
+                "confidence_score": 0.0,
+                "is_schema_validated": False
+            }
+        }
+
+        try:
+            fallback_report = FinalReportSchema(**fallback_data)
+            return fallback_report.model_dump_json(indent=2)
+
+        except Exception as schema_err:
+            return json.dumps(
+                {
+                    "error": "Nihai rapor oluşturulamadı ve validasyon başarısız oldu.",
+                    "schema_error": str(schema_err),
+                    "fallback_data": fallback_data
+                },
+                ensure_ascii=False,
+                indent=2
+            )
 @tool
 def detect_motion_density(start_time: int, end_time: int, video_path: str) -> dict:
     """Belirtilen zaman aralığındaki video akışını/kesitini inceleyerek piksellerdeki zamansal 
@@ -286,49 +286,29 @@ def detect_motion_density(start_time: int, end_time: int, video_path: str) -> di
     
 @tool
 def flag_critical_timestamps(video_path: str) -> List[int]:
-    """Tüm video dosyasını yerel vLLM (Qwen3-VL) sunucusuna göndererek baştan sona hızlıca tarar;
-    sahnede anomali, kaza, ihlal veya ani hareket değişimi barındıran kritik saniyeleri otonom listeler."""
-    
-    system_prompt = (
-        "Sen endüstriyel tesisler ve saha operasyonları için geliştirilmiş, yüksek performanslı bir "
-        "Video Anomali Taraması Yapay Zekasısın. Görevin, sana verilen uzun videoyu baştan sona incelemek, "
-        "iş güvenliği ihlali, kaza, sıra dışı toplanma veya donanım arızası gibi kritik olayların başladığı "
-        "veya gerçekleştiği saniyeleri tam sayı olarak tespit etmek ve KESİNLİKLE sadece istenen JSON formatında çıktı üretmektir."
-    )
-    
-    user_prompt = """
-    Sana verilen video dosyasını baştan sona dikkatlice tara. 
-    İçerisinde anomali, iş kazası, tehlikeli durum veya şüpheli hareketlilik barındıran tüm kritik anların saniyelerini (toplam geçen saniye cinsinden tam sayı olarak) tespit et.
-    
-    Yanıtını KESİNLİKLE aşağıdaki JSON formatında döndür. JSON yapısı haricinde hiçbir konuşma, giriş, markdown veya açıklama metni ekleme.
+    """Vision modelinin ürettiği world_state içinden olay zamanlarını döndürür."""
 
-    {
-      "critical_timestamps": [ Tespit edilen kritik saniyelerin kronolojik tam sayı listesi. Örn: [15, 20, 145, 494] ]
-    }
-    """
-    
-    raw_content = _call_vllm_api(
-        system_prompt=system_prompt,
-        user_prompt=user_prompt,
-        model_name="Qwen3-VL-8B-Instruct",
-        max_tokens=150,
-        video_path=video_path
-    )
+    world_state = _get_world_state(video_path)
 
-    try:
-        model_json = json.loads(raw_content)
-        
-        if "error" in model_json:
-            return [15, 30, 45]
-            
-        timestamps = model_json.get("critical_timestamps", [])
-        cleaned_timestamps = [int(t) for t in timestamps if str(t).isdigit()]
-        
-        return sorted(list(set(cleaned_timestamps)))
-        
-    except Exception:
-        return [15, 30, 45]
-    
+    timestamps = []
+
+    for event in world_state.get("events", []):
+        try:
+            time_str = event.get("time", "00:00")
+
+            # 00:15 -> 15
+            minute, second = time_str.split(":")
+            total_seconds = int(minute) * 60 + int(second)
+
+            timestamps.append(total_seconds)
+
+        except Exception:
+            continue
+
+    if not timestamps:
+        return [0]
+
+    return sorted(list(set(timestamps)))
 @tool
 def get_scene_metadata(video_path: str) -> dict:
     """Video dosyasını yerel vLLM (Qwen3-VL) sunucusuna göndererek videonun çekildiği 
@@ -537,7 +517,7 @@ def monitor_hardware_telemetry() -> dict:
     """Sistemin çalıştığı yerel (offline) sunucu ortamındaki gerçek CPU, GPU sıcaklığı, 
     toplanmış VRAM tahsisi ve boş bellek durumlarını anlık ve canlı olarak döndürür."""
     
-    cpu_util = psutil.cpu_percentage(interval=None)
+    cpu_util = psutil.cpu_percent(interval=None)
     ram_info = psutil.virtual_memory()
     
     gpu_temp = 0
