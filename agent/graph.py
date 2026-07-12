@@ -48,7 +48,8 @@ def extract_video_info_node(state: AgentState) -> AgentState:
         	"video_path": video_path
     	})
 
-    	time_str = f"00:{t}"
+    	minutes, seconds = divmod(int(t), 60)
+        time_str = f"{minutes:02d}:{seconds:02d}"
 
     	detected.append({
         	"time": time_str,

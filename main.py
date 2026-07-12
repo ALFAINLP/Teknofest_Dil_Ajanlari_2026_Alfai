@@ -8,7 +8,7 @@ from model_py.services.brain_service import analyze_state
 
 def main():
     # Adım 1: Video Dosyasını Belirle (Şartname girdi gereksinimi)
-    video_file_path = "Videos/test.mp4"
+    video_file_path = "Videos/test2.mp4"
     
     
     print("\n[Vision] Video analiz ediliyor...")
