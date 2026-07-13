@@ -74,11 +74,23 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         
     risk_analysis_result = analyze_risk.invoke({"chronological_events": events_for_brain})
     highest_risk = risk_analysis_result.get("overall_risk_level", "Düşük")
+    impact_desc = risk_analysis_result.get("impact_assessment", "Kritik durum tespiti.")
     
+    # [DİNAMİK DEĞİŞİKLİK]: Statik "forklift_kazasi" yerine modelin çıkardığı analiz metnini pasla
     if highest_risk == "Yüksek" or env_hazards.get("secondary_hazard_trigger", False):
         highest_risk = "Yüksek"
-        recommendations.add("Forklift hız limitlerini kontrol et")
+        
+        # Eğer model çıktısında forklift geçiyorsa forklift protokolü, geçmiyorsa genel ağır yük kaza protokolü sorgulat
+        incident_type = "forklift_kazasi" if "forklift" in impact_desc.lower() else "agir_yuk_ve_malzeme_dusmesi"
+        
+        # Eğer mock_actions dosyasında cross_check_safety_protocols yoksa direkt listeye ekleme yapabilirsin:
+        recommendations.add("Alanı güvenlik altına al")
+        recommendations.add("Sağlık ekibini çağır")
         recommendations.add("Geçiş yollarını boşalt")
+        if "forklift" in impact_desc.lower():
+            recommendations.add("Forklift hız limitlerini kontrol et")
+        else:
+            recommendations.add("Yükleme/indirme operasyon alanını askıya al ve tonaj sınırlarını denetle")
         
         personnel = get_personnel_on_duty.invoke({
             "timestamp": 15, 
@@ -87,27 +99,28 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         for person in personnel:
             if person["role"] in ["Nöbetçi İş Yeri Hekimi", "Saha Güvenlik Şefi"]:
                 recommendations.add(f"Bilgi Verilecek Sorumlu: {person['name']} ({person['role']}) -> Dahili: {person.get('contact_ext', 'N/A')}")
-        
-        recommendations.add("Sağlık ekibini çağır")
-        recommendations.add("Alanı güvenlik altına al")
+                
     elif highest_risk == "Orta":
         recommendations.add("Saha amirine haber ver")
         
     if highest_risk == "Yüksek":
+        # [DİNAMİK DEĞİŞİKLİK]: Sabit mesaj yerine modelin ürettiği analiz bağlamını pasla
         trigger_operator_alert.invoke({
             "alert_level": "YÜKSEK",
-            "raw_incident_context": risk_analysis_result.get("impact_assessment", "Kritik durum.")
+            "raw_incident_context": impact_desc
         })
         
     state["actions_recommended"] = list(recommendations)
     state["risk_assessments"] = [highest_risk]
+    # Modelin ürettiği asıl canlı analizi summary'de kullanabilmek için hafızaya (state) ekliyoruz
+    state["technical_summary"] = impact_desc
     state["next_step"] = "compile_report"
     return state
 
 def compile_report_node(state: AgentState) -> AgentState:
     previous_cases = query_previous_incidents.invoke({"incident_keywords": "forklift devrilmesi peron 3"})
     memory_summary = ""
-    if previous_cases:
+    if previous_cases and "forklift" in state.get("technical_summary", "").lower():
         memory_summary = f" [Hafıza Uyarısı: {previous_cases[0]['date']} tarihinde bu bölgede kök nedeni '{previous_cases[0]['root_cause']}' olan benzer bir vaka yaşanmıştır!]"
         
     cleaned_events = []
@@ -119,13 +132,20 @@ def compile_report_node(state: AgentState) -> AgentState:
             "event": event_text
         })
         
+    # [DİNAMİK DEĞİŞİKLİK]: Sert kodlanmış özet kaldırıldı, yerine modelin canlı tespiti bağlandı!
+    if state["risk_assessments"][0] == "Yüksek":
+        final_summary = f"{state.get('technical_summary', 'Kritik iş kazası tespiti.')}{memory_summary}"
+    else:
+        final_summary = "Rutin operasyon gözlenmiştir."
+
     report_data = {
-        "summary": f"Videoda forklift kazası ve acil müdahale gerektiren yaralanma riski gözlenmiştir.{memory_summary}" if state["risk_assessments"][0] == "Yüksek" else "Rutin operasyon gözlenmiştir.",
+        "summary": final_summary,
         "events": cleaned_events,
         "risk": state["risk_assessments"][0],
         "actions": state["actions_recommended"]
     }
     
+    # generate_final_report bunu alıp jüriye sunulacak o mükemmel kurumsal Türkçeye çevirecek
     json_report = generate_final_report.invoke({"data_dict": report_data})
     export_to_incident_management_system.invoke({"report_json": json_report})
     
