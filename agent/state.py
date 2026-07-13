@@ -1,4 +1,5 @@
-from typing import TypedDict, List, Dict, Any
+from typing import TypedDict, List, Dict, Any, Annotated
+from langgraph.graph.message import add_messages
 
 class AgentState(TypedDict):
     video_path: str
@@ -8,3 +9,5 @@ class AgentState(TypedDict):
     actions_recommended: List[str]
     final_json_output: str
     next_step: str
+    # ReAct için zorunlu Hafıza (Conversational Memory) alanı:
+    messages: Annotated[list, add_messages]

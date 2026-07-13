@@ -131,6 +131,7 @@ def analyze_risk(chronological_events: List[dict]) -> dict:
             "impact_assessment": f"Brain modeli çalıştırılırken hata oluştu: {str(e)}",
             "is_emergency_protocol_triggered": False
         }
+@tool
 def generate_final_report(data_dict: dict) -> str:
     """Toplanan ham analiz ve risk verilerini alır, lokal büyük dil modeli (Llama-3.1-70B / Qwen2.5-72B)
     aracılığıyla jüri standartlarında açıklanabilir kurumsal özet ve KPI metrikleriyle zenginleştirir.
