@@ -1,5 +1,6 @@
 from langgraph.graph import StateGraph, END
 from agent.state import AgentState
+from agent.memory_manager import MemoryManager
 from tools.mock_actions import (
     get_frame,
     analyze_risk,
@@ -52,91 +53,236 @@ def extract_video_info_node(state: AgentState) -> AgentState:
         })
         
     state["detected_events"] = detected
+
+    # Hafızaya olayları ekle
+    state["event_history"] = MemoryManager.add_events(
+        state.get("event_history", []),
+        detected
+    )  
+    # ==========================
+    # Temporal Context
+    # ==========================
+    state["context_summary"] = MemoryManager.analyze_temporal_context(
+        state["event_history"]
+    )
     state["next_step"] = "process_risk"
     return state
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
     highest_risk = "Düşük"
     recommendations = set()
-    
+
     scene_meta = get_scene_metadata.invoke({"video_path": state["video_path"]})
     zone = scene_meta.get("zone_name", "Genel Saha")
     env_hazards = assess_environmental_hazards.invoke({"zone": zone})
-    
+
     events_for_brain = []
     for item in state["detected_events"]:
         event_data = item.get("event", {})
-        event_text = event_data.get("description", "Açıklama bulunamadı.") if isinstance(event_data, dict) else str(event_data)
+        event_text = (
+            event_data.get("description", "Açıklama bulunamadı.")
+            if isinstance(event_data, dict)
+            else str(event_data)
+        )
+
         events_for_brain.append({
             "time": item["time"],
             "event": event_text
         })
-        
-    risk_analysis_result = analyze_risk.invoke({"chronological_events": events_for_brain})
-    highest_risk = risk_analysis_result.get("overall_risk_level", "Düşük")
-    impact_desc = risk_analysis_result.get("impact_assessment", "Kritik durum tespiti.")
-    
-    # [DİNAMİK DEĞİŞİKLİK]: Statik "forklift_kazasi" yerine modelin çıkardığı analiz metnini pasla
-    if highest_risk == "Yüksek" or env_hazards.get("secondary_hazard_trigger", False):
+
+    risk_analysis_result = analyze_risk.invoke({
+        "chronological_events": events_for_brain
+    })
+
+    highest_risk = risk_analysis_result.get(
+        "overall_risk_level",
+        "Düşük"
+    )
+
+    impact_desc = risk_analysis_result.get(
+        "impact_assessment",
+        "Kritik durum tespiti."
+    )
+
+    # ==========================
+    # Adaptive Risk Memory
+    # ==========================
+    medium_count = MemoryManager.recent_risk_count(
+        state.get("risk_history", []),
+        "Orta"
+    )
+
+    if highest_risk == "Orta" and medium_count >= 2:
         highest_risk = "Yüksek"
-        
-        # Eğer model çıktısında forklift geçiyorsa forklift protokolü, geçmiyorsa genel ağır yük kaza protokolü sorgulat
-        incident_type = "forklift_kazasi" if "forklift" in impact_desc.lower() else "agir_yuk_ve_malzeme_dusmesi"
-        
-        # Eğer mock_actions dosyasında cross_check_safety_protocols yoksa direkt listeye ekleme yapabilirsin:
+
+    # ==========================
+    # Temporal Context
+    # ==========================
+    context = state.get("context_summary", {})
+
+    if context.get("systematic_risk", False):
+
+        if highest_risk == "Orta":
+            highest_risk = "Yüksek"
+
+        recommendations.add(
+            "Temporal Context: Aynı bölgede tekrar eden olaylar tespit edildi."
+        )
+
+        recommendations.add(
+            context.get(
+                "recommended_action",
+                "Bakım ekibini bilgilendir."
+            )
+        )
+
+    # ==========================
+    # Risk Değerlendirmesi
+    # ==========================
+    if highest_risk == "Yüksek" or env_hazards.get(
+        "secondary_hazard_trigger",
+        False
+    ):
+        highest_risk = "Yüksek"
+
+        incident_type = (
+            "forklift_kazasi"
+            if "forklift" in impact_desc.lower()
+            else "agir_yuk_ve_malzeme_dusmesi"
+        )
+
         recommendations.add("Alanı güvenlik altına al")
         recommendations.add("Sağlık ekibini çağır")
         recommendations.add("Geçiş yollarını boşalt")
+
         if "forklift" in impact_desc.lower():
-            recommendations.add("Forklift hız limitlerini kontrol et")
+            recommendations.add(
+                "Forklift hız limitlerini kontrol et"
+            )
         else:
-            recommendations.add("Yükleme/indirme operasyon alanını askıya al ve tonaj sınırlarını denetle")
-        
+            recommendations.add(
+                "Yükleme/indirme operasyon alanını askıya al ve tonaj sınırlarını denetle"
+            )
+
         personnel = get_personnel_on_duty.invoke({
-            "timestamp": 15, 
+            "timestamp": 15,
             "zone": zone
         })
+
         for person in personnel:
-            if person["role"] in ["Nöbetçi İş Yeri Hekimi", "Saha Güvenlik Şefi"]:
-                recommendations.add(f"Bilgi Verilecek Sorumlu: {person['name']} ({person['role']}) -> Dahili: {person.get('contact_ext', 'N/A')}")
-                
+            if person["role"] in [
+                "Nöbetçi İş Yeri Hekimi",
+                "Saha Güvenlik Şefi"
+            ]:
+                recommendations.add(
+                    f"Bilgi Verilecek Sorumlu: "
+                    f"{person['name']} "
+                    f"({person['role']}) "
+                    f"-> Dahili: {person.get('contact_ext', 'N/A')}"
+                )
+
     elif highest_risk == "Orta":
         recommendations.add("Saha amirine haber ver")
-        
+
+    # ==========================
+    # Tool Memory + Debouncing
+    # ==========================
     if highest_risk == "Yüksek":
-        # [DİNAMİK DEĞİŞİKLİK]: Sabit mesaj yerine modelin ürettiği analiz bağlamını pasla
-        trigger_operator_alert.invoke({
-            "alert_level": "YÜKSEK",
-            "raw_incident_context": impact_desc
-        })
-        
+
+        if not MemoryManager.was_tool_used(
+            state.get("tool_history", []),
+            "trigger_operator_alert"
+        ):
+
+            trigger_operator_alert.invoke({
+                "alert_level": "YÜKSEK",
+                "raw_incident_context": impact_desc
+            })
+
+            state["tool_history"] = MemoryManager.add_tool(
+                state.get("tool_history", []),
+                "trigger_operator_alert"
+            )
+
+    # ==========================
+    # State Güncellemeleri
+    # ==========================
     state["actions_recommended"] = list(recommendations)
     state["risk_assessments"] = [highest_risk]
-    # Modelin ürettiği asıl canlı analizi summary'de kullanabilmek için hafızaya (state) ekliyoruz
-    state["technical_summary"] = impact_desc
-    state["next_step"] = "compile_report"
-    return state
 
+    state["risk_history"] = MemoryManager.add_risk(
+        state.get("risk_history", []),
+        highest_risk
+    )
+
+    state["technical_summary"] = impact_desc
+
+    state["next_step"] = "compile_report"
+
+    return state
 def compile_report_node(state: AgentState) -> AgentState:
-    previous_cases = query_previous_incidents.invoke({"incident_keywords": "forklift devrilmesi peron 3"})
+    previous_cases = query_previous_incidents.invoke({
+        "incident_keywords": "forklift devrilmesi peron 3"
+    })
+
+    # ==========================
+    # Memory Summary
+    # ==========================
     memory_summary = ""
+
     if previous_cases and "forklift" in state.get("technical_summary", "").lower():
-        memory_summary = f" [Hafıza Uyarısı: {previous_cases[0]['date']} tarihinde bu bölgede kök nedeni '{previous_cases[0]['root_cause']}' olan benzer bir vaka yaşanmıştır!]"
-        
+        memory_summary = (
+            f" [Hafıza Uyarısı: {previous_cases[0]['date']} tarihinde bu bölgede "
+            f"kök nedeni '{previous_cases[0]['root_cause']}' olan benzer bir vaka yaşanmıştır!]"
+        )
+
+    # ==========================
+    # Temporal Context Summary
+    # ==========================
+    context = state.get("context_summary", {})
+
+    temporal_summary = ""
+
+    if context.get("systematic_risk", False):
+        temporal_summary = (
+            f" Son analizlerde aynı bölgede "
+            f"{context.get('repeated_events', 0)} adet benzer risk olayı "
+            f"tespit edilmiştir. "
+            f"Bu durum sistematik bir güvenlik riski olarak değerlendirilmiş "
+            f"ve risk seviyesi artırılmıştır. "
+            f"Önerilen aksiyon: "
+            f"{context.get('recommended_action', 'Bakım ekibini bilgilendir')}."
+        )
+
     cleaned_events = []
+
     for item in state["detected_events"]:
         event_data = item.get("event", {})
-        event_text = event_data.get("description", "Açıklama bulunamadı.") if isinstance(event_data, dict) else str(event_data)
+        event_text = (
+            event_data.get("description", "Açıklama bulunamadı.")
+            if isinstance(event_data, dict)
+            else str(event_data)
+        )
+
         cleaned_events.append({
             "time": item["time"],
             "event": event_text
         })
-        
-    # [DİNAMİK DEĞİŞİKLİK]: Sert kodlanmış özet kaldırıldı, yerine modelin canlı tespiti bağlandı!
+
+    # ==========================
+    # Nihai Özet
+    # ==========================
     if state["risk_assessments"][0] == "Yüksek":
-        final_summary = f"{state.get('technical_summary', 'Kritik iş kazası tespiti.')}{memory_summary}"
+        final_summary = (
+            f"{state.get('technical_summary', 'Kritik iş kazası tespiti.')}"
+            f"{memory_summary}"
+            f"{temporal_summary}"
+        )
     else:
-        final_summary = "Rutin operasyon gözlenmiştir."
+        final_summary = (
+            "Rutin operasyon gözlenmiştir."
+            f"{temporal_summary}"
+        )
 
     report_data = {
         "summary": final_summary,
@@ -144,11 +290,16 @@ def compile_report_node(state: AgentState) -> AgentState:
         "risk": state["risk_assessments"][0],
         "actions": state["actions_recommended"]
     }
-    
-    # generate_final_report bunu alıp jüriye sunulacak o mükemmel kurumsal Türkçeye çevirecek
-    json_report = generate_final_report.invoke({"data_dict": report_data})
-    export_to_incident_management_system.invoke({"report_json": json_report})
-    
+
+    # Nihai raporu oluştur
+    json_report = generate_final_report.invoke({
+        "data_dict": report_data
+    })
+
+    export_to_incident_management_system.invoke({
+        "report_json": json_report
+    })
+
     log_kpi_metrics.invoke({
         "metrics_data": {
             "processed_segments_count": len(cleaned_events),
@@ -156,12 +307,24 @@ def compile_report_node(state: AgentState) -> AgentState:
             "is_schema_validated": "error" not in json_report
         }
     })
-    
-    state["final_json_output"] = json_report
-    state["next_step"] = "complete"
-    return state
 
+    state["final_json_output"] = json_report
+
+    # ==========================
+    # Persistent Memory
+    # ==========================
+    MemoryManager.save_memory(
+        state.get("event_history", []),
+        state.get("risk_history", []),
+        state.get("tool_history", [])
+    )
+
+    state["next_step"] = "complete"
+
+    return state
+    
 workflow = StateGraph(AgentState)
+
 workflow.add_node("extract_video_info", extract_video_info_node)
 workflow.add_node("evaluate_risks", evaluate_risks_node)
 workflow.add_node("compile_report", compile_report_node)
@@ -174,6 +337,7 @@ def router(state: AgentState) -> str:
     elif state["next_step"] == "compile_report":
         return "compile_report"
     return END
+
 
 workflow.add_conditional_edges("extract_video_info", router)
 workflow.add_conditional_edges("evaluate_risks", router)
