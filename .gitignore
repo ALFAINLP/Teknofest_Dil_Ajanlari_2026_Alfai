@@ -1,0 +1,8 @@
+
+.venv/
+node_modules/
+dist/
+__pycache__/
+*.pyc
+*.mp4
+memory/memory.json
