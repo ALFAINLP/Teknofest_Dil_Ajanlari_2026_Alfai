@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-background:  var(--background);
+  --color-foreground:  var(--foreground);
+  --color-card:        var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover:     var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:     var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:   var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:       var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent:      var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border:      var(--border);
+  --color-input:       var(--input);
+  --color-ring:        var(--ring);
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  calc(var(--radius) - 2px);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) + 4px);
+}
+
+/* ─── Koyu Askeri Tema ─────────────────────────────────────── */
+:root {
+  --radius: 0.5rem;
+
+  --background:         #0b141c;
+  --foreground:         #dae3ee;
+
+  --card:               #141c24;
+  --card-foreground:    #dae3ee;
+
+  --popover:            #141c24;
+  --popover-foreground: #dae3ee;
+
+  --primary:            #a2c9ff;
+  --primary-foreground: #00315c;
+
+  --secondary:          #222b33;
+  --secondary-foreground: #c0c7d4;
+
+  --muted:              #1a2330;
+  --muted-foreground:   #8b919d;
+
+  --accent:             #1e3a5f;
+  --accent-foreground:  #a2c9ff;
+
+  --destructive:        #93000a;
+  --border:             #2a3540;
+  --input:              #1a2330;
+  --ring:               #a2c9ff;
+}
+
+/* ─── Light Mode (html.light) ──────────────────────────────── */
+html.light {
+  --background:         #f0f4f8;
+  --foreground:         #0d1926;
+  --card:               #ffffff;
+  --card-foreground:    #0d1926;
+  --popover:            #ffffff;
+  --popover-foreground: #0d1926;
+  --primary:            #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary:          #e2e8f0;
+  --secondary-foreground: #1e293b;
+  --muted:              #e8eef4;
+  --muted-foreground:   #5c6b7a;
+  --accent:             #dbeafe;
+  --accent-foreground:  #1e40af;
+  --destructive:        #dc2626;
+  --border:             #cbd5e1;
+  --input:              #e8eef4;
+  --ring:               #2563eb;
+}
+
+/* Yapısal elementler light modda override */
+html.light body                   { background-color: #f0f4f8; color: #0d1926; }
+html.light .t-sidebar             { background-color: #e8edf3 !important; border-color: #cbd5e1 !important; }
+html.light .t-topbar              { background-color: #e8edf3 !important; border-color: #cbd5e1 !important; }
+html.light .t-surface             { background-color: #ffffff !important; border-color: #cbd5e1 !important; }
+html.light .t-surface-2           { background-color: #f0f4f8 !important; }
+html.light .t-border              { border-color: #cbd5e1 !important; }
+html.light .t-text-muted          { color: #5c6b7a !important; }
+html.light .t-text-dim            { color: #94a3b8 !important; }
+html.light .t-text-base           { color: #0d1926 !important; }
+html.light .t-logline             { background-color: #f8fafc !important; }
+html.light .t-cam-bg              { background-color: #1e293b !important; }
+html.light .t-video-bg            { background-color: #0f172a !important; }
+html.light .t-heatmap-bg          { background-color: #0f172a !important; }
+html.light .t-json-bg             { background-color: #1e293b !important; }
+
+/* ─── Genel ────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+#root { width: 100%; min-height: 100vh; }
+
+/* ─── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #0b141c; }
+::-webkit-scrollbar-thumb { background: #2a3540; border-radius: 2px; }
+
+/* ─── Yardımcı Sınıflar ────────────────────────────────────── */
+.glass {
+  background: rgba(20, 28, 36, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid #2a3540;
+}
+
+.scanline {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px
+  );
+  pointer-events: none; z-index: 5;
+}
+
+.live-dot::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  margin-right: 6px;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.heatmap-blob {
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: pulse-heat 3s ease-in-out infinite;
+}
+
+@keyframes pulse-heat {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(1.08); }
+}
+
+@keyframes chart-draw {
+  to { stroke-dashoffset: 0; }
+}
+.chart-line {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: chart-draw 2.5s ease-out forwards;
+}

@@ -1,0 +1,1124 @@
+import { useState, useEffect, useRef } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Slider } from '@/components/ui/slider'
+import { Switch } from '@/components/ui/switch'
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from '@/components/ui/table'
+import { cn } from '@/lib/utils'
+import {
+  BarChart3, Target, ArrowRightLeft,
+} from 'lucide-react'
+import { APP_CONFIG } from '@/config/appConfig'
+import { analyzeVideo } from '@/services/analysisApi'
+import { eventToLog, normalizeAnalysisEvent } from '@/features/analysis/eventMapper'
+import { useOperatorFeedback } from '@/hooks/useOperatorFeedback'
+
+// ─── Sabitler ────────────────────────────────────────────────────────────────
+const NAV_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'cameras',   label: 'Kameralar' },
+  { id: 'heatmap',   label: 'Isı Haritası' },
+  { id: 'tactical',  label: 'Taktiksel Raporlar' },
+  { id: 'reports',   label: 'Raporlar' },
+  { id: 'json',      label: 'JSON Çıktısı' },
+  { id: 'settings',  label: 'Ayarlar' },
+]
+
+// Backend'in (agent.py) risk_score esikleriyle birebir eslesir: >=70 kritik, >=40 orta.
+function getRiskGuidance(riskScore) {
+  if (riskScore == null) {
+    return {
+      level: null,
+      headline: 'Analiz bekleniyor',
+      detail: 'Video yüklendiğinde risk skoruna göre karar motoru burada dinamik öneriler üretecek.',
+      color: '#414752',
+    }
+  }
+  if (riskScore >= 70) {
+    return {
+      level: 'Kritik',
+      headline: 'Devriye sıklığı artırılmalı',
+      detail: `Risk skoru %${riskScore} — kritik eşiğin (%70) üzerinde. Devriye sıklığı ve müdahale kapasitesi artırılmalı.`,
+      color: '#ffb4ab',
+    }
+  }
+  if (riskScore >= 40) {
+    return {
+      level: 'Orta',
+      headline: 'İzleme sıklığı artırılmalı',
+      detail: `Risk skoru %${riskScore} — orta seviyede. KKD ve ekipman denetimleri sıklaştırılmalı.`,
+      color: '#ffb77d',
+    }
+  }
+  return {
+    level: 'Düşük',
+    headline: 'Stabil, standart protokol yeterli',
+    detail: `Risk skoru %${riskScore} — düşük seviyede (%40 eşiğinin altında). Mevcut izleme protokolü stabil şekilde sürdürülebilir.`,
+    color: '#4ade80',
+  }
+}
+
+const CAMERAS = [
+  { id: 'CAM_01', zone: 'Depo Girişi',     status: 'active' },
+  { id: 'CAM_02', zone: 'Üretim Hattı A',  status: 'active' },
+  { id: 'CAM_03', zone: 'Yükleme Rampası', status: 'warn'   },
+  { id: 'CAM_04', zone: 'Ana Giriş',       status: 'active' },
+]
+
+// ─── JSON Syntax Renklendirme ─────────────────────────────────────────────────
+function JsonSyntax({ json }) {
+  if (!json) return <span style={{ color: '#2a3540' }}>{'// Henüz veri yok — video yükleyin'}</span>
+  return json.split('\n').map((line, i) => {
+    const parts = []
+    let rest = line
+    rest = rest.replace(/^(\s*)("[\w_]+")(\s*:\s*)/, (_, indent, key, colon) => {
+      parts.push(
+        <span key="i" style={{ color: 'inherit' }}>{indent}</span>,
+        <span key="k" style={{ color: '#a2c9ff', fontWeight: 600 }}>{key}</span>,
+        <span key="c" style={{ color: '#8b919d' }}>{colon}</span>,
+      )
+      return ''
+    })
+    if      (rest.match(/^".*?"[,]?$/))          parts.push(<span key="v" style={{ color: '#4ade80' }}>{rest}</span>)
+    else if (rest.match(/^-?\d+\.?\d*[,]?$/))    parts.push(<span key="v" style={{ color: '#ffb77d' }}>{rest}</span>)
+    else if (rest.match(/^(true|false|null)[,]?$/)) parts.push(<span key="v" style={{ color: '#c084fc' }}>{rest}</span>)
+    else if (rest.trim())                         parts.push(<span key="v" style={{ color: '#8b919d' }}>{rest}</span>)
+
+    return (
+      <span key={i} style={{ display: 'block' }}>
+        {parts.length ? parts : <span style={{ color: '#8b919d' }}>{line}</span>}
+      </span>
+    )
+  })
+}
+
+// ─── Küçük Bileşenler ─────────────────────────────────────────────────────────
+function LogLine({ time, msg, level, isDark = true }) {
+  const darkStyles = {
+    critical: 'border-[#ffb4ab] bg-[#93000a]/20 text-[#ffdad6]',
+    warn:     'border-[#ffb77d] bg-[#4d2600]/20 text-[#ffb77d]',
+    info:     'border-[#414752] bg-[#182028]    text-[#c0c7d4]',
+    ok:       'border-[#4ade80] bg-[#052e16]/20 text-[#86efac]',
+  }
+  const lightStyles = {
+    critical: 'border-red-400    bg-red-50     text-red-800',
+    warn:     'border-amber-400  bg-amber-50   text-amber-800',
+    info:     'border-slate-300  bg-slate-50   text-slate-700',
+    ok:       'border-emerald-400 bg-emerald-50 text-emerald-800',
+  }
+  const darkTime = {
+    critical: 'text-[#ffb4ab]', warn: 'text-[#ffb77d]',
+    info:     'text-[#a2c9ff]', ok:   'text-[#4ade80]',
+  }
+  const lightTime = {
+    critical: 'text-red-700', warn: 'text-amber-700',
+    info:     'text-blue-700', ok:  'text-emerald-700',
+  }
+  const styles   = isDark ? darkStyles : lightStyles
+  const timeColor = isDark ? darkTime  : lightTime
+  return (
+    <div className={cn('flex gap-2 border-l-2 rounded-sm px-3 py-2 text-[13px]', styles[level])}>
+      <span className={cn('font-mono text-[11px] shrink-0 mt-0.5', timeColor[level])}>{time}</span>
+      <span className="font-sans leading-snug">{msg}</span>
+    </div>
+  )
+}
+
+function RiskBadge({ level, isDark = true }) {
+  const darkMap = {
+    'Kritik': 'bg-[#93000a] text-[#ffb4ab] border-[#ffb4ab]/30',
+    'Yüksek': 'bg-[#4d2600] text-[#ffb77d] border-[#ffb77d]/30',
+    'Orta':   'bg-[#1a2a00] text-[#a3e635] border-[#a3e635]/30',
+    'Düşük':  'bg-[#182028] text-[#c0c7d4] border-[#414752]',
+  }
+  const lightMap = {
+    'Kritik': 'bg-red-50    text-red-700    border-red-300',
+    'Yüksek': 'bg-amber-50  text-amber-700  border-amber-300',
+    'Orta':   'bg-lime-50   text-lime-700   border-lime-300',
+    'Düşük':  'bg-slate-100 text-slate-600  border-slate-300',
+  }
+  const map = isDark ? darkMap : lightMap
+  return (
+    <span className={cn('inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-wide', map[level] ?? map['Düşük'])}>
+      {level}
+    </span>
+  )
+}
+
+// ─── Heatmap Canvas ───────────────────────────────────────────────────────────
+function HeatmapView({ fullscreen = false, eventRows = [] }) {
+  const [riskFilter, setRiskFilter] = useState('all')
+  const [focusedEvent, setFocusedEvent] = useState(null)
+  const riskColors = { Kritik: '#ff6b6b', Yüksek: '#ff9f43', Orta: '#a3e635', Düşük: '#60a5fa' }
+  const maximumTime = Math.max(...eventRows.map(event => event.end_time ?? event.start_time ?? 0), 1)
+  const visibleEvents = eventRows.filter(event => riskFilter === 'all' || event.risk === riskFilter)
+  const points = visibleEvents.map((event, index) => {
+    const seconds = event.start_time ?? 0
+    const confidence = Number.parseFloat(String(event.conf ?? '85').replace('%', '')) || 85
+    return {
+      event,
+      left: `${10 + (seconds / maximumTime) * 80}%`,
+      top: `${18 + ((index * 31) % 64)}%`,
+      size: 80 + confidence,
+      color: riskColors[event.risk] ?? riskColors.Düşük,
+    }
+  })
+  return (
+    <div className={cn('t-heatmap-bg relative w-full rounded-xl overflow-hidden border border-[#2a3540] bg-[#060f16]', fullscreen ? 'h-full' : 'min-h-[420px]')}
+      style={{ backgroundImage: 'linear-gradient(#1e2d3d 1px, transparent 1px), linear-gradient(90deg, #1e2d3d 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+      {points.map(({ event, ...point }) => (
+        <button key={event.id} type="button" onClick={() => setFocusedEvent(event)}
+          className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#a2c9ff]"
+          style={{ top: point.top, left: point.left, width: point.size, height: point.size, background: point.color, opacity: 0.42, filter: 'blur(18px)' }}
+          aria-label={`${event.time} ${event.event}`} />
+      ))}
+      {eventRows.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center font-sans text-sm text-[#414752]">
+          Isı haritası için önce bir video analiz edin
+        </div>
+      )}
+      {focusedEvent && (
+        <div className="absolute left-5 top-14 max-w-sm rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 p-3 shadow-xl">
+          <div className="flex items-center justify-between gap-4">
+            <span className="font-mono text-[11px] text-[#a2c9ff]">{focusedEvent.time}</span>
+            <RiskBadge level={focusedEvent.risk} />
+          </div>
+          <p className="mt-2 font-sans text-xs text-[#dae3ee]">{focusedEvent.event}</p>
+          <p className="mt-1 font-sans text-[10px] text-[#8b919d]">{focusedEvent.zone} · Güven {focusedEvent.conf}</p>
+        </div>
+      )}
+      <div className="absolute top-4 left-5">
+        <p className="font-sans text-[10px] uppercase tracking-widest text-[#414752]">Model olay yoğunluğu · {visibleEvents.length} olay</p>
+      </div>
+      <div className="absolute bottom-4 left-5 glass rounded-lg p-3 space-y-1.5">
+        {Object.entries(riskColors).map(([label, color]) => (
+          <div key={label} className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+            <span className="font-sans text-[11px] text-[#c0c7d4]">{label}</span>
+          </div>
+        ))}
+      </div>
+      <div className="absolute bottom-4 right-5 flex gap-2">
+        {[['all', 'Tümü'], ['Kritik', 'Kritik'], ['Yüksek', 'Yüksek'], ['Orta', 'Orta']].map(([value, label]) => (
+          <button key={value} type="button" onClick={() => setRiskFilter(value)} className={cn('font-sans text-[11px] px-3 py-1.5 rounded-lg border transition-colors',
+            riskFilter === value ? 'bg-[#a2c9ff]/15 border-[#a2c9ff]/30 text-[#a2c9ff]'
+                    : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/30 hover:text-[#a2c9ff]')}>
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Ajanlar Arası Hedef Takip Aktarımı (LangGraph State Transfer) ────────────
+const HANDOFF_LOG_POOL = [
+  { from: 'CAM_01', to: 'CAM_02', msg: 'Anomali tespit edildi — hedef kilitlendi, takip başlatıldı.',            state: 'TARGET_LOCKED'  },
+  { from: 'CAM_02', to: 'CAM_03', msg: 'Hedef kadraj dışına çıktı — komşu kameraya state aktarımı yapılıyor.',    state: 'STATE_HANDOFF'  },
+  { from: 'CAM_03', to: 'CAM_04', msg: 'LangGraph ajan zinciri: bounding box + track ID senkronize edildi.',      state: 'SYNC_OK'        },
+  { from: 'CAM_04', to: 'CAM_01', msg: 'Takip tamamlandı — hedef güvenli bölgeye ulaştı, izleme kapatıldı.',      state: 'TRACK_CLOSED'   },
+]
+
+// ─── Kamera Grid ──────────────────────────────────────────────────────────────
+function CamerasPage({ videoSrc, isDark = true }) {
+  const statusMap = {
+    active:  { dot: '#4ade80', label: 'Aktif',      ring: 'border-[#2a3540]'    },
+    warn:    { dot: '#ffb77d', label: 'Uyarı',      ring: 'border-[#ffb77d]/40' },
+    offline: { dot: '#ef4444', label: 'Çevrimdışı', ring: 'border-[#ef4444]/40' },
+  }
+  const [handoffLogs, setHandoffLogs] = useState([])
+  const handoffIdx = useRef(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const entry = HANDOFF_LOG_POOL[handoffIdx.current % HANDOFF_LOG_POOL.length]
+      const now = new Date()
+      const t = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2, '0')).join(':')
+      setHandoffLogs(prev => [{ id: Date.now(), time: t, ...entry }, ...prev].slice(0, 8))
+      handoffIdx.current += 1
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto min-h-0 gap-4">
+      <div className="shrink-0 flex items-center justify-between">
+        <div>
+          <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Kamera Sistemi</h2>
+          <p className="t-text-dim font-sans text-[11px] mt-0.5">4 kamera · 3 aktif · 1 uyarıda</p>
+        </div>
+        <Badge variant="outline" className="font-sans text-[10px] border-[#4ade80]/30 text-[#4ade80] bg-[#052e16]/40">● 3/4 AKTİF</Badge>
+      </div>
+      <div className="shrink-0 grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {CAMERAS.map(cam => {
+          const s = statusMap[cam.status]
+          const isMain = cam.id === 'CAM_04'
+          return (
+            <div key={cam.id} className={cn('t-cam-bg relative rounded-xl overflow-hidden border bg-[#060f16] w-full aspect-video', s.ring)}>
+              <div className="scanline" />
+              {isMain && videoSrc ? (
+                <video src={videoSrc} className="absolute inset-0 w-full h-full object-contain bg-black" loop muted playsInline autoPlay />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1e2d3d" strokeWidth="1.2">
+                    <rect x="2" y="6" width="20" height="12" rx="2" /><path d="M10 9l5 3-5 3V9z" />
+                  </svg>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0b141c]/90 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-3 flex items-center justify-between">
+                <div>
+                  <p className="font-mono text-[13px] font-bold text-[#a2c9ff]">{cam.id}</p>
+                  <p className="font-sans text-[11px] text-[#8b919d]">{cam.zone}</p>
+                </div>
+                <div className="flex items-center gap-1.5 glass rounded-full px-2.5 py-1">
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: s.dot }} />
+                  <span className="font-sans text-[10px] font-semibold" style={{ color: s.dot }}>{s.label}</span>
+                </div>
+              </div>
+              <div className="absolute top-3 left-4 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                <span className="font-mono text-[10px] text-[#ef4444]/70">REC</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Ajanlar arası hedef takip aktarımı */}
+      <div className={cn('shrink-0 min-h-[150px] rounded-xl border flex flex-col overflow-hidden',
+        isDark ? 'border-[#2a3540] bg-[#0d1520]' : 'border-slate-200 bg-white')}>
+        <div className={cn('shrink-0 flex items-center gap-2 px-4 py-2.5 border-b', isDark ? 'border-[#2a3540]' : 'border-slate-200')}>
+          <ArrowRightLeft className={cn('w-3.5 h-3.5', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')} />
+          <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>
+            Ajanlar Arası Hedef Takip Aktarımı · LangGraph State Transfer
+          </p>
+        </div>
+        <ScrollArea className="flex-1">
+          <div className="p-2.5 space-y-1.5">
+            {handoffLogs.length === 0 ? (
+              <p className={cn('font-sans text-[11px] px-2 py-4 text-center', isDark ? 'text-[#414752]' : 'text-slate-400')}>
+                Ajan zinciri senkronize — aktarım bekleniyor…
+              </p>
+            ) : handoffLogs.map(log => (
+              <div key={log.id} className={cn('flex items-center gap-2.5 px-3 py-1.5 rounded-lg border text-[11px]',
+                isDark ? 'border-[#2a3540] bg-[#141c24]' : 'border-slate-200 bg-slate-50')}>
+                <span className={cn('font-mono text-[10px] shrink-0', isDark ? 'text-[#414752]' : 'text-slate-400')}>{log.time}</span>
+                <span className={cn('font-mono font-bold shrink-0', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>{log.from}</span>
+                <ArrowRightLeft className={cn('w-3 h-3 shrink-0', isDark ? 'text-[#8b919d]' : 'text-slate-400')} />
+                <span className={cn('font-mono font-bold shrink-0', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>{log.to}</span>
+                <span className={cn('flex-1 truncate', isDark ? 'text-[#dae3ee]' : 'text-slate-700')}>{log.msg}</span>
+                <Badge variant="outline" className={cn('font-mono text-[9px] shrink-0',
+                  isDark ? 'border-[#4ade80]/30 text-[#4ade80] bg-transparent' : 'border-emerald-300 text-emerald-700 bg-emerald-50')}>
+                  {log.state}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+    </div>
+  )
+}
+
+// ─── JSON Çıktısı (Tam Ekran) ─────────────────────────────────────────────────
+function JsonPage({ jsonOutput }) {
+  const [copied, setCopied] = useState(false)
+  function copy() { navigator.clipboard?.writeText(jsonOutput || '{}'); setCopied(true); setTimeout(() => setCopied(false), 2000) }
+  const lines = (jsonOutput || '// Henüz veri yok — video yükleyin').split('\n')
+  return (
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden gap-4">
+      <div className="shrink-0 flex items-center justify-between">
+        <div>
+          <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">JSON Analiz Çıktısı</h2>
+          <p className="t-text-dim font-sans text-[11px] mt-0.5">Model çıktısı · Ham veri · LangGraph ajanı</p>
+        </div>
+        <Button size="sm" variant="outline" onClick={copy}
+          className="font-sans text-[11px] border-[#a2c9ff]/30 text-[#a2c9ff] bg-transparent hover:bg-[#1d2b45]">
+          {copied ? '✓ Kopyalandı' : '⧉ Tümünü Kopyala'}
+        </Button>
+      </div>
+      <div className="t-json-bg flex-1 min-h-0 flex flex-col overflow-hidden rounded-xl border border-[#2a3540] bg-[#060f16]">
+        <div className="t-topbar shrink-0 flex items-center gap-3 px-4 py-2.5 bg-[#0d1520] border-b border-[#2a3540]">
+          <div className="flex gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#ef4444]/50" />
+            <span className="w-3 h-3 rounded-full bg-[#ffb77d]/50" />
+            <span className="w-3 h-3 rounded-full bg-[#4ade80]/50" />
+          </div>
+          <span className="font-sans text-[11px] text-[#414752] ml-1">alfai_analysis_output.json</span>
+          <div className="ml-auto">
+            <span className={cn('font-sans text-[10px] font-semibold', jsonOutput ? 'text-[#4ade80]' : 'text-[#414752]')}>
+              {jsonOutput ? '● Analiz mevcut' : '● Video bekleniyor'}
+            </span>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto overscroll-contain">
+          <div className="flex min-h-full min-w-max">
+            <div className="shrink-0 select-none py-5 px-3 border-r border-[#1e2d3d] text-right min-w-[3rem]">
+              {lines.map((_, i) => (
+                <div key={i} className="font-mono text-[12px] leading-6" style={{ color: '#2a3540' }}>{i + 1}</div>
+              ))}
+            </div>
+            <pre className="flex-1 py-5 px-5 font-mono text-[13px] leading-6 whitespace-pre">
+              <JsonSyntax json={jsonOutput} />
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Raporlar ─────────────────────────────────────────────────────────────────
+function ReportsPage({ eventRows, analysis, feedbackMap, isDark = true }) {
+  const guidance = getRiskGuidance(analysis?.risk_score)
+  const feedbackValues = eventRows.map(event => feedbackMap[event.id]).filter(Boolean)
+  const disputedCount = feedbackValues.filter(value => value !== 'verified').length
+  const operatorStatus = disputedCount > 0 ? `${disputedCount} tespite itiraz var` : feedbackValues.length > 0 ? 'Tespitler onaylandı' : 'Henüz değerlendirilmedi'
+  return (
+    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1">
+      <div className="flex flex-col gap-4 pb-5">
+      <div className="shrink-0">
+        <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Analiz Raporu</h2>
+        <p className="t-text-dim font-sans text-[11px] mt-0.5">Olay özeti · AI karar motoru çıktısı</p>
+      </div>
+
+      <Card className={cn('shrink-0 border', isDark ? 'bg-[#141c24] border-[#2a3540]' : 'bg-white border-slate-200')}>
+        <CardContent className="px-4 py-4 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: guidance.color }} />
+              <p className={cn('font-sans text-[13px] font-semibold', isDark ? 'text-[#dae3ee]' : 'text-slate-800')}>{guidance.headline}</p>
+            </div>
+            {analysis && (
+              <span className="font-mono text-[12px] font-bold shrink-0" style={{ color: guidance.color }}>
+                %{analysis.risk_score} · {analysis.risk}
+              </span>
+            )}
+          </div>
+          <p className={cn('font-sans text-[12px] leading-relaxed', isDark ? 'text-[#8b919d]' : 'text-slate-500')}>
+            {analysis?.summary ?? guidance.detail}
+          </p>
+          {analysis?.actions?.length > 0 && (
+            <ul className="space-y-1.5 pt-1">
+              {analysis.actions.map((action, i) => (
+                <li key={i} className={cn('flex items-start gap-2 font-sans text-[12px] leading-relaxed', isDark ? 'text-[#dae3ee]' : 'text-slate-700')}>
+                  <Target className={cn('w-3 h-3 shrink-0 mt-0.5', isDark ? 'text-[#a3e635]' : 'text-emerald-600')} />
+                  {action}
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      {analysis?.kpi_metrics && (
+        <Card className={cn('shrink-0 border', isDark ? 'bg-[#141c24] border-[#2a3540]' : 'bg-white border-slate-200')}>
+          <CardHeader className="px-4 py-3 t-border border-b">
+            <CardTitle className="t-text-muted font-sans text-[11px] uppercase tracking-widest">AI KPI Metrikleri</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 py-4 grid grid-cols-4 gap-3">
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>İşlem Durumu</p>
+              <p className={cn('font-sans text-[13px] font-semibold mt-1', isDark ? 'text-[#dae3ee]' : 'text-slate-800')}>{analysis.kpi_metrics.ai_processing_status}</p>
+            </div>
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>Operatör Değerlendirmesi</p>
+              <p className={cn('font-sans text-[12px] font-bold mt-1', disputedCount > 0 ? 'text-[#ffb77d]' : feedbackValues.length > 0 ? 'text-[#4ade80]' : 'text-[#8b919d]')}>
+                {operatorStatus}
+              </p>
+            </div>
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>Güven Skoru</p>
+              <p className="font-mono text-[13px] font-bold mt-1 text-[#a2c9ff]">{analysis.kpi_metrics.confidence_score}</p>
+            </div>
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>Şema Doğrulaması</p>
+              <p className={cn('font-mono text-[13px] font-bold mt-1', analysis.kpi_metrics.is_schema_validated ? 'text-[#4ade80]' : 'text-[#ffb4ab]')}>
+                {analysis.kpi_metrics.is_schema_validated ? '✓ Geçerli' : '✗ Geçersiz'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {eventRows.length > 0 && (
+        <Card className="t-surface shrink-0">
+          <CardHeader className="px-4 py-3 t-border border-b">
+            <CardTitle className="t-text-muted font-sans text-[11px] uppercase tracking-widest">Tespit Özeti · {eventRows.length} olay</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 max-h-48 overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="t-border border-b hover:bg-transparent">
+                  {['Zaman','Bölge','Olay','Risk','Güven'].map(h => (
+                    <TableHead key={h} className="t-text-dim font-sans text-[10px] uppercase tracking-widest h-8 px-3">{h}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[...eventRows].reverse().map((row, i) => (
+                  <TableRow key={i} className="t-border border-b hover:bg-[#1a2330]/50">
+                    <TableCell className={cn('font-mono text-[11px] px-3 py-2', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>{row.time}</TableCell>
+                    <TableCell className="t-text-muted font-sans text-[12px] px-3 py-2">{row.zone}</TableCell>
+                    <TableCell className="t-text-base font-sans text-[12px] px-3 py-2">{row.event}</TableCell>
+                    <TableCell className="px-3 py-2"><RiskBadge level={row.risk} isDark={isDark} /></TableCell>
+                    <TableCell className="t-text-muted font-mono text-[11px] px-3 py-2">{row.conf}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Taktiksel Raporlar ─────────────────────────────────────────────────────
+function TacticalReportsPage({ eventRows, analysis, isDark }) {
+  const zoneStats = {}
+  eventRows.forEach(r => {
+    if (!zoneStats[r.zone]) zoneStats[r.zone] = { total: 0, kritik: 0, yuksek: 0 }
+    zoneStats[r.zone].total += 1
+    if (r.risk === 'Kritik') zoneStats[r.zone].kritik += 1
+    if (r.risk === 'Yüksek') zoneStats[r.zone].yuksek += 1
+  })
+  const zoneList = Object.entries(zoneStats).sort((a, b) => b[1].total - a[1].total)
+
+  const guidance = getRiskGuidance(analysis?.risk_score)
+  const recommendations = analysis?.actions ?? []
+
+  const now = new Date()
+  const dateStr = now.toLocaleDateString('tr-TR')
+  const timeStr = [now.getHours(), now.getMinutes()].map(n => String(n).padStart(2, '0')).join(':')
+
+  return (
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-3xl space-y-4 pb-6">
+        <div className="shrink-0">
+          <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Taktiksel Raporlar</h2>
+          <p className="t-text-dim font-sans text-[11px] mt-0.5">Karar destek özeti · Amir brifingi · LangGraph çıkarım motoru</p>
+        </div>
+
+        <Card className={cn('border', isDark ? 'bg-[#141c24] border-[#2a3540]' : 'bg-white border-slate-200')}>
+          <CardHeader className={cn('px-5 py-4 border-b flex flex-row items-center justify-between gap-3', isDark ? 'border-[#2a3540]' : 'border-slate-200')}>
+            <div>
+              <CardTitle className={cn('font-mono text-[13px] font-bold uppercase tracking-widest', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>
+                Taktiksel Vardiya Raporu
+              </CardTitle>
+              <p className={cn('font-sans text-[10px] mt-1', isDark ? 'text-[#414752]' : 'text-slate-400')}>
+                Rapor No: TR-{dateStr.replace(/\./g, '')}-{timeStr.replace(':', '')} · Sadece Yetkili Personel
+              </p>
+            </div>
+            <Badge variant="outline" className={cn('font-mono text-[10px] shrink-0', isDark ? 'border-[#ffb77d]/40 text-[#ffb77d] bg-[#4d2600]/20' : 'border-amber-300 text-amber-700 bg-amber-50')}>
+              ● BRİFİNGE HAZIR
+            </Badge>
+          </CardHeader>
+
+          <CardContent className="px-5 py-5 space-y-5">
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest mb-2', isDark ? 'text-[#8b919d]' : 'text-slate-400')}>1. Yönetici Özeti</p>
+              <p className={cn('font-sans text-[13px] leading-relaxed', isDark ? 'text-[#dae3ee]' : 'text-slate-700')}>
+                {analysis?.summary ?? guidance.detail}
+              </p>
+            </div>
+
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest mb-2', isDark ? 'text-[#8b919d]' : 'text-slate-400')}>2. Bölgesel Tehdit Değerlendirmesi</p>
+              {zoneList.length > 0 ? (
+                <div className="space-y-1.5">
+                  {zoneList.map(([zone, s]) => (
+                    <div key={zone} className={cn('flex items-center gap-3 px-3 py-2 rounded-lg border text-[12px]', isDark ? 'border-[#2a3540] bg-[#0b141c]' : 'border-slate-200 bg-slate-50')}>
+                      <span className={cn('font-mono font-semibold flex-1', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>{zone}</span>
+                      <span className={isDark ? 'text-[#8b919d]' : 'text-slate-500'}>{s.total} olay</span>
+                      <RiskBadge level={s.kritik > 0 ? 'Kritik' : s.yuksek > 0 ? 'Yüksek' : 'Düşük'} isDark={isDark} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={cn('font-sans text-[12px]', isDark ? 'text-[#414752]' : 'text-slate-400')}>Vardiya boyunca kayıtlı bölgesel olay bulunmuyor.</p>
+              )}
+            </div>
+
+            <div>
+              <p className={cn('font-sans text-[10px] uppercase tracking-widest mb-2', isDark ? 'text-[#8b919d]' : 'text-slate-400')}>3. Stratejik Öneriler</p>
+              {recommendations.length > 0 ? (
+                <ul className="space-y-2">
+                  {recommendations.map((rec, i) => (
+                    <li key={i} className={cn('flex items-start gap-2.5 text-[13px] leading-relaxed', isDark ? 'text-[#dae3ee]' : 'text-slate-700')}>
+                      <Target className={cn('w-3.5 h-3.5 shrink-0 mt-0.5', isDark ? 'text-[#a3e635]' : 'text-emerald-600')} />
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={cn('font-sans text-[12px]', isDark ? 'text-[#414752]' : 'text-slate-400')}>
+                  Video yüklenip analiz tamamlandığında öneriler risk skoruna göre burada otomatik oluşturulacaktır.
+                </p>
+              )}
+            </div>
+
+            <div className={cn('flex items-center justify-between pt-4 border-t font-sans text-[11px]', isDark ? 'border-[#2a3540] text-[#414752]' : 'border-slate-200 text-slate-400')}>
+              <span>
+                Hazırlayan: LangGraph Karar Motoru v2
+                {analysis && ` · Risk Skoru: %${analysis.risk_score} (${analysis.risk})`}
+              </span>
+              <span>{dateStr} {timeStr}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+// ─── Ayarlar ──────────────────────────────────────────────────────────────────
+function SettingsPage() {
+  const [sensitivity, setSensitivity] = useState([72])
+  const [notifCritical, setNotifCritical] = useState(true)
+  const [notifWarn, setNotifWarn]         = useState(true)
+  const [notifInfo, setNotifInfo]         = useState(false)
+  const [autoRecord, setAutoRecord]       = useState(true)
+
+  return (
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-2xl space-y-6 pb-6">
+        <div className="shrink-0">
+          <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Sistem Ayarları</h2>
+          <p className="t-text-dim font-sans text-[11px] mt-0.5">Model konfigürasyonu · Bildirimler · Analiz parametreleri</p>
+        </div>
+
+        {/* Ajan Analiz Hassasiyeti */}
+        <Card className="t-surface bg-[#141c24] border-[#2a3540]">
+          <CardHeader className="px-5 py-4 t-border border-b border-[#2a3540]">
+            <CardTitle className="t-text-muted font-sans text-[11px] uppercase tracking-widest text-[#8b919d]">Ajan Analiz Hassasiyeti</CardTitle>
+          </CardHeader>
+          <CardContent className="px-5 py-5 space-y-4">
+            <div className="flex items-center justify-between mb-1">
+              <span className="t-text-base font-sans text-[13px] text-[#dae3ee]">Tespit Eşiği</span>
+              <span className="font-mono text-[13px] font-bold text-[#a2c9ff]">%{sensitivity[0]}</span>
+            </div>
+            <Slider
+              value={sensitivity}
+              onValueChange={setSensitivity}
+              min={10} max={99} step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between font-sans text-[10px] t-text-dim text-[#414752]">
+              <span>Düşük (hızlı)</span>
+              <span>Dengeli</span>
+              <span>Yüksek (yavaş)</span>
+            </div>
+            <p className="font-sans text-[11px] t-text-dim text-[#414752] mt-2">
+              Eşik değeri düştükçe daha fazla anomali tespit edilir; ancak yanlış pozitif oranı artar.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Bildirim Tercihleri */}
+        <Card className="t-surface bg-[#141c24] border-[#2a3540]">
+          <CardHeader className="px-5 py-4 t-border border-b border-[#2a3540]">
+            <CardTitle className="t-text-muted font-sans text-[11px] uppercase tracking-widest text-[#8b919d]">Bildirim Tercihleri</CardTitle>
+          </CardHeader>
+          <CardContent className="px-5 py-4 space-y-0 divide-y divide-[#2a3540]">
+            {[
+              { label: 'Kritik Alarm Bildirimleri',  desc: 'Risk skoru 0.85 üzerindeki olaylar',      checked: notifCritical, set: setNotifCritical, dot: '#ffb4ab' },
+              { label: 'Uyarı Bildirimleri',         desc: 'Orta seviye anomali tespitlerinde bildir', checked: notifWarn,     set: setNotifWarn,     dot: '#ffb77d' },
+              { label: 'Bilgi Günlüğü',              desc: 'Sistem loglarını ekranda göster',          checked: notifInfo,     set: setNotifInfo,     dot: '#a2c9ff' },
+              { label: 'Otomatik Kayıt',             desc: 'Anomali tespitinde video kaydını başlat',  checked: autoRecord,    set: setAutoRecord,    dot: '#4ade80' },
+            ].map(({ label, desc, checked, set, dot }) => (
+              <div key={label} className="flex items-center justify-between py-3.5">
+                <div className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dot }} />
+                  <div>
+                    <p className="t-text-base font-sans text-[13px] text-[#dae3ee]">{label}</p>
+                    <p className="t-text-dim font-sans text-[11px] text-[#8b919d]">{desc}</p>
+                  </div>
+                </div>
+                <Switch checked={checked} onCheckedChange={set} />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+// ─── Video Analiz Görünümü ────────────────────────────────────────────────────
+function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent, onFeedback, feedbackMap }) {
+  const fileInputRef = useRef(null)
+  const videoRef     = useRef(null)
+
+  useEffect(() => {
+    if (videoSrc && videoRef.current) {
+      videoRef.current.load()
+      videoRef.current.play().catch(() => {})
+    }
+  }, [videoSrc])
+
+  useEffect(() => {
+    if (!selectedEvent || !videoRef.current) return
+    videoRef.current.currentTime = selectedEvent.start_time ?? 0
+    videoRef.current.play().catch(() => {})
+  }, [selectedEvent])
+
+  return (
+    <div className="space-y-3 w-full">
+      {/* Video */}
+      <div className="t-video-bg relative w-full rounded-xl overflow-hidden border border-[#2a3540] bg-[#060f16]" style={{ height: 560 }}>
+        <div className="scanline" />
+
+        {videoSrc ? (
+          <video ref={videoRef} src={videoSrc}
+            className="w-full h-full object-contain bg-black"
+            controls loop playsInline />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#1e2d3d" strokeWidth="1.2">
+              <rect x="2" y="6" width="20" height="12" rx="2" /><path d="M10 9l5 3-5 3V9z" />
+            </svg>
+            <p className="font-sans text-[12px] text-[#414752]">Video Bekleniyor</p>
+            <p className="font-sans text-[10px] text-[#2a3540]">↑ Video Yükle butonuna basın</p>
+          </div>
+        )}
+
+        {/* Video Yükle — sağ üst, controls ile çakışmasın */}
+        <div className="absolute top-3 right-3 flex items-center gap-2 pointer-events-auto z-10">
+          {videoSrc && (
+            <span className="font-sans text-[10px] font-semibold text-[#4ade80] bg-black/70 px-2 py-1 rounded border border-[#4ade80]/20 max-w-[160px] truncate">
+              ▶ {fileName}
+            </span>
+          )}
+          <Input ref={fileInputRef} type="file" accept="video/*" className="hidden"
+            onChange={e => { const f = e.target.files?.[0]; if (f) onFileSelect(f) }} />
+          <Button size="sm" variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="h-7 px-3 font-sans text-[11px] font-semibold
+              bg-black/70 backdrop-blur border-[#a2c9ff]/50 text-[#a2c9ff]
+              hover:bg-[#1d2b45] hover:text-white transition-colors">
+            ↑ Video Yükle
+          </Button>
+        </div>
+
+        {/* Alt HUD — sadece video yokken */}
+        {!videoSrc && (
+          <div className="absolute bottom-3 left-3 flex gap-3">
+            <div className="glass px-3 py-2 rounded-lg">
+              <p className="font-sans text-[9px] uppercase tracking-widest text-[#8b919d] mb-0.5">Vardiya</p>
+              <p className="font-sans text-sm font-semibold">08:00 – 16:00</p>
+            </div>
+            <div className="glass border-l-2 border-l-[#a2c9ff] px-3 py-2 rounded-lg">
+              <p className="font-sans text-[9px] uppercase tracking-widest text-[#8b919d] mb-0.5">Bölge</p>
+              <p className="font-sans text-sm font-semibold">Ana Giriş</p>
+            </div>
+          </div>
+        )}
+
+        {/* Kritik olay sayacı — video oynarken */}
+        {videoSrc && eventRows.some(r => r.risk === 'Kritik') && (
+          <div className="absolute bottom-16 left-3 glass border-l-2 border-l-[#ffb4ab] px-3 py-2 rounded-lg">
+            <p className="font-sans text-[9px] uppercase tracking-widest text-[#8b919d] mb-0.5">Kritik Olay</p>
+            <p className="font-sans text-sm font-bold text-[#ffb4ab]">{eventRows.filter(r => r.risk === 'Kritik').length} Tespit</p>
+          </div>
+        )}
+      </div>
+
+      {selectedEvent && (
+        <Card className="t-surface border-[#a2c9ff]/30 bg-[#101b27]">
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="font-sans text-[9px] font-semibold uppercase tracking-widest text-[#a2c9ff]">Kanıt Zinciri</p>
+                <h3 className="mt-1 font-sans text-sm font-semibold text-[#dae3ee]">{selectedEvent.event}</h3>
+                <p className="mt-1 font-mono text-[10px] text-[#8b919d]">
+                  {selectedEvent.time} · {selectedEvent.end_time_label ?? 'kritik an'} · Güven {selectedEvent.conf}
+                </p>
+              </div>
+              <RiskBadge level={selectedEvent.risk} />
+            </div>
+
+            <div className="mt-3 grid gap-3 lg:grid-cols-2">
+              <div className="space-y-1.5">
+                {(selectedEvent.evidence ?? []).map((item, index) => (
+                  <button key={`${item.time}-${index}`} type="button"
+                    onClick={() => {
+                      if (!videoRef.current) return
+                      videoRef.current.currentTime = item.seconds ?? selectedEvent.start_time ?? 0
+                      videoRef.current.play().catch(() => {})
+                    }}
+                    className="flex w-full items-start gap-2 rounded-lg border border-[#2a3540] bg-[#0b141c] px-3 py-2 text-left transition-colors hover:border-[#a2c9ff]/40">
+                    <span className="font-mono text-[10px] text-[#a2c9ff]">{item.time}</span>
+                    <span className="font-sans text-[11px] leading-relaxed text-[#c0c7d4]">{item.description}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="rounded-lg border border-[#ffb77d]/20 bg-[#4d2600]/10 p-3">
+                <p className="font-sans text-[9px] font-semibold uppercase tracking-widest text-[#ffb77d]">Belirsizlik Notu</p>
+                <p className="mt-2 font-sans text-[11px] leading-relaxed text-[#c0c7d4]">
+                  {(selectedEvent.uncertainties ?? ['Ek bir belirsizlik bildirilmedi.']).join(' ')}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#2a3540] pt-3">
+              <span className="mr-1 font-sans text-[9px] uppercase tracking-widest text-[#414752]">Operatör doğrulaması</span>
+              {[
+                ['verified', 'Doğru tespit'],
+                ['false_alarm', 'Yanlış alarm'],
+                ['wrong_risk', 'Risk yanlış'],
+                ['wrong_time', 'Zaman yanlış'],
+              ].map(([value, label]) => (
+                <button key={value} type="button" onClick={() => onFeedback(selectedEvent, value)}
+                  className={cn(
+                    'rounded-md border px-2.5 py-1 font-sans text-[10px] transition-colors',
+                    feedbackMap[selectedEvent.id] === value
+                      ? 'border-[#4ade80]/50 bg-[#052e16]/40 text-[#86efac]'
+                      : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/40 hover:text-[#dae3ee]'
+                  )}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Zaman çizelgesi */}
+      <Card className="t-surface bg-[#141c24] border-[#2a3540]">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-sans text-[11px] uppercase tracking-widest text-[#8b919d]">Temporal Analysis · PySceneDetect</span>
+            <span className="font-sans text-[11px] t-text-dim text-[#414752]">{eventRows.length} olay</span>
+          </div>
+          <div className="relative h-10 bg-[#0b141c] rounded-lg overflow-hidden border border-[#2a3540] flex items-center">
+            <div className="absolute inset-0 flex justify-between px-3 pointer-events-none opacity-10">
+              {Array.from({ length: 8 }).map((_, i) => <span key={i} className="h-full w-px bg-white" />)}
+            </div>
+            {eventRows.length > 0 ? (
+              <>
+                {eventRows.slice(0, 6).map((r, i) => ({
+                  left: `${10 + i * 14}%`,
+                  color: r.risk === 'Kritik' ? '#ffb4ab' : r.risk === 'Yüksek' ? '#ffb77d' : '#a2c9ff',
+                  label: r.event, pulse: r.risk === 'Kritik',
+                })).map(({ left, color, label, pulse }, i) => (
+                  <div key={i} title={label}
+                    className={cn('absolute w-3 h-3 rounded-full border-2 border-[#0b141c] cursor-help', pulse && 'animate-pulse')}
+                    style={{ left, backgroundColor: color }} />
+                ))}
+                <div className="absolute left-[55%] h-full w-px bg-[#a2c9ff]" style={{ boxShadow: '0 0 6px #a2c9ff' }} />
+              </>
+            ) : (
+              <p className="w-full text-center font-sans text-[10px] text-[#414752]">Henüz analiz verisi yok</p>
+            )}
+          </div>
+          <div className="flex justify-between font-sans text-[10px] t-text-dim text-[#414752] mt-2">
+            {['00:00','04:00','08:00','12:00','16:00'].map(t => <span key={t}>{t}</span>)}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// ─── İkon Bileşenleri ─────────────────────────────────────────────────────────
+// ─── Ana Bileşen ──────────────────────────────────────────────────────────────
+export default function Dashboard() {
+  const [activeNav, setActiveNav]         = useState('dashboard')
+  const [dashboardTab, setDashboardTab]   = useState('video')
+  const [logs, setLogs]                   = useState([])
+  const [eventRows, setEventRows]         = useState([])
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const { feedbackMap, saveFeedback }     = useOperatorFeedback()
+  const [tick, setTick]                   = useState(0)
+  const [videoSrc, setVideoSrc]           = useState(null)
+  const [videoFileName, setVideoFileName] = useState(null)
+  const isDark                            = true
+  const [analyzing, setAnalyzing]         = useState(false)
+  const [analysis, setAnalysis]           = useState(null)
+  const [analysisError, setAnalysisError] = useState(null)
+  const revealInterval = useRef(null)
+  const eventIdCounter = useRef(1)
+
+  useEffect(() => {
+    document.documentElement.classList.remove('light')
+  }, [])
+
+  const jsonOutput = analysis ? JSON.stringify(analysis, null, 2) : ''
+
+  function showEvidence(event) {
+    setSelectedEvent(event)
+    setDashboardTab('video')
+  }
+
+  async function handleFileSelect(file) {
+    if (videoSrc) URL.revokeObjectURL(videoSrc)
+    if (revealInterval.current) clearInterval(revealInterval.current)
+
+    setVideoSrc(URL.createObjectURL(file))
+    setVideoFileName(file.name)
+    setLogs([])
+    setEventRows([])
+    eventIdCounter.current = 1
+    setSelectedEvent(null)
+    setTick(0)
+    setAnalysis(null)
+    setAnalysisError(null)
+    setAnalyzing(true)
+
+    try {
+      const data = await analyzeVideo(file)
+      setAnalysis(data)
+
+      // Ajanin tespit ettigi gercek olaylari, canli akan bir log gibi sirayla ekrana yansit.
+      const queue = [...data.events]
+      if (queue.length === 0) { setAnalyzing(false); return }
+      revealInterval.current = setInterval(() => {
+        const entry = queue.shift()
+        setLogs(prev => [eventToLog(entry), ...prev])
+        const fallbackId = `EVT-${String(eventIdCounter.current++).padStart(3, '0')}`
+        const normalizedEvent = normalizeAnalysisEvent(entry, fallbackId)
+        setEventRows(prev => [...prev, normalizedEvent])
+        setTick(p => p + 1)
+        if (queue.length === 0) {
+          clearInterval(revealInterval.current)
+          setAnalyzing(false)
+        }
+      }, APP_CONFIG.eventRevealIntervalMs)
+    } catch (err) {
+      setAnalysisError(err instanceof Error ? err.message : 'Analiz sırasında beklenmeyen bir hata oluştu.')
+      setAnalyzing(false)
+    }
+  }
+
+  useEffect(() => () => {
+    if (revealInterval.current) clearInterval(revealInterval.current)
+    if (videoSrc) URL.revokeObjectURL(videoSrc)
+  }, [])
+
+  return (
+    <div className="t-surface-2 flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+
+      {/* ── Sidebar ────────────────────────────────────────────────── */}
+      <aside className="t-sidebar w-56 shrink-0 flex flex-col bg-[#0d1520] border-r border-[#2a3540]">
+        <div className="px-5 py-5 t-border border-b border-[#2a3540]">
+          <div className="flex items-center gap-2.5">
+            <BarChart3 className="w-8 h-8 shrink-0 text-[#a2c9ff] drop-shadow-[0_0_6px_rgba(162,201,255,0.55)]" strokeWidth={2.25} />
+            <div>
+              <p className="font-mono text-base font-bold tracking-widest text-[#a2c9ff]">ALFAI</p>
+              <p className="t-text-dim font-sans text-[10px] text-[#414752] mt-0.5 tracking-wide">v2.5 · Çevrimdışı</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-3 py-3 space-y-0.5">
+          {NAV_ITEMS.map(({ id, label }) => (
+            <button key={id} onClick={() => setActiveNav(id)}
+              className={cn(
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-left',
+                'font-sans text-[11px] font-bold tracking-widest uppercase',
+                activeNav === id
+                  ? (isDark ? 'bg-[#1d2b45] text-white' : 'bg-blue-100 text-blue-900 border border-blue-200')
+                  : (isDark ? 't-text-muted text-[#8b919d] hover:bg-[#1a2330] hover:text-[#dae3ee]' : 'text-slate-500 hover:bg-slate-200 hover:text-slate-900')
+              )}>
+              <span className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: activeNav === id ? '#a2c9ff' : '#2a3540' }} />
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Global sayaçlar: her bölümde görünür, ana içerik yüksekliğini daraltmaz. */}
+        <div className="t-border shrink-0 grid grid-cols-2 gap-2 p-3 border-t border-[#2a3540]">
+          {[
+            { label: 'Aktif Kamera', value: '12', sub: '2 bakımda', colorDark: 'text-[#a2c9ff]', colorLight: 'text-blue-700' },
+            {
+              label: 'Bugün Olay',
+              value: String(eventRows.length),
+              sub: `${eventRows.filter(r => r.risk === 'Kritik').length} kritik`,
+              colorDark: 'text-[#ffb4ab]', colorLight: 'text-red-700',
+            },
+          ].map(({ label, value, sub, colorDark, colorLight }) => (
+            <div key={label} className="t-surface min-w-0 rounded-lg border border-[#2a3540] bg-[#141c24] px-3 py-2.5">
+              <p className="t-text-dim truncate font-sans text-[8px] uppercase tracking-[0.12em] text-[#414752]">{label}</p>
+              <p className={cn('mt-1 font-mono text-lg font-bold leading-none', isDark ? colorDark : colorLight)}>{value}</p>
+              <p className="t-text-dim mt-1 truncate font-sans text-[9px] text-[#414752]">{sub}</p>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── İçerik Alanı ───────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+
+        {/* Topbar */}
+        {/* Ana içerik — tam genişlik, sağ panel yok */}
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full flex flex-col overflow-hidden px-5 py-4">
+
+            {activeNav === 'cameras'  && <CamerasPage videoSrc={videoSrc} isDark={isDark} />}
+            {activeNav === 'heatmap'  && (
+              <div className="flex-1 flex flex-col overflow-hidden gap-3">
+                <div className="shrink-0">
+                  <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Isı Haritası</h2>
+                  <p className="t-text-dim font-sans text-[11px] mt-0.5">Hareket yoğunluğu · Anomali dağılımı</p>
+                </div>
+                <div className="flex-1 overflow-hidden"><HeatmapView fullscreen eventRows={eventRows} /></div>
+              </div>
+            )}
+            {activeNav === 'tactical' && <TacticalReportsPage eventRows={eventRows} analysis={analysis} isDark={isDark} />}
+            {activeNav === 'reports'  && <ReportsPage eventRows={eventRows} analysis={analysis} feedbackMap={feedbackMap} isDark={isDark} />}
+            {activeNav === 'json'     && <JsonPage jsonOutput={jsonOutput} />}
+            {activeNav === 'settings' && <SettingsPage />}
+
+            {activeNav === 'dashboard' && (
+              <Tabs value={dashboardTab} onValueChange={setDashboardTab} className="flex-1 flex flex-col overflow-hidden">
+                <TabsList className="shrink-0 t-surface bg-[#141c24] border border-[#2a3540] rounded-lg p-1 mb-4 w-fit">
+                  {[['video','Video Analiz'],['events','Olay Tablosu']].map(([v, lbl]) => (
+                    <TabsTrigger key={v} value={v}
+                      className="font-sans text-[11px] uppercase tracking-widest data-[state=active]:bg-[#a2c9ff] data-[state=active]:text-[#00315c]">
+                      {lbl}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+
+                {/* Video Analiz — 2/3 video + 1/3 log paneli */}
+                <TabsContent value="video" className="flex-1 overflow-hidden mt-0">
+                  <div className="h-full grid grid-cols-3 gap-4">
+
+                    {/* Video + zaman çizelgesi (2 pay) */}
+                    <div className="col-span-2 overflow-y-auto">
+                      <VideoView
+                        videoSrc={videoSrc}
+                        fileName={videoFileName}
+                        onFileSelect={handleFileSelect}
+                        eventRows={eventRows}
+                        selectedEvent={selectedEvent}
+                        onFeedback={saveFeedback}
+                        feedbackMap={feedbackMap}
+                      />
+                    </div>
+
+                    {/* Canlı Log Paneli (1 pay) */}
+                    <div className={cn(
+                      'col-span-1 min-h-0 flex flex-col overflow-hidden rounded-xl border',
+                      isDark ? 'border-[#2a3540] bg-[#0d1520]' : 'border-slate-200 bg-white'
+                    )}>
+
+                      {/* Karar motoru */}
+                      <div className={cn('shrink-0 p-4 border-b', isDark ? 'border-[#2a3540]' : 'border-slate-200')}>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>Karar Motoru</p>
+                          <span className={cn('font-sans text-[9px] font-semibold', analyzing ? 'text-[#ffb77d]' : videoSrc ? 'text-[#4ade80]' : 'text-[#414752]')}>
+                            {analyzing ? 'ANALİZ EDİLİYOR' : videoSrc ? 'TAMAMLANDI' : 'BEKLEMEDE'}
+                          </span>
+                        </div>
+                        <div className="space-y-1.5">
+                          {[
+                            { color: analyzing ? '#ffb77d' : (isDark ? '#a2c9ff' : '#1d4ed8'),
+                              text: analyzing ? 'Video LangGraph ajanına gönderildi…' : analysis ? 'Analiz tamamlandı' : 'Video bekleniyor' },
+                            { color: analysis ? getRiskGuidance(analysis.risk_score).color : (isDark ? '#414752' : '#94a3b8'),
+                              text: analysis
+                                ? <>Risk skoru <b style={{ color: getRiskGuidance(analysis.risk_score).color }}>%{analysis.risk_score}</b> — {analysis.risk}</>
+                                : 'Risk değerlendiriliyor…' },
+                            { color: analysis ? getRiskGuidance(analysis.risk_score).color : (isDark ? '#98cbff' : '#2563eb'),
+                              text: analysisError
+                                ? <span className="text-[#ffb4ab]">{analysisError}</span>
+                                : analysis ? getRiskGuidance(analysis.risk_score).headline : 'Aksiyon bekleniyor' },
+                          ].map(({ color, text }, i) => (
+                            <div key={i} className={cn('flex items-center gap-2.5 text-[13px]', isDark ? 'text-[#dae3ee]' : 'text-slate-700')}>
+                              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                              <span className="font-sans">{text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Log başlık */}
+                      <div className={cn('shrink-0 flex items-center justify-between px-4 py-3 border-b', isDark ? 'border-[#2a3540]' : 'border-slate-200')}>
+                        <p className={cn('font-sans text-[10px] uppercase tracking-widest', isDark ? 'text-[#414752]' : 'text-slate-400')}>Operasyonel Log</p>
+                        <span className={cn('font-sans text-[9px] font-semibold', videoSrc ? 'text-[#4ade80]' : 'text-[#414752]')}>
+                          {analyzing && tick === 0 ? 'başlıyor...' : videoSrc ? `${tick} olay` : 'video bekleniyor'}
+                        </span>
+                      </div>
+
+                      {/* Log listesi */}
+                      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+                        <div className="p-3 space-y-1.5">
+                          {logs.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
+                              <span className="text-2xl opacity-20">🎥</span>
+                              <p className={cn('font-sans text-[10px] leading-relaxed', isDark ? 'text-[#414752]' : 'text-slate-400')}>
+                                Video yüklendiğinde<br />AI analiz logları burada akar
+                              </p>
+                            </div>
+                          ) : (
+                            logs.map(log => <LogLine key={log.id} {...log} isDark={isDark} />)
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* Olay Tablosu */}
+                <TabsContent value="events" className="flex-1 overflow-hidden mt-0">
+                  <Card className="t-surface bg-[#141c24] border-[#2a3540] h-full flex flex-col">
+                    <CardHeader className="px-5 py-4 t-border border-b border-[#2a3540] shrink-0">
+                      <CardTitle className="t-text-muted font-sans text-[11px] uppercase tracking-widest text-[#8b919d] flex items-center justify-between">
+                        <span>Zaman Damgalı Olay Günlüğü</span>
+                        <span className="t-text-dim text-[#414752]">{eventRows.length} olay</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 flex-1 overflow-auto">
+                      {eventRows.length === 0 ? (
+                        <div className="flex items-center justify-center h-full">
+                          <p className="t-text-dim font-sans text-[11px] text-[#414752]">Video yüklendiğinde olaylar burada listelenir</p>
+                        </div>
+                      ) : (
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="t-border border-b border-[#2a3540] hover:bg-transparent">
+                              {['Zaman','Bölge','Olay','Risk','Güven','Kanıt'].map(h => (
+                                <TableHead key={h} className="t-text-dim font-sans text-[10px] uppercase tracking-widest text-[#414752] h-9">{h}</TableHead>
+                              ))}
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {[...eventRows].reverse().map((row, i) => (
+                              <TableRow key={i} className="t-border border-b border-[#2a3540] hover:bg-[#1a2330]/50">
+                                <TableCell className={cn('font-mono text-[12px]', isDark ? 'text-[#a2c9ff]' : 'text-blue-700')}>{row.time}</TableCell>
+                                <TableCell className={cn('font-sans text-[13px]', isDark ? 'text-[#8b919d]' : 'text-slate-500')}>{row.zone}</TableCell>
+                                <TableCell className={cn('font-sans text-[13px]', isDark ? 'text-[#dae3ee]' : 'text-slate-800')}>{row.event}</TableCell>
+                                <TableCell><RiskBadge level={row.risk} isDark={isDark} /></TableCell>
+                                <TableCell className={cn('font-mono text-[12px]', isDark ? 'text-[#8b919d]' : 'text-slate-500')}>{row.conf}</TableCell>
+                                <TableCell>
+                                  <button type="button" onClick={() => showEvidence(row)}
+                                    className="rounded-md border border-[#a2c9ff]/30 px-2.5 py-1 font-sans text-[10px] text-[#a2c9ff] transition-colors hover:bg-[#1d2b45]">
+                                    Kanıtı Göster
+                                  </button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
