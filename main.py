@@ -50,22 +50,23 @@ def main():
     print("ReAct DÖNGÜSÜ TAMAMLANDI: ADIM ADIM YOL HARİTASI (HAFIZA)")
     print("=" * 60 + "\n")
 
+    # Modelin süreç boyunca kendi kendine aldığı kararları ve araç çıktılarını yazdırıyoruz
     for i, msg in enumerate(final_output.get("messages", [])):
-        role = msg.get("role", "unknown").upper()
-        content = msg.get("content", "")
-        tool_calls = msg.get("tool_calls", [])
-
+        
+        # YENİ KISIM: dict (.get) yerine obje metotlarını kullanıyoruz
+        role = getattr(msg, "type", "unknown").upper() # 'ai' döner, biz onu AI yaparız
+        if role == "AI": role = "ASSISTANT" # Görüntü güzelliği için ufak bir dokunuş
+            
+        content = getattr(msg, "content", "")
+        tool_calls = getattr(msg, "tool_calls", [])
+        
         print(f"[{i+1}] {role}:")
         if content:
             print(f"    Mesaj: {content}")
-
+            
         if tool_calls:
             for tc in tool_calls:
-                print(
-                    f"    🛠️ Eylem (Araç Çağrısı): "
-                    f"{tc['name']} -> Argümanlar: {tc['args']}"
-                )
-
+                print(f"    🛠️ Eylem (Araç Çağrısı): {tc['name']} -> Argümanlar: {tc['args']}")
         print("-" * 40)
 
     # Adım 5: Şartnameye %100 Uyumlu, Pydantic Onaylı Çıktıyı Ekrana Bas

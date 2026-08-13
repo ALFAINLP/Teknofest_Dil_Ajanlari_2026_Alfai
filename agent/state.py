@@ -11,6 +11,9 @@ class AgentState(TypedDict):
     detected_events: List[Dict[str, Any]]
     risk_assessments: List[str]
     actions_recommended: List[str]
+    
+    # Ajanın trend sonucunu tutacağı değişken
+    risk_trend: str
 
     # Memory
     event_history: List[Dict[str, Any]]

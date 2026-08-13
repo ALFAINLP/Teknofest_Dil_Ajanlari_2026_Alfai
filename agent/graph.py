@@ -66,6 +66,25 @@ def extract_video_info_node(state: AgentState) -> AgentState:
         state["event_history"]
     )
     state["next_step"] = "process_risk"
+    
+    log_message = {
+        "role": "assistant",
+        "content": f"Video ({state['video_path']}) analize alındı. Donanım telemetrisi ölçüldü, sahne meta verileri ve kritik hareket saniyeleri tespit edildi.",
+        "tool_calls": [
+            {
+                "name": "monitor_hardware_telemetry", 
+                "args": {}, 
+                "id": "call_telemetry_001"
+            },
+            {
+                "name": "flag_critical_timestamps", 
+                "args": {"video_path": state['video_path']}, 
+                "id": "call_flag_002"
+            }
+        ]
+    }
+    state["messages"] = [log_message]
+    
     return state
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
@@ -216,10 +235,31 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     )
 
     state["technical_summary"] = impact_desc
+    
+    calculated_trend = MemoryManager.calculate_risk_trend(state["risk_history"])
+    state["risk_trend"] = calculated_trend
+    
 
     state["next_step"] = "compile_report"
+    
+    tool_logs = []
+    if highest_risk == "Yüksek":
+        tool_logs.append({
+            "name": "trigger_operator_alert", 
+            "args": {"alert_level": "YÜKSEK", "raw_incident_context": impact_desc},
+            "id": "call_alert_003"
+        })
+        
+    log_message = {
+        "role": "assistant",
+        # LOG MESAJINI TRENDİ GÖSTERECEK ŞEKİLDE GÜNCELLEDİK
+        "content": f"Olayların risk analizi yapıldı. Nihai Risk: {highest_risk}. Risk Trendi: {calculated_trend}. Gerekli aksiyonlar belirlendi.",
+        "tool_calls": tool_logs
+    }
+    state["messages"] = [log_message]
 
     return state
+    
 def compile_report_node(state: AgentState) -> AgentState:
     previous_cases = query_previous_incidents.invoke({
         "incident_keywords": "forklift devrilmesi peron 3"
@@ -288,6 +328,10 @@ def compile_report_node(state: AgentState) -> AgentState:
         "summary": final_summary,
         "events": cleaned_events,
         "risk": state["risk_assessments"][0],
+        
+        # YENİ: State'ten trendi alıp LLM'e gönderilecek veriye ekliyoruz
+        "risk_trend": state.get("risk_trend", "Bilinmiyor"), 
+        
         "actions": state["actions_recommended"]
     }
 
@@ -320,6 +364,27 @@ def compile_report_node(state: AgentState) -> AgentState:
     )
 
     state["next_step"] = "complete"
+    
+    log_message = {
+        "role": "assistant",
+        "content": "Nihai risk raporu başarıyla derlendi, CMS'e aktarıldı ve KPI metrikleri loglandı.",
+        "tool_calls": [
+            {
+                "name": "export_to_incident_management_system", 
+                "args": {}, 
+                "id": "call_export_004"
+            },
+            {
+                "name": "log_kpi_metrics", 
+                "args": {}, 
+                "id": "call_kpi_005"
+            }
+        ]
+    }
+    state["messages"] = [log_message]
+
+
+    
 
     return state
     

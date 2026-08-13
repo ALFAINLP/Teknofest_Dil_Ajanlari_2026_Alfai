@@ -2,7 +2,7 @@
 # hem insanın okuyabileceği hem de makinenin işleyebileceği yapılandırılmış veri modeli.
 
 from pydantic import BaseModel, Field
-from typing import List, Union
+from typing import List, Union, Optional  # <-- Optional eklendi
 
 class EventItem(BaseModel):
     time: str = Field(..., description="Olayın gerçekleştiği zaman damgası (Örn: '00:15')")
@@ -19,5 +19,11 @@ class FinalReportSchema(BaseModel):
     summary: str = Field(..., description="Videonun genel operasyonel Türkçe özeti")
     events: List[EventItem] = Field(..., description="Zaman damgalı olayların listesi")
     risk: str = Field(..., description="Risk değerlendirme seviyesi (Düşük, Orta, Yüksek veya Sistem Hatası)")
+    
+    # ==========================================
+    # YENİ EKLENEN KISIM: Geçmiş hafızadan çekilen risk eğilimi
+    # ==========================================
+    risk_trend: Optional[str] = Field(default="Bilinmiyor", description="Risk değişim eğilimi (Örn: 'ARTAN TREND', 'STABİL')")
+    
     actions: List[str] = Field(..., description="Operatöre sunulan acil aksiyon önerileri")
     kpi_metrics: KpiMetrics = Field(..., description="Şartname metrik gereksinimi uyarınca otonom hesaplanan yapay zeka performans verileri")

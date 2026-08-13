@@ -137,6 +137,7 @@ def generate_final_report(data_dict: dict) -> str:
     """Toplanan ham analiz ve risk verilerini alır, lokal büyük dil modeli (Llama-3.1-70B / Qwen2.5-72B)
     aracılığıyla jüri standartlarında açıklanabilir kurumsal özet ve KPI metrikleriyle zenginleştirir.
     Ardından Pydantic şema doğrulaması (Validation) uygulayarak doğrulanmış saf JSON formatında döndürür."""
+    
     selected_model = settings.REASONING_MODEL
 
     system_prompt = (
@@ -146,6 +147,9 @@ def generate_final_report(data_dict: dict) -> str:
         "en üst seviyeye çıkarmak ve KESİNLİKLE sadece istenen JSON formatında çıktı üretmektir."
     )
 
+    # ==========================================
+    # DEĞİŞİKLİK BURADA: Prompt içine risk_trend eklendi
+    # ==========================================
     user_prompt = f"""
 Aşağıda, LangGraph iş akışı boyunca video analiz (Qwen3-VL) ve risk değerlendirme katmanlarından toplanan ham veriler yer almaktadır:
 
@@ -153,16 +157,18 @@ Ham Rapor Girdisi:
 {json.dumps(data_dict, ensure_ascii=False, indent=2)}
 
 Lütfen bu verileri al. 'summary' alanını operatörün ve jürinin hızlı karar almasını destekleyecek,
-gereksiz detaydan arındırılmış, açıklanabilir ve kaliteli bir Türkçe yönetim özetine dönüştür.
+gereksiz detaydan arındırılmış, açıklanabilir ve kaliteli bir Türkçe yönetim özetine dönüştür. 
+Eğer ham verilerde bir 'risk_trend' (risk eğilimi) belirtilmişse, bu eğilimi de yönetici özetinin içine doğal bir cümle ile dahil et.
 
 Ayrıca şartnamenin metrik gereksinimi uyarınca, bu işleme ait yapay zeka KPI verilerini otonom hesapla.
 
 Yanıtını KESİNLİKLE aşağıdaki JSON şablonuna sadık kalarak döndür. JSON yapısı dışında asla ek metin yazma.
 
 {{
-  "summary": "Senin üreteceğin ileri seviye Türkçe kurumsal yönetim özeti.",
+  "summary": "Senin üreteceğin ileri seviye Türkçe kurumsal yönetim özeti (Trend bilgisini de içersin).",
   "events": [ Ham girdideki olayları aynen aktar ],
   "risk": "Ham girdideki risk seviyesini koru",
+  "risk_trend": "Ham girdideki risk_trend bilgisini aynen aktar",
   "actions": [ Ham girdideki aksiyonları aynen koru ],
   "kpi_metrics": {{
     "ai_processing_status": "Başarılı / Kritik Müdahale Devrede",

@@ -273,3 +273,35 @@ class MemoryManager:
             encoding="utf-8"
         ) as f:
             return json.load(f)
+            
+    @staticmethod
+    def calculate_risk_trend(risk_history: list) -> str:
+        """
+        Geçmiş risk skorlarını analiz ederek tehlikenin yönünü (Trend) belirler.
+        """
+        if len(risk_history) < 2:
+            return "Stabil (Yetersiz Veri)"
+            
+        # Risk seviyelerini sayısal ağırlıklara çevir
+        risk_weights = {"Düşük": 1, "Orta": 2, "Yüksek": 3, "Kritik": 4}
+        
+        # Son 3 işlemi (yakın geçmişi) analiz et
+        recent_risks = risk_history[-3:]
+        
+        # Eğer liste ["Düşük", "Düşük"] veya ["Yüksek"] gibi ise sadece ağırlıkları al
+        try:
+            scores = [risk_weights.get(r, 1) for r in recent_risks]
+        except AttributeError:
+            return "Stabil"
+            
+        # İlk skor ile son skor arasındaki farka bak
+        trend_diff = scores[-1] - scores[0]
+        
+        if trend_diff > 0:
+            return "📈 ARTAN TREND (Tehlike Büyüyor)"
+        elif trend_diff < 0:
+            return "📉 AZALAN TREND (Durum İyileşiyor)"
+        else:
+            if scores[-1] >= 3:
+                return "⚠️ KRONİK YÜKSEK RİSK (Tehlike Devam Ediyor)"
+            return "➡️ STABİL (Değişim Yok)"
