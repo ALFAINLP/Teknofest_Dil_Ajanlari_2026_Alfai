@@ -10,4 +10,20 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    watch: {
+      // Backend veya hafıza dosyaları değiştiğinde tarayıcının otomatik yenilenmesini önle
+      ignored: [
+        '**/agent/**', 
+        '**/config/**', 
+        '**/tools/**', 
+        '**/model_py/**',
+        '**/*.json',     
+        '**/*.db',       
+        '**/*.sqlite3',
+        '**/*.log',
+        '**/__pycache__/**'
+      ]
+    }
+  }
 })

@@ -1,10 +1,34 @@
 {
     "event_history": [
         {
-            "time": "00:00",
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletin yanında durdu.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
             "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },
@@ -12,10 +36,10 @@
             "zone": "Genel Saha"
         },
         {
-            "time": "00:03",
+            "time": "00:16",
             "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi yengecinin ağırlığından etkilenerek geriye doğru kayar.",
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },
@@ -23,10 +47,10 @@
             "zone": "Genel Saha"
         },
         {
-            "time": "00:07",
+            "time": "00:19",
             "event": {
-                "frame": "video_segment_00:07",
-                "description": "İşçi yengecinin devrilmesiyle birlikte yere düşer ve kendi kendine kurtulmaya çalışır.",
+                "frame": "video_segment_00:19",
+                "description": "Sürücü kalktı ve yere düşen motosikleti kaldırdı.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },
@@ -34,494 +58,10 @@
             "zone": "Genel Saha"
         },
         {
-            "time": "00:10",
+            "time": "00:20",
             "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere düşerken yengecinin ağırlığından etkilenerek yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, yengecin dengesiz olduğu kamyonun üzerine çıkar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengeç dengesizlik nedeniyle döner.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "Yengeç devrilir ve işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi yengecinin ağırlığından etkilenerek geriye doğru kayar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:07",
-            "event": {
-                "frame": "video_segment_00:07",
-                "description": "İşçi yengecinin devrilmesiyle birlikte yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere düşerken yengecinin ağırlığından etkilenerek yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi yengecin ağırlığından etkilenerek geriye doğru kayar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "İşçi yengecin devrilmesiyle birlikte yere düşer ve kendini korumaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere yatıp kollarıyla kendini tutmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üzerine yerleştirilmiş büyük metal yengeçin yanında durur.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengeç dengesizlik göstererek döner.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "İşçi yengeçin devrilmesini engellemek için harekete geçer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "Yengeç devrilir ve işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi yengecin ağırlığından etkilenerek geriye doğru kayar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "İşçi yengecin devrilmesiyle birlikte yere düşer ve kendini korumaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:11",
-            "event": {
-                "frame": "video_segment_00:11",
-                "description": "İşçi yere yatmış halde, yengecin devrilmesinden sonra durumu kontrol eder.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi yengecin ağırlığından etkilenerek geriye doğru kayar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "İşçi yengecin devrilmesiyle birlikte yere düşer ve kendini korumaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:11",
-            "event": {
-                "frame": "video_segment_00:11",
-                "description": "İşçi yere yatmış halde, yengecin devrilmesinden sonra durumu kontrol eder.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, yengecin dengesiz olduğu kamyonun üzerine çıkar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengeç dengesizlik nedeniyle döner.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "Yengeç devrilir ve işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun üstünde büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi bir adım atar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:05",
-            "event": {
-                "frame": "video_segment_00:05",
-                "description": "Yengecin devrilmesiyle işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "İşçi yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, yengecin dengesiz olduğu kamyonun üzerine çıkar.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengeç dengesizlik nedeniyle döner.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:08",
-            "event": {
-                "frame": "video_segment_00:08",
-                "description": "Yengeç devrilir ve işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:10",
-            "event": {
-                "frame": "video_segment_00:10",
-                "description": "İşçi yere düşer ve kendi kendine kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, dengesiz dönen büyük bir metal borunun yanında duruyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:05",
-            "event": {
-                "frame": "video_segment_00:05",
-                "description": "Borunun dengesiz döndüğü an, işçi tarafından fark ediliyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:09",
-            "event": {
-                "frame": "video_segment_00:09",
-                "description": "İşçi, borunun döndüğü yönüne doğru eğilerek kurtulmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:11",
-            "event": {
-                "frame": "video_segment_00:11",
-                "description": "İşçi, borunun etkisiyle yere düşer ve kollarıyla kendini tutmaya çalışır.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:00",
-            "event": {
-                "frame": "video_segment_00:00",
-                "description": "İşçi, kamyonun platformunda büyük bir yengeci tutuyor.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:03",
-            "event": {
-                "frame": "video_segment_00:03",
-                "description": "Yengecin dengesi bozulur ve işçi bir adım geri çekilir.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:06",
-            "event": {
-                "frame": "video_segment_00:06",
-                "description": "Yengecin devrilmesiyle işçi yere düşer.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:09",
-            "event": {
-                "frame": "video_segment_00:09",
-                "description": "İşçi yere düşer ve kendi kendine kurtulmaya çalışır.",
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yolda duran araçların arasında durdu ve çevreye bakındı.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },
@@ -530,20 +70,7 @@
         }
     ],
     "risk_history": [
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Düşük",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek",
-        "Yüksek"
+        "Düşük"
     ],
-    "tool_history": [
-        "trigger_operator_alert"
-    ]
+    "tool_history": []
 }

@@ -8,9 +8,9 @@ from typing import Any
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
-
-from model_py.services.vision_service import analyze_video
-
+from agent.graph import app as langgraph_app
+#from model_py.services.vision_service import analyze_video
+import traceback
 
 app = FastAPI(
     title="ALFAI Web API",
@@ -138,13 +138,56 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             while chunk := await file.read(1024 * 1024):
                 temporary_file.write(chunk)
 
-        model_output = await run_in_threadpool(analyze_video, temporary_path)
-        if not isinstance(model_output, dict):
-            raise ValueError("Model sözlük biçiminde JSON üretmedi.")
-        return _normalize_report(model_output)
+        initial_state = {"video_path": temporary_path}
+        graph_output = await run_in_threadpool(langgraph_app.invoke, initial_state)
+
+        # 3. React için Yalnızca Zamana Göre Tekilleştirilmiş (Deduplicated by Time) Format
+        safe_events = []
+        seen_times = set() # Sadece zamanları takip ediyoruz
+
+        for evt in graph_output.get("detected_events", []):
+            event_content = evt.get("event", "Olay tespit edilemedi.")
+            if isinstance(event_content, dict):
+                event_text = event_content.get("description", str(event_content))
+            else:
+                event_text = str(event_content)
+            
+            event_time = evt.get("time", "00:00")
+            
+            # Aynı saniyede birden fazla olay olmasını engellemek için sadece zamanı kontrol et
+            if event_time not in seen_times:
+                seen_times.add(event_time)
+                clean_evt = evt.copy()
+                clean_evt["event"] = event_text
+                safe_events.append(clean_evt)
+
+        safe_actions = graph_output.get("actions_recommended", [])
+        if not safe_actions:
+            safe_actions = ["Rutin saha izlemesi devam ediyor, anomali tespiti bekleniyor."]
+
+        model_output = {
+            "summary": graph_output.get("technical_summary") or "Video analiz edildi, genel durum stabil.",
+            "events": safe_events,
+            "risk": graph_output.get("risk_assessments", ["Düşük"])[0] if graph_output.get("risk_assessments") else "Düşük",
+            "actions": safe_actions
+        }
+
+        final_response = _normalize_report(model_output)
+        final_response["risk_trend"] = graph_output.get("risk_trend", "Stabil")
+
+        return final_response
+        
     except Exception as error:
+        print("\n" + "="*50)
+        print("🚨 API'DE GİZLİ HATA YAKALANDI 🚨")
+        traceback.print_exc()  
+        print("="*50 + "\n")
         raise HTTPException(status_code=502, detail=f"Model analizi başarısız: {error}") from error
     finally:
         await file.close()
         if temporary_path and os.path.exists(temporary_path):
             os.remove(temporary_path)
+            
+            
+            
+            

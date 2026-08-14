@@ -1,0 +1,13 @@
+# Bağımlılıklar
+node_modules/
+.venv/
+
+# Python Önbellekleri
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Editör Geçici / Swap Dosyaları
+*.swp
+*.swo
+*~
