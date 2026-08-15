@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 *.mp4
 memory/memory.json
+__pycache__/
+*.pyc
