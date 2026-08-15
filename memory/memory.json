@@ -614,9 +614,106 @@
             "event": "Olay bulunamadı.",
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Gündüz kavşakta kırmızı kamyonet kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Beyaz minibüs kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Gündüz kavşakta beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Gece kavşakta beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Gece kavşakta beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Gündüz kavşakta kırmızı kamyonet kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Gündüz kavşakta beyaz minibüs kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": "Gündüz kavşakta beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Günlük kavşakta kırmızı kamyonet geçiş yaparken, beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Günlük kavşakta beyaz otomobil kavşakta duruyor, gri otomobil kavşakta çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Gece kavşakta beyaz otomobil kavşakta duruyor, beyaz otomobil kavşakta çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Gece kavşakta beyaz otomobil kavşakta duruyor, beyaz otomobil kavşakta çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Günlük kavşakta kırmızı kamyonet geçiş yaparken, beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Günlük kavşakta kırmızı kamyonet geçiş yaparken, beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Günlük kavşakta kırmızı kamyonet geçiş yaparken, beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": "Günlük kavşakta kırmızı kamyonet geçiş yaparken, beyaz otomobil kavşakta duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
+        "Düşük",
         "Düşük",
         "Düşük",
         "Düşük",

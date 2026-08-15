@@ -3,15 +3,16 @@
 import os
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from agent.graph import app as langgraph_app
-#from model_py.services.vision_service import analyze_video
-import traceback
 from agent.memory_manager import MemoryManager
+from model_py.services.chat_service import build_chat_messages, chat as llama_chat
+import traceback
 import json
 
 app = FastAPI(
@@ -269,18 +270,96 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         final_response["risk_trend"] = graph_output.get("risk_trend", "Stabil")
 
         return final_response
-        
+
     except Exception as error:
         print("\n" + "="*50)
         print("🚨 API'DE GİZLİ HATA YAKALANDI 🚨")
-        traceback.print_exc()  
+        traceback.print_exc()
         print("="*50 + "\n")
         raise HTTPException(status_code=502, detail=f"Model analizi başarısız: {error}") from error
     finally:
         await file.close()
         if temporary_path and os.path.exists(temporary_path):
             os.remove(temporary_path)
-            
-            
-            
-            
+
+
+# ─────────────────────────────────────────────────────────────
+# Chat Asistanı — Metin Tabanlı Kullanıcı-Ajan Etkileşimi
+# ─────────────────────────────────────────────────────────────
+
+class ChatMessage(BaseModel):
+    """Tek bir sohbet turu mesajı."""
+    role: str     # "user" veya "assistant"
+    content: str
+
+
+class ChatRequest(BaseModel):
+    """
+    Frontend'den gelen chat isteği.
+
+    - message:          Operatörün yeni sorusu / mesajı.
+    - analysis_context: Aktif analiz sonucu (events, risk, summary, vb.).
+                        Frontend, video analizi bittikten sonra bunu doldurur.
+                        Yoksa None / boş bırakılabilir.
+    - history:          Aynı oturumdaki önceki sohbet turları (isteye bağlı).
+                        Llama'nın önceki soruları hatırlaması için kullanılır.
+    """
+    message: str
+    analysis_context: Optional[dict] = None
+    history: Optional[list[ChatMessage]] = None
+
+
+@app.post("/api/chat")
+async def chat_with_agent(req: ChatRequest) -> dict:
+    """
+    Operatörün soru / mesajını Llama 3.1 70B'ye iletir.
+
+    Model:
+    - Aktif video analizi bağlamını (events, risk, summary) sistem promptuna alır.
+    - Geçmiş hafızayı (memory.json) bağlama ekler.
+    - Önceki sohbet turlarını hatırlayarak çoklu tur desteği sunar.
+    - Araç çağrısı (tool_call) YAPMAZ — saf konuşma modu.
+
+    Dönen yapı:
+        reply (str): Llama'nın Türkçe yanıtı.
+        has_context (bool): Analiz bağlamının mevcut olup olmadığı.
+    """
+    try:
+        # Kalıcı hafızayı yükle
+        memory = MemoryManager.load_memory()
+
+        # Önceki sohbet turlarını sözlük listesine çevir
+        history_dicts = [
+            {"role": m.role, "content": m.content}
+            for m in (req.history or [])
+        ]
+
+        # Sistem promptu + bağlam + geçmiş + yeni soru
+        messages = await run_in_threadpool(
+            build_chat_messages,
+            req.message,
+            req.analysis_context,
+            memory,
+            history_dicts,
+        )
+
+        print(f"\n💬 [CHAT] Operatör: {req.message[:80]}")
+        print(f"   Bağlam var mı: {'Evet' if req.analysis_context else 'Hayır'}")
+        print(f"   Geçmiş tur sayısı: {len(history_dicts)}")
+
+        # Llama'ya gönder
+        reply = await run_in_threadpool(llama_chat, messages)
+
+        print(f"🤖 [CHAT] Llama yanıtı: {reply[:120]}...")
+
+        return {
+            "reply": reply,
+            "has_context": bool(req.analysis_context),
+        }
+
+    except Exception as error:
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=502,
+            detail=f"Chat yanıtı üreti lemedi: {error}",
+        ) from error
