@@ -31,3 +31,38 @@ export async function analyzeVideo(file, { signal } = {}) {
   return response.json()
 }
 
+export async function sendChatMessage({ message, analysisContext = null, history = [] }, { signal } = {}) {
+  let response
+  try {
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        analysis_context: analysisContext,
+        history,
+      }),
+      signal,
+    })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new AnalysisApiError('Chat servisine bağlanılamadı. Backend ve Llama servislerini kontrol edin.')
+  }
+
+  if (!response.ok) {
+    let detail = ''
+    try {
+      const payload = await response.json()
+      detail = payload.detail ? `: ${payload.detail}` : ''
+    } catch {
+      // Sunucu JSON döndürmediyse durum kodunu göstermek yeterlidir.
+    }
+    throw new AnalysisApiError(`Chat sunucu hatası ${response.status}${detail}`, response.status)
+  }
+
+  const payload = await response.json()
+  if (!payload.reply || typeof payload.reply !== 'string') {
+    throw new AnalysisApiError('Chat servisi geçerli bir yanıt döndürmedi.')
+  }
+  return payload
+}
