@@ -18,6 +18,7 @@ import { APP_CONFIG } from '@/config/appConfig'
 import { analyzeVideo } from '@/services/analysisApi'
 import { eventToLog, normalizeAnalysisEvent } from '@/features/analysis/eventMapper'
 import { useOperatorFeedback } from '@/hooks/useOperatorFeedback'
+import ChatAssistant from '@/components/ChatAssistant'
 
 // ─── Sabitler ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -1267,6 +1268,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <ChatAssistant analysis={analysis} analyzing={analyzing} />
     </div>
   )
 }

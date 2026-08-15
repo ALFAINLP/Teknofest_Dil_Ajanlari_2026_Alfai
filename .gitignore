@@ -11,3 +11,7 @@ __pycache__/
 *.swp
 *.swo
 *~
+*.mp4
+memory/memory.json
+__pycache__/
+*.pyc

@@ -117,9 +117,231 @@
             },
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletinin yanında durdu.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletinin yanında durdu.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletinin yanında durdu.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletin yanında durdu.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Gündüz kavşakta kırmızı kamyonet kavşakta sola dönüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Gündüz kavşakta beyaz minibüs ve gümüş otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Gece kavşakta iki beyaz otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Gündüz kavşakta mor minivan ve beyaz minibüs çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Gündüz kavşakta kırmızı otomobil ve siyah otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Kazaların ardından kavşakta hasarlı durum ve yaralı araçlar görülmektedir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Olay bulunamadı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Gündüz kavşakta kırmızı kamyonet sol dönüş yaparken, gelen beyaz otomobil ile çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Gece kavşakta beyaz otomobil, diğer yönden gelen beyaz otomobile çarparak duruyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Yağmurlu gün kavşakta kırmızı kamyonet ve beyaz minivan çarpışıyor; kavşakta bir araç devrilir ve işaret levhaları hasar alıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Gündüz kavşakta kırmızı kamyonet kavşakta dönüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Gündüz kavşakta beyaz minibüs ve gri otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Gece kavşakta beyaz otomobil ve beyaz otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Gündüz kavşakta kırmızı kamyonet ve beyaz minibüs çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Gündüz kavşakta beyaz minibüs ve siyah otomobil çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Gündüz kavşakta beyaz minibüs ve kırmızı kamyonet çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": "Ekran siyah olup, polis ve trafik kurumlarının uyarısı gösteriliyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
+        "Düşük",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Düşük",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
         "Düşük"
     ],
     "tool_history": []
