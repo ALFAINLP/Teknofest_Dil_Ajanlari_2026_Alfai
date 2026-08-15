@@ -30,6 +30,63 @@ const NAV_ITEMS = [
   { id: 'settings',  label: 'Ayarlar' },
 ]
 
+const SETTINGS_STORAGE_KEY = 'alfai-dashboard-settings'
+const DEFAULT_SETTINGS = {
+  detectionThreshold: 72,
+  notifyCritical: true,
+  notifyWarning: true,
+  showInfoLogs: false,
+}
+
+function readSavedSettings() {
+  try {
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}') }
+  } catch {
+    return DEFAULT_SETTINGS
+  }
+}
+
+function confidencePercent(value) {
+  const numeric = Number.parseFloat(String(value ?? '').replace('%', '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return 0
+  return numeric <= 1 ? numeric * 100 : numeric
+}
+
+function formatTimelineTime(seconds) {
+  const safeSeconds = Math.max(0, Math.round(seconds || 0))
+  const minutes = Math.floor(safeSeconds / 60)
+  const remainder = safeSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`
+}
+
+function buildStrategicRecommendations(eventRows, modelActions = []) {
+  if (eventRows.length === 0) return modelActions
+
+  const recommendations = modelActions.filter(action => String(action).trim())
+  const criticalCount = eventRows.filter(event => event.risk === 'Kritik').length
+  const elevatedCount = eventRows.filter(event => event.risk === 'Yüksek' || event.risk === 'Orta').length
+  const zoneCounts = eventRows.reduce((counts, event) => {
+    counts[event.zone] = (counts[event.zone] ?? 0) + 1
+    return counts
+  }, {})
+  const primaryZone = Object.entries(zoneCounts).sort((a, b) => b[1] - a[1])[0]
+
+  if (criticalCount > 0) {
+    recommendations.push(`${criticalCount} kritik olay için ilgili zaman damgaları operatör tarafından öncelikli doğrulanmalı ve saha müdahale prosedürü başlatılmalıdır.`)
+  } else if (elevatedCount > 0) {
+    recommendations.push(`${elevatedCount} orta/yüksek riskli olayın kanıt kareleri incelenmeli; doğrulanan olaylar vardiya sorumlusuna aktarılmalıdır.`)
+  } else {
+    recommendations.push(`${eventRows.length} düşük riskli tespit örneklem yöntemiyle doğrulanmalı; yanlış pozitifler operatör geri bildirimiyle işaretlenmelidir.`)
+  }
+
+  if (primaryZone) {
+    recommendations.push(`${primaryZone[0]} bölgesinde ${primaryZone[1]} olay yoğunlaştı; bu bölgenin zaman aralığı ve kamera görüşü ayrıca incelenmelidir.`)
+  }
+
+  recommendations.push('Tespitler yalnızca karar desteğidir; fiziksel müdahale öncesinde video kanıtı ve saha koşulları yetkili personel tarafından doğrulanmalıdır.')
+  return [...new Set(recommendations)].slice(0, 5)
+}
+
 // Backend'in (agent.py) risk_score esikleriyle birebir eslesir: >=70 kritik, >=40 orta.
 function getRiskGuidance(riskScore) {
   if (riskScore == null) {
@@ -494,7 +551,7 @@ function TacticalReportsPage({ eventRows, analysis, isDark }) {
   const zoneList = Object.entries(zoneStats).sort((a, b) => b[1].total - a[1].total)
 
   const guidance = getRiskGuidance(analysis?.risk_score)
-  const recommendations = analysis?.actions ?? []
+  const recommendations = buildStrategicRecommendations(eventRows, analysis?.actions ?? [])
 
   const now = new Date()
   const dateStr = now.toLocaleDateString('tr-TR')
@@ -581,12 +638,8 @@ function TacticalReportsPage({ eventRows, analysis, isDark }) {
 }
 
 // ─── Ayarlar ──────────────────────────────────────────────────────────────────
-function SettingsPage() {
-  const [sensitivity, setSensitivity] = useState([72])
-  const [notifCritical, setNotifCritical] = useState(true)
-  const [notifWarn, setNotifWarn]         = useState(true)
-  const [notifInfo, setNotifInfo]         = useState(false)
-  const [autoRecord, setAutoRecord]       = useState(true)
+function SettingsPage({ settings, onChange }) {
+  const { detectionThreshold, notifyCritical, notifyWarning, showInfoLogs } = settings
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -604,21 +657,21 @@ function SettingsPage() {
           <CardContent className="px-5 py-5 space-y-4">
             <div className="flex items-center justify-between mb-1">
               <span className="t-text-base font-sans text-[13px] text-[#dae3ee]">Tespit Eşiği</span>
-              <span className="font-mono text-[13px] font-bold text-[#a2c9ff]">%{sensitivity[0]}</span>
+              <span className="font-mono text-[13px] font-bold text-[#a2c9ff]">%{detectionThreshold}</span>
             </div>
             <Slider
-              value={sensitivity}
-              onValueChange={setSensitivity}
+              value={[detectionThreshold]}
+              onValueChange={([value]) => onChange({ detectionThreshold: value })}
               min={10} max={99} step={1}
               className="w-full"
             />
             <div className="flex justify-between font-sans text-[10px] t-text-dim text-[#414752]">
-              <span>Düşük (hızlı)</span>
+              <span>Daha fazla tespit</span>
               <span>Dengeli</span>
-              <span>Yüksek (yavaş)</span>
+              <span>Daha seçici</span>
             </div>
             <p className="font-sans text-[11px] t-text-dim text-[#414752] mt-2">
-              Eşik değeri düştükçe daha fazla anomali tespit edilir; ancak yanlış pozitif oranı artar.
+              Güven puanı bu değerin altında kalan olaylar sonuçlara alınmaz. Düşük eşik daha fazla olay, yüksek eşik daha seçici sonuç üretir.
             </p>
           </CardContent>
         </Card>
@@ -630,11 +683,10 @@ function SettingsPage() {
           </CardHeader>
           <CardContent className="px-5 py-4 space-y-0 divide-y divide-[#2a3540]">
             {[
-              { label: 'Kritik Alarm Bildirimleri',  desc: 'Risk skoru 0.85 üzerindeki olaylar',      checked: notifCritical, set: setNotifCritical, dot: '#ffb4ab' },
-              { label: 'Uyarı Bildirimleri',         desc: 'Orta seviye anomali tespitlerinde bildir', checked: notifWarn,     set: setNotifWarn,     dot: '#ffb77d' },
-              { label: 'Bilgi Günlüğü',              desc: 'Sistem loglarını ekranda göster',          checked: notifInfo,     set: setNotifInfo,     dot: '#a2c9ff' },
-              { label: 'Otomatik Kayıt',             desc: 'Anomali tespitinde video kaydını başlat',  checked: autoRecord,    set: setAutoRecord,    dot: '#4ade80' },
-            ].map(({ label, desc, checked, set, dot }) => (
+              { key: 'notifyCritical', label: 'Kritik Alarm Bildirimleri', desc: 'Kritik olayları ekranda anlık bildir', checked: notifyCritical, dot: '#ffb4ab' },
+              { key: 'notifyWarning',  label: 'Uyarı Bildirimleri', desc: 'Yüksek ve orta riskli olayları ekranda bildir', checked: notifyWarning, dot: '#ffb77d' },
+              { key: 'showInfoLogs',   label: 'Bilgi Günlüğü', desc: 'Düşük riskli bilgi loglarını operasyonel logda göster', checked: showInfoLogs, dot: '#a2c9ff' },
+            ].map(({ key, label, desc, checked, dot }) => (
               <div key={label} className="flex items-center justify-between py-3.5">
                 <div className="flex items-center gap-3">
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dot }} />
@@ -643,7 +695,7 @@ function SettingsPage() {
                     <p className="t-text-dim font-sans text-[11px] text-[#8b919d]">{desc}</p>
                   </div>
                 </div>
-                <Switch checked={checked} onCheckedChange={set} />
+                <Switch checked={checked} onCheckedChange={(value) => onChange({ [key]: value })} />
               </div>
             ))}
           </CardContent>
@@ -657,9 +709,17 @@ function SettingsPage() {
 function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent, onFeedback, feedbackMap }) {
   const fileInputRef = useRef(null)
   const videoRef     = useRef(null)
+  const [videoDuration, setVideoDuration] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+
+  const lastEventTime = Math.max(...eventRows.map(event => event.end_time ?? event.start_time ?? 0), 0)
+  const timelineDuration = Math.max(videoDuration, lastEventTime, 1)
+  const timelineTicks = Array.from({ length: 5 }, (_, index) => timelineDuration * index / 4)
 
   useEffect(() => {
     if (videoSrc && videoRef.current) {
+      setVideoDuration(0)
+      setCurrentTime(0)
       videoRef.current.load()
       videoRef.current.play().catch(() => {})
     }
@@ -680,7 +740,9 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
         {videoSrc ? (
           <video ref={videoRef} src={videoSrc}
             className="w-full h-full object-contain bg-black"
-            controls loop playsInline />
+            controls loop playsInline
+            onLoadedMetadata={event => setVideoDuration(event.currentTarget.duration || 0)}
+            onTimeUpdate={event => setCurrentTime(event.currentTarget.currentTime || 0)} />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3">
             <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#1e2d3d" strokeWidth="1.2">
@@ -796,7 +858,7 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
       <Card className="t-surface bg-[#141c24] border-[#2a3540]">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-sans text-[11px] uppercase tracking-widest text-[#8b919d]">Temporal Analysis · PySceneDetect</span>
+            <span className="font-sans text-[11px] uppercase tracking-widest text-[#8b919d]">Olay Zaman Çizelgesi · Model Tespitleri</span>
             <span className="font-sans text-[11px] t-text-dim text-[#414752]">{eventRows.length} olay</span>
           </div>
           <div className="relative h-10 bg-[#0b141c] rounded-lg overflow-hidden border border-[#2a3540] flex items-center">
@@ -805,23 +867,33 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
             </div>
             {eventRows.length > 0 ? (
               <>
-                {eventRows.slice(0, 6).map((r, i) => ({
-                  left: `${10 + i * 14}%`,
+                {eventRows.map((r) => ({
+                  id: r.id,
+                  seconds: r.start_time ?? 0,
+                  left: `${Math.min(100, Math.max(0, ((r.start_time ?? 0) / timelineDuration) * 100))}%`,
                   color: r.risk === 'Kritik' ? '#ffb4ab' : r.risk === 'Yüksek' ? '#ffb77d' : '#a2c9ff',
                   label: r.event, pulse: r.risk === 'Kritik',
-                })).map(({ left, color, label, pulse }, i) => (
-                  <div key={i} title={label}
-                    className={cn('absolute w-3 h-3 rounded-full border-2 border-[#0b141c] cursor-help', pulse && 'animate-pulse')}
+                })).map(({ id, seconds, left, color, label, pulse }) => (
+                  <button key={id} type="button" title={`${formatTimelineTime(seconds)} · ${label}`}
+                    onClick={() => {
+                      if (!videoRef.current) return
+                      videoRef.current.currentTime = seconds
+                      videoRef.current.play().catch(() => {})
+                    }}
+                    className={cn('absolute -translate-x-1/2 w-3 h-3 rounded-full border-2 border-[#0b141c]', pulse && 'animate-pulse')}
                     style={{ left, backgroundColor: color }} />
                 ))}
-                <div className="absolute left-[55%] h-full w-px bg-[#a2c9ff]" style={{ boxShadow: '0 0 6px #a2c9ff' }} />
+                <div
+                  className="absolute h-full w-px bg-[#a2c9ff] transition-[left] duration-100"
+                  style={{ left: `${Math.min(100, (currentTime / timelineDuration) * 100)}%`, boxShadow: '0 0 6px #a2c9ff' }}
+                />
               </>
             ) : (
               <p className="w-full text-center font-sans text-[10px] text-[#414752]">Henüz analiz verisi yok</p>
             )}
           </div>
           <div className="flex justify-between font-sans text-[10px] t-text-dim text-[#414752] mt-2">
-            {['00:00','04:00','08:00','12:00','16:00'].map(t => <span key={t}>{t}</span>)}
+            {timelineTicks.map((seconds, index) => <span key={index}>{formatTimelineTime(seconds)}</span>)}
           </div>
         </CardContent>
       </Card>
@@ -845,12 +917,55 @@ export default function Dashboard() {
   const [analyzing, setAnalyzing]         = useState(false)
   const [analysis, setAnalysis]           = useState(null)
   const [analysisError, setAnalysisError] = useState(null)
-  const revealInterval = useRef(null)
+  const [settings, setSettings]           = useState(readSavedSettings)
+  const [alerts, setAlerts]               = useState([])
+  const [serviceStatus, setServiceStatus] = useState('checking')
   const eventIdCounter = useRef(1)
 
   useEffect(() => {
     document.documentElement.classList.remove('light')
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function checkServices() {
+      try {
+        const response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/health`)
+        const data = await response.json()
+        if (!cancelled) setServiceStatus(response.ok && data.status === 'healthy' ? 'online' : 'offline')
+      } catch {
+        if (!cancelled) setServiceStatus('offline')
+      }
+    }
+
+    checkServices()
+    const timer = window.setInterval(checkServices, 15000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
+  }, [settings])
+
+  function updateSettings(patch) {
+    setSettings(current => ({ ...current, ...patch }))
+  }
+
+  function showEventAlert(event) {
+    const isCritical = event.risk === 'Kritik'
+    const isWarning = event.risk === 'Yüksek' || event.risk === 'Orta'
+    if ((!isCritical || !settings.notifyCritical) && (!isWarning || !settings.notifyWarning)) return
+
+    const id = `${event.id}-${Date.now()}`
+    setAlerts(current => [...current.slice(-2), { id, event }])
+    window.setTimeout(() => {
+      setAlerts(current => current.filter(alert => alert.id !== id))
+    }, 6000)
+  }
 
   const jsonOutput = analysis ? JSON.stringify(analysis, null, 2) : ''
 
@@ -861,8 +976,6 @@ export default function Dashboard() {
 
   async function handleFileSelect(file) {
     if (videoSrc) URL.revokeObjectURL(videoSrc)
-    if (revealInterval.current) clearInterval(revealInterval.current)
-
     setVideoSrc(URL.createObjectURL(file))
     setVideoFileName(file.name)
     setLogs([])
@@ -872,27 +985,26 @@ export default function Dashboard() {
     setTick(0)
     setAnalysis(null)
     setAnalysisError(null)
+    setAlerts([])
     setAnalyzing(true)
 
     try {
       const data = await analyzeVideo(file)
-      setAnalysis(data)
+      const acceptedEvents = (data.events ?? []).filter(
+        event => confidencePercent(event.confidence) >= settings.detectionThreshold,
+      )
+      setAnalysis({ ...data, events: acceptedEvents })
 
-      // Ajanin tespit ettigi gercek olaylari, canli akan bir log gibi sirayla ekrana yansit.
-      const queue = [...data.events]
-      if (queue.length === 0) { setAnalyzing(false); return }
-      revealInterval.current = setInterval(() => {
-        const entry = queue.shift()
-        setLogs(prev => [eventToLog(entry), ...prev])
+      // Model toplu yanıt verdiği için olayları yapay gecikmeyle değil, analiz biter bitmez göster.
+      const normalizedEvents = acceptedEvents.map(entry => {
         const fallbackId = `EVT-${String(eventIdCounter.current++).padStart(3, '0')}`
-        const normalizedEvent = normalizeAnalysisEvent(entry, fallbackId)
-        setEventRows(prev => [...prev, normalizedEvent])
-        setTick(p => p + 1)
-        if (queue.length === 0) {
-          clearInterval(revealInterval.current)
-          setAnalyzing(false)
-        }
-      }, APP_CONFIG.eventRevealIntervalMs)
+        return normalizeAnalysisEvent(entry, fallbackId)
+      })
+      setLogs(acceptedEvents.map(eventToLog).reverse())
+      setEventRows(normalizedEvents)
+      setTick(normalizedEvents.length)
+      normalizedEvents.forEach(showEventAlert)
+      setAnalyzing(false)
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'Analiz sırasında beklenmeyen bir hata oluştu.')
       setAnalyzing(false)
@@ -900,12 +1012,37 @@ export default function Dashboard() {
   }
 
   useEffect(() => () => {
-    if (revealInterval.current) clearInterval(revealInterval.current)
     if (videoSrc) URL.revokeObjectURL(videoSrc)
   }, [])
 
+  const visibleLogs = settings.showInfoLogs
+    ? logs
+    : logs.filter(log => log.level !== 'info')
+
   return (
     <div className="t-surface-2 flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+
+      <div className="fixed right-5 top-5 z-50 w-80 space-y-2">
+        {alerts.map(({ id, event }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setAlerts(current => current.filter(alert => alert.id !== id))}
+            className={cn(
+              'w-full rounded-lg border p-3 text-left shadow-xl backdrop-blur',
+              event.risk === 'Kritik'
+                ? 'border-[#ffb4ab]/50 bg-[#35191d]/95 text-[#ffb4ab]'
+                : 'border-[#ffb77d]/50 bg-[#33251b]/95 text-[#ffb77d]',
+            )}
+          >
+            <p className="font-sans text-[10px] font-bold uppercase tracking-widest">
+              {event.risk === 'Kritik' ? 'Kritik alarm' : 'Risk uyarısı'}
+            </p>
+            <p className="mt-1 font-sans text-[12px] text-[#f1f5f9]">{event.event}</p>
+            <p className="mt-1 font-mono text-[10px] opacity-75">{event.time} · {event.zone}</p>
+          </button>
+        ))}
+      </div>
 
       {/* ── Sidebar ────────────────────────────────────────────────── */}
       <aside className="t-sidebar w-56 shrink-0 flex flex-col bg-[#0d1520] border-r border-[#2a3540]">
@@ -914,7 +1051,12 @@ export default function Dashboard() {
             <BarChart3 className="w-8 h-8 shrink-0 text-[#a2c9ff] drop-shadow-[0_0_6px_rgba(162,201,255,0.55)]" strokeWidth={2.25} />
             <div>
               <p className="font-mono text-base font-bold tracking-widest text-[#a2c9ff]">ALFAI</p>
-              <p className="t-text-dim font-sans text-[10px] text-[#414752] mt-0.5 tracking-wide">v2.5 · Çevrimdışı</p>
+              <p className={cn(
+                'font-sans text-[10px] mt-0.5 tracking-wide',
+                serviceStatus === 'online' ? 'text-[#4ade80]' : serviceStatus === 'offline' ? 'text-[#ffb4ab]' : 'text-[#8b919d]',
+              )}>
+                {serviceStatus === 'online' ? 'Model ve API hazır' : serviceStatus === 'offline' ? 'Servis bağlantısı yok' : 'Servisler kontrol ediliyor'}
+              </p>
             </div>
           </div>
         </div>
@@ -939,9 +1081,15 @@ export default function Dashboard() {
         {/* Global sayaçlar: her bölümde görünür, ana içerik yüksekliğini daraltmaz. */}
         <div className="t-border shrink-0 grid grid-cols-2 gap-2 p-3 border-t border-[#2a3540]">
           {[
-            { label: 'Aktif Kamera', value: '12', sub: '2 bakımda', colorDark: 'text-[#a2c9ff]', colorLight: 'text-blue-700' },
             {
-              label: 'Bugün Olay',
+              label: 'Model Durumu',
+              value: serviceStatus === 'online' ? 'Hazır' : serviceStatus === 'offline' ? 'Kapalı' : '…',
+              sub: serviceStatus === 'online' ? 'Qwen bağlantısı aktif' : 'Servisleri kontrol edin',
+              colorDark: serviceStatus === 'online' ? 'text-[#4ade80]' : 'text-[#ffb4ab]',
+              colorLight: serviceStatus === 'online' ? 'text-emerald-700' : 'text-red-700',
+            },
+            {
+              label: 'Analiz Olayı',
               value: String(eventRows.length),
               sub: `${eventRows.filter(r => r.risk === 'Kritik').length} kritik`,
               colorDark: 'text-[#ffb4ab]', colorLight: 'text-red-700',
@@ -977,7 +1125,7 @@ export default function Dashboard() {
             {activeNav === 'tactical' && <TacticalReportsPage eventRows={eventRows} analysis={analysis} isDark={isDark} />}
             {activeNav === 'reports'  && <ReportsPage eventRows={eventRows} analysis={analysis} feedbackMap={feedbackMap} isDark={isDark} />}
             {activeNav === 'json'     && <JsonPage jsonOutput={jsonOutput} />}
-            {activeNav === 'settings' && <SettingsPage />}
+            {activeNav === 'settings' && <SettingsPage settings={settings} onChange={updateSettings} />}
 
             {activeNav === 'dashboard' && (
               <Tabs value={dashboardTab} onValueChange={setDashboardTab} className="flex-1 flex flex-col overflow-hidden">
@@ -1053,15 +1201,15 @@ export default function Dashboard() {
                       {/* Log listesi */}
                       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
                         <div className="p-3 space-y-1.5">
-                          {logs.length === 0 ? (
+                          {visibleLogs.length === 0 ? (
                             <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
                               <span className="text-2xl opacity-20">🎥</span>
                               <p className={cn('font-sans text-[10px] leading-relaxed', isDark ? 'text-[#414752]' : 'text-slate-400')}>
-                                Video yüklendiğinde<br />AI analiz logları burada akar
+                                Video analizi tamamlandığında<br />tespit sonuçları burada gösterilir
                               </p>
                             </div>
                           ) : (
-                            logs.map(log => <LogLine key={log.id} {...log} isDark={isDark} />)
+                            visibleLogs.map(log => <LogLine key={log.id} {...log} isDark={isDark} />)
                           )}
                         </div>
                       </div>

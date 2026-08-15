@@ -2,10 +2,16 @@ JSON_SCHEMA = """
 {
   "summary": "Videoda gerçekleşen olayların Türkçe genel özeti",
   "events": [
-    {"time": "00:00", "event": "Gerçekleşen 1. eylem"},
-    {"time": "00:05", "event": "Gerçekleşen 2. eylem"}
+    {
+      "time": "00:00",
+      "event": "Gerçekleşen eylem",
+      "zone": "Olayın görüldüğü bölge",
+      "risk": "Düşük/Orta/Yüksek/Kritik",
+      "confidence": 0.85
+    }
   ],
-  "risk": "Düşük/Orta/Yüksek (Duruma göre belirle)",
+  "risk": "Düşük/Orta/Yüksek/Kritik (Duruma göre belirle)",
+  "risk_score": 50,
   "actions": [
     "Operatöre veya sahaya önerilen 1. aksiyon",
     "Operatöre veya sahaya önerilen 2. aksiyon"
@@ -27,7 +33,8 @@ Başka hiçbir açıklama metni ekleme.
 VISION_USER_PROMPT = """
 Videoyu baştan sona analiz et.
 
-Özellikle yengeci tutan adamın hareketlerine odaklan ve saniye saniye incele.
+İnsan, araç ve nesne hareketlerini zaman sırasına göre incele. Güvenlik açısından
+anlamlı olayları; başlangıç zamanı, bölge, risk seviyesi ve güven puanıyla belirt.
 
 Gereksiz görsel detaylara
 (renkler, arka plan bulanıklığı, çevresel nesneler)
@@ -41,6 +48,11 @@ ve yapılandırılmış bir şekilde
 Türkçe olarak özetle.
 
 Risk durumunu belirle.
+
+Tespit edilen olaylara doğrudan bağlı, uygulanabilir ve birbirinden farklı en az
+iki stratejik aksiyon öner. Öneriler genel ifadelerden oluşmasın; hangi olay veya
+bölge için neyin kontrol edilmesi gerektiğini açıkça söylesin. Olay yoksa rutin
+izlemenin sürdürülmesini ve kamera görüşünün kontrolünü öner.
 
 Çıktını verilen JSON şemasına tamamen uygun oluştur.
 

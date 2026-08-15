@@ -1,26 +1,65 @@
 {
     "event_history": [
         {
-            "time": "00:15",
-            "event": "Motosiklet sürücüsü devrildi.",
+            "time": "00:00",
+            "event": "Gündüz kavşakta kırmızı kamyonet kavşakta duruyor.",
             "motion_density": 0.0,
             "zone": "Genel Saha"
         },
         {
-            "time": "00:16",
-            "event": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
+            "time": "00:05",
+            "event": "Beyaz minibüs kavşakta diğer araçlarla çarpışıyor.",
             "motion_density": 0.0,
             "zone": "Genel Saha"
         },
         {
-            "time": "00:19",
-            "event": "Sürücü kalktı ve motosikletin yanında durdu.",
+            "time": "00:10",
+            "event": "Gece kavşakta beyaz otomobil diğer araçla çarpışıyor.",
             "motion_density": 0.0,
             "zone": "Genel Saha"
         },
         {
             "time": "00:20",
-            "event": "Sürücü, çevredeki araçlarla etkileşime girdi.",
+            "event": "Yağmurlu kavşakta beyaz minibüs ve kırmızı araç çarpışıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Kavşakta duran araçlarla çarpışan araçlar durumu kontrol edemiyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Gündüz kavşakta kırmızı kamyonet kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Beyaz minibüs kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Gündüz kavşakta gri otomobil kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
             "motion_density": 0.0,
             "zone": "Genel Saha"
         },
@@ -28,29 +67,7 @@
             "time": "00:15",
             "event": {
                 "frame": "video_segment_00:15",
-                "description": "Motosiklet sürücüsü devrildi.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:16",
-            "event": {
-                "frame": "video_segment_00:16",
-                "description": "Sürücü yere düşmüş ve motosikleti yanına çekti.",
-                "has_risk": true,
-                "risk_type": "Yüksek"
-            },
-            "motion_density": 0.0,
-            "zone": "Genel Saha"
-        },
-        {
-            "time": "00:19",
-            "event": {
-                "frame": "video_segment_00:19",
-                "description": "Sürücü kalktı ve yere düşen motosikleti kaldırdı.",
+                "description": "Gece kavşakta beyaz otomobil kavşakta duruyor.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },
@@ -61,7 +78,40 @@
             "time": "00:20",
             "event": {
                 "frame": "video_segment_00:20",
-                "description": "Sürücü, yolda duran araçların arasında durdu ve çevreye bakındı.",
+                "description": "Gece kavşakta beyaz otomobil kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Gündüz kavşakta kırmızı kamyonet kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "Gündüz kavşakta beyaz minibüs kavşakta duruyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": {
+                "frame": "video_segment_00:35",
+                "description": "Gündüz kavşakta gri otomobil kavşakta duruyor.",
                 "has_risk": true,
                 "risk_type": "Yüksek"
             },

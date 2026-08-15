@@ -20,6 +20,7 @@ from tools.mock_actions import (
 from model_py.services.vision_service import analyze_video
 from model_py.services.brain_service import analyze_state 
 import traceback
+import json
 
 def extract_video_info_node(state: AgentState) -> AgentState:
     telemetry = monitor_hardware_telemetry.invoke({})
@@ -116,8 +117,15 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
 
     events_for_brain = []
     for item in state["detected_events"]:
-        event_text = item.get("event", "Açıklama bulunamadı.")
-        events_for_brain.append(f"Zaman: {item['time']} - Olay: {event_text}")
+        event_content = item.get("event", "Açıklama bulunamadı.")
+    
+        # Eğer event bir sözlükse açıklamasını (description) çekelim
+        if isinstance(event_content, dict):
+            event_text = event_content.get("description", str(event_content))
+        else:
+            event_text = str(event_content)
+        
+        events_for_brain.append(f"Zaman: {item.get('time', '00:00')} - Olay: {event_text}")
         
     # Llama'ya durum bilgisini ve araç (tool) kullanma yetkisini veriyoruz
     prompt = (
