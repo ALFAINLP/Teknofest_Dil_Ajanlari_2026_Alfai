@@ -11,6 +11,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from agent.graph import app as langgraph_app
 #from model_py.services.vision_service import analyze_video
 import traceback
+from agent.memory_manager import MemoryManager
+import json
 
 app = FastAPI(
     title="ALFAI Web API",
@@ -138,8 +140,99 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             while chunk := await file.read(1024 * 1024):
                 temporary_file.write(chunk)
 
-        initial_state = {"video_path": temporary_path}
-        graph_output = await run_in_threadpool(langgraph_app.invoke, initial_state)
+        memory = MemoryManager.load_memory()
+
+        initial_state = {
+            # --- Girdi ---
+            "video_path": temporary_path,
+            # --- Ara çalışma alanları (boş başlar, graph doldurur) ---
+            "current_time_segments": [],
+            "detected_events": [],
+            "risk_assessments": [],
+            "actions_recommended": [],
+            "final_json_output": "",
+            "next_step": "",
+            "risk_trend": "",
+            "context_summary": {},
+            "technical_summary": "",
+            # --- Kalıcı hafıza (önceki analizlerden gelen birikim) ---
+            "event_history": memory.get("event_history", []),
+            "risk_history": memory.get("risk_history", []),
+            "tool_history": memory.get("tool_history", []),
+            # --- LangGraph mesaj hafızası ---
+            "messages": [],
+        }
+        
+        print("\n" + "="*40)
+        print("🚀 [ALFAI LANGGRAPH BAŞLIYOR]")
+        print(f"📦 Memory'den Gelen Veriler (State Keys): {list(initial_state.keys())}")
+        print("="*40)
+        
+        final_state = await run_in_threadpool(langgraph_app.invoke, initial_state)
+        
+        print("\n" + "="*40)
+        print("✅ [LANGGRAPH ÇALIŞMASINI TAMAMLADI]")
+        print(f"🔑 Final State Anahtarları: {list(final_state.keys())}")
+        
+        if "messages" in final_state and len(final_state["messages"]) > 0:
+            print(f"💬 Ajan Mesaj Sayısı: {len(final_state['messages'])}")
+            
+        print("="*40 + "\n")
+        
+        
+        print("\n" + "="*60)
+        print("🧠 [AJANIN ADIM ADIM DÜŞÜNME ZİNCİRİ (REASONING CHAIN)]")
+        print("="*60)
+        
+        if "messages" in final_state:
+            for i, msg in enumerate(final_state["messages"]):
+                # Mesaj LangChain objesi mi yoksa sözlük (dict) mü kontrol edelim
+                if isinstance(msg, dict):
+                    content = msg.get("content", "")
+                    tool_calls = msg.get("tool_calls", [])
+                    msg_type = msg.get("type", "Unknown")
+                else:
+                    content = getattr(msg, "content", "")
+                    tool_calls = getattr(msg, "tool_calls", [])
+                    msg_type = msg.__class__.__name__
+
+                print(f"\n{'='*20} ADIM {i+1} | TÜR: {msg_type.upper()} {'='*20}")
+                
+                # Modelin iç sesi / çıkarımları
+                if content:
+                    print(f"💭 Düşünce/Çıktı:\n{content.strip()}")
+                
+                # Model bir fonksiyona/araca (tool) başvurduysa
+                if tool_calls:
+                    print("\n🛠️ ÇAĞRILAN ARAÇLAR:")
+                    for tool in tool_calls:
+                        tool_name = tool.get('name') if isinstance(tool, dict) else getattr(tool, 'name', 'Bilinmiyor')
+                        tool_args = tool.get('args') if isinstance(tool, dict) else getattr(tool, 'args', {})
+                        print(f"  - Araç Adı: {tool_name}")
+                        print(f"  - Parametreler: {tool_args}")
+                
+                # ToolMessage ise aracın döndürdüğü sonuç
+                if msg_type == "ToolMessage" or msg_type == "tool":
+                    tool_name = msg.get("name") if isinstance(msg, dict) else getattr(msg, "name", "Araç")
+                    print(f"⚙️ {tool_name} Aracından Gelen Sonuç:\n{str(content)[:300]}... (devamı kırpıldı)")
+
+        print("\n" + "="*60 + "\n")
+        
+        
+        # final_json_output: compile_report node tarafından üretilen JSON string
+        raw_json = final_state.get("final_json_output", "")
+        if raw_json:
+            try:
+                parsed_json = json.loads(raw_json)
+            except (json.JSONDecodeError, TypeError):
+                parsed_json = {}
+        else:
+            parsed_json = {}
+
+        # final_state ile parsed_json'u birleştiriyoruz:
+        # final_state → graph'ın tüm değişkenleri (risk_trend, detected_events, vb.)
+        # parsed_json  → compile_report'un ürettiği özet (summary, actions, vb.)
+        graph_output = {**final_state, **parsed_json}
 
         # 3. React için Yalnızca Zamana Göre Tekilleştirilmiş (Deduplicated by Time) Format
         safe_events = []

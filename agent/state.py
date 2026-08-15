@@ -26,6 +26,7 @@ class AgentState(TypedDict):
     # Çıktı
     final_json_output: str
     next_step: str
+    technical_summary: str
 
     # LangGraph mesaj hafızası
     messages: Annotated[list, add_messages]

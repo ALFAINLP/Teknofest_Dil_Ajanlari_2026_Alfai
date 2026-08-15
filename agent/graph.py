@@ -18,8 +18,9 @@ from tools.mock_actions import (
     export_to_incident_management_system
 )
 from model_py.services.vision_service import analyze_video
-from model_py.services.brain_service import analyze_state 
+from model_py.services.brain_service import analyze_state
 import traceback
+import json
 
 def extract_video_info_node(state: AgentState) -> AgentState:
     telemetry = monitor_hardware_telemetry.invoke({})
@@ -51,24 +52,28 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     
     for t in target_segments:
         motion = detect_motion_density.invoke({
-            "start_time": t, 
-            "end_time": t+2, 
+            "start_time": t,
+            "end_time": t + 2,
             "video_path": state["video_path"]
         })
         frame_info = get_frame.invoke({
-            "time": t, 
+            "time": t,
             "video_path": state["video_path"]
         })
-        
-        
-        
+
         minutes = t // 60
         seconds = t % 60
         time_str = f"{minutes:02d}:{seconds:02d}"
-        
+
+        # FIX 1: get_frame bir dict döndürür; ham dict yerine description string'ini al
+        if isinstance(frame_info, dict):
+            event_text = frame_info.get("description", "Kare analizi tamamlandı.")
+        else:
+            event_text = str(frame_info)
+
         detected.append({
             "time": time_str,
-            "event": frame_info,
+            "event": event_text,
             "motion_density": motion.get("average_motion_density_percentage", 0.0),
             "zone": zone
         })
@@ -114,11 +119,16 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     zone = scene_meta.get("zone_name", "Genel Saha")
     env_hazards = assess_environmental_hazards.invoke({"zone": zone})
 
+    # FIX 2: event içeriği her zaman string olarak temizle (dict sızmasını önle)
     events_for_brain = []
     for item in state["detected_events"]:
-        event_text = item.get("event", "Açıklama bulunamadı.")
+        raw = item.get("event", "Açıklama bulunamadı.")
+        if isinstance(raw, dict):
+            event_text = raw.get("description", str(raw))
+        else:
+            event_text = str(raw)
         events_for_brain.append(f"Zaman: {item['time']} - Olay: {event_text}")
-        
+
     # Llama'ya durum bilgisini ve araç (tool) kullanma yetkisini veriyoruz
     prompt = (
         f"Şu anki bölge: {zone}. Çevresel riskler: {env_hazards}. Aşağıdaki olayları incele. "
@@ -126,69 +136,69 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         "aracını kullan ve önlemler al. Yoksa sadece risk seviyesini belirt.\n"
         f"Olaylar:\n{chr(10).join(events_for_brain)}"
     )
-    
-    current_messages = state.get("messages", [])
-    current_messages.append({"role": "user", "content": prompt})
+
+    # FIX 3: add_messages reducer çift yazma sorunu — state listesini mutate etme.
+    # Önceki mesajları kopyala, yeni user prompt'unu ekle → analyze_state'e gönder.
+    # State'e sadece YENİ mesajları döndür; reducer otomatik birleştirir.
+    previous_messages = list(state.get("messages", []))
+    messages_for_llm = previous_messages + [{"role": "user", "content": prompt}]
 
     # 2. LLM DÜŞÜNÜYOR VE KARAR VERİYOR
-    brain_response = analyze_state(current_messages)
-    
+    brain_response = analyze_state(messages_for_llm)
+
     recommendations = set()
     highest_risk = "Düşük"
     impact_desc = "Otonom yapay zeka analizi devrede."
-    
+
     # 3. AKSİYON ALAN MOCK FONKSİYONLAR (LLM inisiyatif alırsa çalışır)
-    if hasattr(brain_response, 'tool_calls') and brain_response.tool_calls:
+    tool_called = False
+    if hasattr(brain_response, "tool_calls") and brain_response.tool_calls:
         for tool_call in brain_response.tool_calls:
-            # LLM "trigger_operator_alert" mock aracını çağırmaya karar verdi!
             if tool_call.function.name == "trigger_operator_alert":
                 highest_risk = "Yüksek"
-                
-                # LLM'in ürettiği parametreleri JSON'dan çıkarıyoruz
                 args = json.loads(tool_call.function.arguments)
-                
-                # İŞTE MOCK FONKSİYONU BURADA GERÇEKTEN ÇALIŞTIRIYORUZ
                 trigger_operator_alert.invoke(args)
-                
                 recommendations.add(f"LLM Uyarı Aracı Tetikledi: {args}")
                 impact_desc = args.get("raw_incident_context", "Kritik Olay Tespiti")
-                
-            # Eğer başka mock araçlar eklediysen (örn: health_team_dispatch), buraya ekleyebilirsin.
+                tool_called = True
+                print(f"🚨 [LLAMA TOOL CALL] trigger_operator_alert tetiklendi → {args}")
 
-    # OpenAI nesnesini LangGraph'ın anlayacağı standart formata çeviriyoruz
-    assistant_msg = {
-        "role": "assistant",
-        "content": brain_response.content if brain_response.content else "Mock araç çağrısı yapıldı."
-    }
-    state["messages"].append(assistant_msg)
+    # LLM yanıtını log mesajı olarak oluştur
+    if tool_called:
+        assistant_content = f"⚡ trigger_operator_alert çalıştırıldı. Risk: Yüksek. Bağlam: {impact_desc}"
+    elif brain_response.content:
+        assistant_content = brain_response.content
+    else:
+        assistant_content = "Llama değerlendirdi — araç çağrısı gerek görülmedi."
+
+    # FIX 3 devam: Sadece bu adımda üretilen YENİ mesajları state'e yaz
+    new_messages = [
+        {"role": "user",      "content": prompt},
+        {"role": "assistant", "content": assistant_content},
+    ]
+    state["messages"] = new_messages  # add_messages reducer bunları öncekilerle birleştirir
+
     state["actions_recommended"] = list(recommendations)
     state["risk_assessments"] = [highest_risk]
     state["technical_summary"] = impact_desc
 
     # ==========================
-    # Adaptive Risk Memory (Mock sistemin hafıza bileşeni)
+    # Adaptive Risk Memory
     # ==========================
     medium_count = MemoryManager.recent_risk_count(
         state.get("risk_history", []),
         "Orta"
     )
-
     if highest_risk == "Orta" and medium_count >= 2:
         highest_risk = "Yüksek"
 
-    # ==========================
-    # State Güncellemeleri
-    # ==========================
     state["risk_history"] = MemoryManager.add_risk(
         state.get("risk_history", []),
         highest_risk
     )
-    
-    calculated_trend = MemoryManager.calculate_risk_trend(state["risk_history"])
-    state["risk_trend"] = calculated_trend
-    
+    state["risk_trend"] = MemoryManager.calculate_risk_trend(state["risk_history"])
     state["next_step"] = "compile_report"
-    
+
     return state
     
 def compile_report_node(state: AgentState) -> AgentState:
@@ -296,23 +306,24 @@ def compile_report_node(state: AgentState) -> AgentState:
 
     state["next_step"] = "complete"
     
+    # FIX 3 devam: compile_report da yalnızca kendi yeni mesajını döndürür
     log_message = {
         "role": "assistant",
         "content": "Nihai risk raporu başarıyla derlendi, CMS'e aktarıldı ve KPI metrikleri loglandı.",
         "tool_calls": [
             {
-                "name": "export_to_incident_management_system", 
-                "args": {}, 
+                "name": "export_to_incident_management_system",
+                "args": {},
                 "id": "call_export_004"
             },
             {
-                "name": "log_kpi_metrics", 
-                "args": {}, 
+                "name": "log_kpi_metrics",
+                "args": {},
                 "id": "call_kpi_005"
             }
         ]
     }
-    state["messages"] = [log_message]
+    state["messages"] = [log_message]  # reducer öncekilerle birleştirir
 
 
     
