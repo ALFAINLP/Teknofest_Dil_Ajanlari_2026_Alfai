@@ -6,7 +6,11 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "TEKNOFEST AI Agent"
     DEBUG: bool = True
     REASONING_MODEL: str = "Llama-3.1-70B"
-    VLLM_SERVER_URL: str = "http://localhost:8000"
+    VISION_MODEL: str = "Qwen/Qwen3-VL-8B-Instruct"
+    VISION_SERVER_URL: str = "http://localhost:8000"
+    BRAIN_SERVER_URL: str = "http://localhost:8001"
+    VLLM_SERVER_URL: str = "http://localhost:8001"
+    CMS_EXPORT_URL: str = "http://localhost:8080/v1/incident/export"
     
     MOCK_VIDEO_TIMELINE: Dict[int, Dict[str, Any]] = {
         0: {

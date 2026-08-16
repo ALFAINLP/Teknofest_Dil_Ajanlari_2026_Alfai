@@ -315,6 +315,188 @@
             "event": "Ekran siyah olup, polis ve trafik kurumlarının uyarısı gösteriliyor.",
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştü ve motosiklet devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kendi kendine kalktı ve motosikletin etrafında durdu",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştü ve kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, çevredeki araçlarla etkileşime girdi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri araba kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:16",
+            "event": "İki beyaz araç kavşakta çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı araç kavşakta duran siyah araca çarptı ve trafik işaretlerine hasar verdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Ambulans kırmızı otomobille çarpıştı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": "Ambulans devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Kazada yaralılar var",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Ambulans kırmızı otomobille çarpıştı",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": {
+                "frame": "video_segment_00:07",
+                "description": "Ambulans devrildi",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Kaza sonrası yaralılar belirlendi",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı ve yere düşen motosikletin etrafında durdu",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
@@ -331,6 +513,10 @@
         "Yüksek",
         "Yüksek",
         "Yüksek",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
         "Düşük",
         "Düşük",
         "Düşük",

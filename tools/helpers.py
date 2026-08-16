@@ -17,9 +17,15 @@ def _format_timestamp(time_seconds: int) -> str:
 def _call_vllm_api(system_prompt: str, user_prompt: str, model_name: str, max_tokens: int, video_path: str = None) -> str:
     """
     Yerel vLLM sunucusuyla olan tüm HTTP POST ağ trafiğini tek noktada yönetir.
+    Model türüne göre (Qwen -> 8000, LLaMA -> 8001) doğru sunucu portuna yönlendirir.
     Hata yakalamayı, HTTP durum kontrollerini ve markdown JSON temizliğini otonom yapar.
     """
-    vllm_url = f"{settings.VLLM_SERVER_URL}/v1/chat/completions"
+    if "qwen" in model_name.lower() or video_path is not None:
+        base_url = getattr(settings, "VISION_SERVER_URL", "http://localhost:8000")
+    else:
+        base_url = getattr(settings, "BRAIN_SERVER_URL", "http://localhost:8001")
+
+    vllm_url = f"{base_url}/v1/chat/completions"
     
     # Çoklu modallı (Video + Metin) veya Salt Metin durumuna göre payload yapısı
     user_content = []

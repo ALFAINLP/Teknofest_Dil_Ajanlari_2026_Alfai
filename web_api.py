@@ -23,6 +23,17 @@ from model_py.config.settings import VISION_BASE_URL, VISION_MODEL
 import traceback
 import json
 import time
+import logging
+import os
+import tempfile
+
+# --- LOGLAMA AYARLARI ---
+logging.basicConfig(
+    level=logging.DEBUG,  # DEBUG yaparsak her detayı görürüz. Canlıya alırken INFO yapılır.
+    format="%(asctime)s | %(levelname)-7s | [%(name)s] %(message)s",
+    datefmt="%H:%M:%S"
+)
+logger = logging.getLogger("ALFAI_API")
 
 app = FastAPI(
     title="ALFAI Web API",
@@ -134,6 +145,12 @@ def root() -> dict:
     return {"status": "ok", "service": "ALFAI Web API"}
 
 
+@app.post("/v1/incident/export")
+def export_incident(payload: dict) -> dict:
+    logger.info(f"📋 Incident exported to CMS: {payload.get('ticket_title', 'Durum Raporu')}")
+    return {"status": "success", "message": "Incident report exported successfully", "ticket_id": "INC-2026-001"}
+
+
 @app.get("/api/health")
 def health() -> dict:
     try:
@@ -161,7 +178,7 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
     temporary_path = ""
     start_time = time.time()
     
-    
+    logger.info(f"📥 [YENİ VİDEO İSTEĞİ] Adı: {file.filename}")
 
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temporary_file:
@@ -170,20 +187,24 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
                 temporary_file.write(chunk)
                 
         file_size_mb = os.path.getsize(temporary_path) / (1024 * 1024)
-        print(f"\n📥 [YENİ VİDEO] Adı: {file.filename}, Boyut: {file_size_mb:.2f} MB")
+        logger.debug(f"📁 Dosya geçici klasöre kaydedildi. Boyut: {file_size_mb:.2f} MB. Yol: {temporary_path}")
 
+        logger.info("👁️ [AŞAMA 1] Vision modeli (Qwen3-VL) çalıştırılıyor...")
         model_output = await run_in_threadpool(analyze_video, temporary_path)
+
         if not isinstance(model_output, dict):
+            logger.error("❌ Model çıktısı beklenen formatta (dict) değil!")
             raise ValueError("Model sözlük biçiminde JSON üretmedi.")
-        return _normalize_report(model_output)
+
+        logger.debug(f"✅ Vision modeli yanıt verdi. Tespit edilen ham olay sayısı: {len(model_output.get('events', []))}")
+        # return _normalize_report(model_output)
+        logger.info("🧠 [AŞAMA 2] Geçmiş hafıza (MemoryManager) yükleniyor...")
         memory = MemoryManager.load_memory()
 
         initial_state = {
-            # --- Girdi ---
             "video_path": temporary_path,
-            # --- Ara çalışma alanları (boş başlar, graph doldurur) ---
             "current_time_segments": [],
-            "detected_events": [],
+            "detected_events": model_output.get("events", []), # Vision modelinin çıktısını LangGraph'a besliyoruz!
             "risk_assessments": [],
             "actions_recommended": [],
             "final_json_output": "",
@@ -191,27 +212,27 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             "risk_trend": "",
             "context_summary": {},
             "technical_summary": "",
-            # --- Kalıcı hafıza (önceki analizlerden gelen birikim) ---
             "event_history": memory.get("event_history", []),
             "risk_history": memory.get("risk_history", []),
             "tool_history": memory.get("tool_history", []),
-            # --- LangGraph mesaj hafızası ---
             "messages": [],
         }
         
-        print("\n" + "="*40)
-        print("🚀 [ALFAI LANGGRAPH BAŞLIYOR]")
-        print(f"📦 Memory'den Gelen Veriler (State Keys): {list(initial_state.keys())}")
-        print("="*40)
+        logger.debug(f"📦 LangGraph Initial State hazırlandı. Keys: {list(initial_state.keys())}")
+        logger.info("🚀 [AŞAMA 3] LangGraph Ajanı invoke ediliyor...")
         
         final_state = await run_in_threadpool(langgraph_app.invoke, initial_state)
         
-        print("\n" + "="*40)
-        print("✅ [LANGGRAPH ÇALIŞMASINI TAMAMLADI]")
-        print(f"🔑 Final State Anahtarları: {list(final_state.keys())}")
+        logger.info("✅ LangGraph çalışmasını tamamladı.")
         
-        if "messages" in final_state and len(final_state["messages"]) > 0:
-            print(f"💬 Ajan Mesaj Sayısı: {len(final_state['messages'])}")
+        if "messages" in final_state:
+            logger.debug(f"💬 Ajan toplam {len(final_state['messages'])} mesaj/adım üretti.")
+            for i, msg in enumerate(final_state["messages"]):
+                msg_type = msg.get("type", "Unknown") if isinstance(msg, dict) else msg.__class__.__name__
+                content = msg.get("content", "") if isinstance(msg, dict) else getattr(msg, "content", "")
+                
+                if content:
+                    logger.debug(f"   [Adım {i+1} | {msg_type}] 💭 Çıktı: {str(content)[:150]}...")
             
         print("="*40 + "\n")
         
@@ -257,12 +278,12 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         
         # final_json_output: compile_report node tarafından üretilen JSON string
         raw_json = final_state.get("final_json_output", "")
-        print(f"\n📄 [MODEL HAM JSON ÇIKTISI]:\n{raw_json}\n")
+        logger.info("📄 [AŞAMA 4] Ajan raporu JSON olarak compile edildi.")
         if raw_json:
             try:
                 parsed_json = json.loads(raw_json)
             except (json.JSONDecodeError, TypeError) as error:
-                print(f"⚠️ [JSON PARSE HATASI] Model bozuk JSON üretti! Hata: {error}")
+                logger.warning(f"⚠️ JSON Parse Hatası! Ajan bozuk JSON üretti: {error}")
                 parsed_json = {}
         else:
             parsed_json = {}
@@ -277,11 +298,11 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         seen_times = set() # Sadece zamanları takip ediyoruz
 
         for evt in graph_output.get("detected_events", []):
-            event_content = evt.get("event", "Olay tespit edilemedi.")
-            if isinstance(event_content, dict):
-                event_text = event_content.get("description", str(event_content))
-            else:
-                event_text = str(event_content)
+            event_time = evt.get("time", "00:00")
+            if event_time not in seen_times:
+                seen_times.add(event_time)
+                safe_events.append(evt)
+                
             
             event_time = evt.get("time", "00:00")
             
@@ -291,6 +312,8 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
                 clean_evt = evt.copy()
                 clean_evt["event"] = event_text
                 safe_events.append(clean_evt)
+
+            logger.info(f"🧹 [FİLTRELEME] Aynı saniyedeki kopya olaylar silindi. Net olay sayısı: {len(safe_events)}")
                 
         total_raw_events = len(graph_output.get("detected_events", []))
         total_safe_events = len(safe_events)
@@ -311,24 +334,21 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         final_response["risk_trend"] = graph_output.get("risk_trend", "Stabil")
         
         elapsed_time = time.time() - start_time
-        print(f"⏱️ [PERFORMANS] Analiz toplam {elapsed_time:.2f} saniye sürdü.")
-        
-        print("\n📤 [REACT'E GÖNDERİLEN SONUÇ ÖZETİ]")
-        print(f"  - Risk Seviyesi: {final_response.get('risk')} (Skor: {final_response.get('risk_score')})")
-        print(f"  - Tespit Edilen Olay Sayısı: {len(final_response.get('events', []))}")
-        print(f"  - Önerilen Aksiyon Sayısı: {len(final_response.get('actions', []))}")
-        print("========================================\n")
+        logger.info(f"🏁 [TAMAMLANDI] Toplam İşlem Süresi: {elapsed_time:.2f} saniye.")
+        logger.debug(f"📤 Frontend'e dönen final JSON: Risk={final_response.get('risk')}, Olay={len(final_response.get('events', []))}")
 
 
 
         return final_response
 
     except Exception as error:
+        logger.error(f"💥 KRİTİK HATA: Model analizi sırasında bir şeyler çöktü: {str(error)}", exc_info=True)
         raise HTTPException(status_code=502, detail=f"Model analizi başarısız: {error}") from error
     finally:
         await file.close()
         if temporary_path and os.path.exists(temporary_path):
             os.remove(temporary_path)
+            logger.debug("🗑️ Geçici video dosyası silindi.")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -373,6 +393,7 @@ async def chat_with_agent(req: ChatRequest) -> dict:
         has_context (bool): Analiz bağlamının mevcut olup olmadığı.
     """
     try:
+        logger.info(f"💬 [YENİ CHAT İSTEĞİ] Kullanıcı sorusu: {req.message[:50]}...")
         # Kalıcı hafızayı yükle
         memory = MemoryManager.load_memory()
 
@@ -381,6 +402,7 @@ async def chat_with_agent(req: ChatRequest) -> dict:
             {"role": m.role, "content": m.content}
             for m in (req.history or [])
         ]
+        logger.debug(f"🔍 Chat Bağlamı: {len(history_dicts)} geçmiş tur bulundu. Analiz context var mı? {bool(req.analysis_context)}")
 
         # Sistem promptu + bağlam + geçmiş + yeni soru
         messages = await run_in_threadpool(
@@ -401,10 +423,11 @@ async def chat_with_agent(req: ChatRequest) -> dict:
             context_risk = req.analysis_context.get("risk", "Bilinmiyor")
             print(f"   📥 [CHAT BAĞLAMI] Modele iletilen videodaki olay sayısı: {context_events_count}, Risk: {context_risk}")
 
+        logger.info("🤖 Llama modeline (Chat) istek gönderiliyor...")
         # Llama'ya gönder
         reply = await run_in_threadpool(llama_chat, messages)
+        logger.debug(f"✅ Llama yanıtı alındı: {reply[:100]}...")
 
-        print(f"🤖 [CHAT] Llama yanıtı: {reply[:120]}...")
 
         return {
             "reply": reply,
@@ -412,6 +435,7 @@ async def chat_with_agent(req: ChatRequest) -> dict:
         }
 
     except Exception as error:
+        logger.error(f"💥 CHAT HATASI: {str(error)}", exc_info=True)
         traceback.print_exc()
         raise HTTPException(
             status_code=502,
