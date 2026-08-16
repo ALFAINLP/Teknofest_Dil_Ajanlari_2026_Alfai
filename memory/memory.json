@@ -497,6 +497,370 @@
             },
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri araba kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:16",
+            "event": "İki beyaz araç kavşakta çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı araç kavşakta duran siyah araca çarptı ve kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Ambulans kırmızı otomobille çarpıştı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": "Ambulans devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Kaza sonucunda yaralılar var",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Ambulans, kırmızı otomobille çarpıştı",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": {
+                "frame": "video_segment_00:07",
+                "description": "Ambulans devrildi",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Kaza sonrası yaralılar belirlendi",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri otomobil, kavşakta duran beyaz minibüsle çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:16",
+            "event": "İki beyaz otomobil, kavşakta birbirine girdi ve çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı otomobil, kavşakta duran siyah otomobile çarptı ve trafik işaretlerine hasar verdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Ambulans kırmızı otomobille çarpıştı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": "Ambulans devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Kazada yaralılar var",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Ambulans, kırmızı otomobille çarpıştı",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": {
+                "frame": "video_segment_00:07",
+                "description": "Ambulans devrildi",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Kazada yaralılar var",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştü ve motosikleti kaldırdı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü kalktı ve çevredeki araçlarla etkileşime girdi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri araba kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:16",
+            "event": "İki beyaz araç kavşakta çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı araç kavşakta duran siyah araca çarptı ve trafik işaretlerine hasar verdi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü yolu geçmeye çalıştı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
@@ -528,7 +892,70 @@
         "Düşük",
         "Düşük",
         "Düşük",
-        "Düşük"
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Düşük",
+        "Yüksek"
     ],
-    "tool_history": []
+    "tool_history": [
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Yüksek",
+                "raw_incident_context": "Motosiklet sürücüsü devrildi ve yere düştü"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet sürücüsü devrildi ve yere düştü",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Yüksek",
+                "raw_incident_context": "Motosiklet sürücüsü devrildi ve yere düştü. Kendi kendine kalktı ve yardım bekliyor."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet sürücüsü devrildi ve yere düştü. Kendi kendine kalktı ve yardım bekliyor.",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Kavşakta önemli bir kaza oldu. Çok sayıda aracın çarpışması sonucu trafik işaretlerine hasar verdi."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Kavşakta önemli bir kaza oldu. Çok sayıda aracın çarpışması sonucu trafik işaretlerine hasar verdi.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Yüksek",
+                "raw_incident_context": "Motosiklet sürücüsü devrildi ve yere düştü"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet sürücüsü devrildi ve yere düştü",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true
+            }
+        }
+    ]
 }

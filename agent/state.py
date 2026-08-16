@@ -29,3 +29,6 @@ class AgentState(TypedDict):
 
     # LangGraph mesaj hafızası
     messages: Annotated[list, add_messages]
+
+    current_zone: str         # HATA 10 için (cache)
+    tool_history: list 
