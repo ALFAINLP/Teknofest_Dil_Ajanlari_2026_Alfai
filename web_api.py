@@ -310,7 +310,7 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             if event_time not in seen_times:
                 seen_times.add(event_time)
                 clean_evt = evt.copy()
-                clean_evt["event"] = event_text
+                clean_evt["event"] = evt.get("event", "Açıklama yok")
                 safe_events.append(clean_evt)
 
             logger.info(f"🧹 [FİLTRELEME] Aynı saniyedeki kopya olaylar silindi. Net olay sayısı: {len(safe_events)}")

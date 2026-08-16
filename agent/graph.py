@@ -171,7 +171,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         f"Aşağıdaki olayları incele ve risk seviyesini belirle:\n"
         f"{chr(10).join(events_for_brain)}"
     )
-    
+    logger.info(f"🔍 evaluate_risks_node çalışıyor. Mevcut state: {state.keys()}")
     # 🟢 KRİTİK: state["messages"] ile hiçbir bağlantısı yok. Sadece bu 2 mesaj gidiyor.
     brain_response = analyze_state([
         {"role": "system", "content": clean_system_prompt},
@@ -255,10 +255,10 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     # logger'da "Mock araç çağrısı yapıldı" gibi anlamsız ifadeler kalmasın.
     # ================================================================
     assistant_content = brain_response.content if brain_response.content else "Risk değerlendirmesi yapıldı, özel bir aksiyon gerekmiyor."
-    state["messages"].append({
-        "role": "assistant", 
-        "content": assistant_content
-    })
+    # state["messages"].append({
+    #     "role": "assistant", 
+    #     "content": assistant_content
+    # })
 
     # ================================================================
     # 🧠 ADAPTIVE RISK MEMORY (Zaten iyi çalışıyor, dokunmuyoruz)
@@ -423,7 +423,7 @@ def compile_report_node(state: AgentState) -> AgentState:
         ]
     }
     state["messages"].append(log_message)
-
+    logger.info(f"🔍 compile_report_node çalışıyor. Mevcut state: {state.keys()}")
 
     
 
@@ -437,15 +437,17 @@ workflow.add_node("compile_report", compile_report_node)
 
 workflow.set_entry_point("extract_video_info")
 
-def router(state: AgentState) -> str:
-    if state["next_step"] == "process_risk":
-        return "evaluate_risks"
-    elif state["next_step"] == "compile_report":
-        return "compile_report"
-    return END
+# def router(state: AgentState) -> str:
+#     if state["next_step"] == "process_risk":
+#         return "evaluate_risks"
+#     elif state["next_step"] == "compile_report":
+#         return "compile_report"
+#     return END
 
 
-workflow.add_conditional_edges("extract_video_info", router)   # Burada router kalsın
-workflow.add_edge("evaluate_risks", "compile_report")          # 🟢 ARTIK SADECE DÜZ EDGE!
+workflow.add_edge("extract_video_info", "evaluate_risks")
+workflow.add_edge("evaluate_risks", "compile_report")
+workflow.add_edge("compile_report", END)
 
+print("🔍 GRAPH EDGES:", workflow.edges)
 app = workflow.compile()

@@ -861,6 +861,200 @@
             },
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri araba kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:16",
+            "event": "İki beyaz araç kavşakta çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı araç kavşakta duran siyah araca çarptı ve kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştü ve motosiklet devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletin yanında durdu",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun altında yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:09",
+            "event": "Araç, mağazanın girişine çarparak camları kırar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": "Bir kişi, kırılan eşyaların arasında dolaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Kişi, kırık cam parçalarını toplar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:09",
+            "event": {
+                "frame": "video_segment_00:09",
+                "description": "Araç, mağazanın girişine çarparak camları ve vitrinleri kırar.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": {
+                "frame": "video_segment_00:24",
+                "description": "Bir kişi, kırılan eşyaların arasında dolaşır ve bazı eşyaları toplar.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına girdi.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "İşçi, kamyonun yanına girdikten sonra yere düştü.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
@@ -902,6 +1096,11 @@
         "Yüksek",
         "Yüksek",
         "Düşük",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
         "Yüksek"
     ],
     "tool_history": [
@@ -955,6 +1154,71 @@
                 "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet sürücüsü devrildi ve yere düştü",
                 "ui_action": "CRITICAL_RED_FLASH",
                 "audio_alert_triggered": true
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Kavşakta önemli bir kaza oldu. Gri araba beyaz minibüsü, iki beyaz araba birbirine çarptı ve kırmızı araba siyah araca ve beyaz minibüsü çarptı."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Kavşakta önemli bir kaza oldu. Gri araba beyaz minibüsü, iki beyaz araba birbirine çarptı ve kırmızı araba siyah araca ve beyaz minibüsü çarptı.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Yüksek",
+                "raw_incident_context": "Motosiklet kazası"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet kazası",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun altında yere düşter."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun altında yere düşter.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Mağazanın girişine araba çarparak camları ve vitrinleri kırdı."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Mağazanın girişine araba çarparak camları ve vitrinleri kırdı.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanından geçerken yere düşter."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanından geçerken yere düşter.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
             }
         }
     ]
