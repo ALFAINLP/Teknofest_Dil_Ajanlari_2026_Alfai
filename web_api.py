@@ -302,18 +302,8 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             if event_time not in seen_times:
                 seen_times.add(event_time)
                 safe_events.append(evt)
-                
-            
-            event_time = evt.get("time", "00:00")
-            
-            # Aynı saniyede birden fazla olay olmasını engellemek için sadece zamanı kontrol et
-            if event_time not in seen_times:
-                seen_times.add(event_time)
-                clean_evt = evt.copy()
-                clean_evt["event"] = evt.get("event", "Açıklama yok")
-                safe_events.append(clean_evt)
 
-            logger.info(f"🧹 [FİLTRELEME] Aynı saniyedeki kopya olaylar silindi. Net olay sayısı: {len(safe_events)}")
+        logger.info(f"🧹 [FİLTRELEME] Aynı saniyedeki kopya olaylar silindi. Net olay sayısı: {len(safe_events)}")
                 
         total_raw_events = len(graph_output.get("detected_events", []))
         total_safe_events = len(safe_events)
@@ -324,7 +314,7 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             safe_actions = ["Rutin saha izlemesi devam ediyor, anomali tespiti bekleniyor."]
 
         model_output = {
-            "summary": graph_output.get("technical_summary") or "Video analiz edildi, genel durum stabil.",
+            "summary": parsed_json.get("summary") or graph_output.get("technical_summary") or "Video analiz edildi, genel durum stabil.",
             "events": safe_events,
             "risk": graph_output.get("risk_assessments", ["Düşük"])[0] if graph_output.get("risk_assessments") else "Düşük",
             "actions": safe_actions
@@ -337,6 +327,13 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         logger.info(f"🏁 [TAMAMLANDI] Toplam İşlem Süresi: {elapsed_time:.2f} saniye.")
         logger.debug(f"📤 Frontend'e dönen final JSON: Risk={final_response.get('risk')}, Olay={len(final_response.get('events', []))}")
 
+        t0 = time.time()
+        model_output = await run_in_threadpool(analyze_video, temporary_path)
+        logger.info(f"⏱️ Vision süresi: {time.time()-t0:.2f}s")
+
+        t1 = time.time()
+        final_state = await run_in_threadpool(langgraph_app.invoke, initial_state)
+        logger.info(f"⏱️ LangGraph süresi: {time.time()-t1:.2f}s")
 
 
         return final_response

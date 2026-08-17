@@ -16,3 +16,7 @@ memory/memory.json
 __pycache__/
 *.pyc
 dist/
+
+Videos/
+*.avi
+benchmark_results.json

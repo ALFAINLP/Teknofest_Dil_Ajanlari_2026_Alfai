@@ -4,7 +4,6 @@ from model_py.config.settings import (
     BRAIN_MODEL,
     TEMPERATURE,
 )
-from model_py.prompts.brain_prompt import BRAIN_SYSTEM_PROMPT
 from model_py.tools.tool_definitions import TOOLS
 
 def analyze_state(messages: list):
@@ -14,10 +13,6 @@ def analyze_state(messages: list):
     """
     formatted_messages = []
     
-    formatted_messages.append({
-        "role": "system",
-        "content": BRAIN_SYSTEM_PROMPT
-    })
     
     for msg in messages:
         # Eğer mesaj zaten bir sözlük ise doğrudan ekle

@@ -1055,6 +1055,3217 @@
             },
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına geldi.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanına girdi ve yere düştü.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına geldi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanına girdi ve yere düştü.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına girdi.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "İşçi, kamyonun yanına girdikten sonra yere düştü.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, ışıklı bir fenerle yola yürüyor.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun altına doğru eğilerek bir şey yapmaya çalışır.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:22",
+            "event": {
+                "frame": "video_segment_00:22",
+                "description": "İşçi yere düşer ve hareket edemez hale gelir.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına geldi.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanına girdi ve yere düştü.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına geldi.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanına girdi ve yere düştü.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanından geçerken yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": "İşçi, yüklenme alanına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İşçi, kamyonun yanından geçerken yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "İşçi, yüklenme alanına yaklaşarak kamyonun yanına geldi.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İşçi, kamyonun yanına girdi ve yere düştü.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Forklift, nesneyi kaldırırken dengesini kaybediyor ve yan yatıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçi, araçtan inip yere düşen nesneye müdahale ediyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": "Bir işçi, olay yerine gelerek durumu kontrol ediyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Forklift, nesneyi kaldırırken dengesini kaybediyor ve yan yatıyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçi, araçtan inip yere düşen nesneye müdahale ediyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": {
+                "frame": "video_segment_00:40",
+                "description": "Bir işçi, olay yerine gelerek durumu kontrol ediyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "İnsanlar arasında kavga başlamıştır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": "Bir kişi yere düşmüştür.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "İnsanlar birbirlerine saldırmaya devam etmektedir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "İki kişi birbirine saldırmaya başlar.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:02",
+            "event": {
+                "frame": "video_segment_00:02",
+                "description": "Bir kişi yere düşer, diğerleri etrafa dağılır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "Bir kişi yere yatmış halde kalmaya devam eder, diğerleri onun etrafında hareket eder.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "İşçi, fabrika alanında kartonlar arasında hareket ederek malzemeyle ilgilenmektedir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçi, malzeme bobinine yaklaşıp onu yerdeki kartonlara yerleştirir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:28",
+            "event": "İşçi, malzeme bobinine yaklaşıp onu yerdeki kartonlara yerleştirir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "İşçi, malzeme bobinine yaklaşır ve onu yerdeki kumaş üzerine yerleştirir.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:28",
+            "event": {
+                "frame": "video_segment_00:28",
+                "description": "İşçi, malzeme bobinine yaklaşır ve onu yerdeki kumaş üzerine yerleştirir.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "İşçi, çelik profillerin bulunduğu bölgeye yürüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "İşçi, çelik profilleri yerleştiriyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçi, çelik profilleri yerleştirirken dengesini kaybederek yere düşüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Bir işçi kameraya yaklaşarak geçiyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "İşçi, çelik profillerin bulunduğu alanda yürüyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "İşçi, çelik profilleri yerleştiriyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçi, çelik profilleri yerleştirirken dengesini kaybederek yere düşüyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Bir işçi kameraya yaklaşarak geçiyor.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Büyük metal boru, kamyonun üzerine yerleştiriliyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": "Metal boru dengesini kaybederek devrilir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:08",
+            "event": "İşçi, devrilen borunun etkisiyle yere düşer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "İşçi, dengesiz bir şekilde dönen metal borunun yanında durur.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:08",
+            "event": {
+                "frame": "video_segment_00:08",
+                "description": "İşçi, borunun devrilmesine karşı eğilerek müdahale eder.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçi, borunun devrilmesi sonucu yere düşer.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:23",
+            "event": "Araç yangını başlar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:45",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:50",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:55",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:00",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:05",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:10",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:15",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:20",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:25",
+            "event": "İnsanlar yangına müdahale eder",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:30",
+            "event": "İnsanlar yangından uzaklaşır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:23",
+            "event": {
+                "frame": "video_segment_00:23",
+                "description": "Araç yangını başlar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": {
+                "frame": "video_segment_00:24",
+                "description": "İnsanlar yangına müdahale eder",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "İnsanlar yangın bölgesinde yere düşer",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": {
+                "frame": "video_segment_00:40",
+                "description": "İnsanlar yangın bölgesinde kalmaya devam eder",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:06",
+            "event": {
+                "frame": "video_segment_01:06",
+                "description": "Bir araç yangın bölgesine yaklaşır",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:01",
+            "event": "İki erkek birbirleriyle kavga ediyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:05",
+            "event": "Bir erkek diğerinin üzerine düşüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:07",
+            "event": "Bir erkek yere düşüyor ve bir kâğıt torbası yere düşüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:10",
+            "event": "Bir erkek bir koltuğa oturuyor ve diğerinin üzerine düşüyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Araç park edilir ve cam kırılır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İlk şüpheli ATM'ye girer",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İkinci şüpheli ATM'ye girer",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Hırsızlar ATM'den para alır",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Hırsızlar araçtan çıkarlar ve kaçışlar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Saldırganlar, araçtan inerek ATM'ye saldırıyorlar.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Saldırganlar, camları kırarak ATM'ye giriyorlar.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Saldırganlar, ATM'den para çekiyorlar.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Saldırganlar, ATM'den para çekip araçtan kaçıyorlar.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:09",
+            "event": "Araç, mağazanın önünden hızla geçerek vitrinleri ve iç mekanı hasar görmüş.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": "Bir kişi hasarlı alanın ortasında dolaşarak nesneleri toplamaya çalışmıştır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:09",
+            "event": {
+                "frame": "video_segment_00:09",
+                "description": "Araç, mağazanın girişine çarparak camları ve vitrinleri kırar.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": {
+                "frame": "video_segment_00:24",
+                "description": "Bir kişi, kırılan eşyaların arasında dolaşır ve bazı eşyaları toplar.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Forklift, yüküyle dengesini kaybederek yan yatıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:04",
+            "event": "İşçi, kazadan etkilenmeden uzaklaşarak güvenli bölgeye kaçıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:00",
+            "event": "İki erkek, sokakta yürüyerek birbirlerine yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:15",
+            "event": "Bir erkek, bir çubukla diğer erkeği vurarak kavga başlatır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:25",
+            "event": "Kavga edenlerin etrafına insanlar toplanır ve müdahale ederler.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:40",
+            "event": "Kavga devam ederken, bir kişi çubuğu bırakır ve kaçışa başlar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:50",
+            "event": "Kavga alanına insanlar toplanır ve kavga edenleri çevreler.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:47",
+            "event": "İki kişi arasında çatışma ve biri diğerine saldırmaya çalışır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:48",
+            "event": "Patlama ve yangın başlar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:47",
+            "event": {
+                "frame": "video_segment_00:47",
+                "description": "İki kişi arasında çatışma ve biri diğerine saldırmaya çalışır.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:48",
+            "event": {
+                "frame": "video_segment_00:48",
+                "description": "Patlama ve yangın başlar.",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:02",
+            "event": "İnsan, araçtan bir nesne çıkarıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:22",
+            "event": "Kamera görüşü kaybolur ve yoğun duman/sis ortaya çıkar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:02",
+            "event": {
+                "frame": "video_segment_00:02",
+                "description": "İnsan, araçtan eşyalar çıkarıyor",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:22",
+            "event": {
+                "frame": "video_segment_00:22",
+                "description": "Araçta patlama ve yoğun duman çıkıyor",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": "Şüpheli bir kişi mağazanın kasasına yaklaşır ve ürün alır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:33",
+            "event": "Bir oda içinde yangın çıkıyor ve ışıklar yanıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:33",
+            "event": "Mağazanın dışındaki bir yolda bir araç yanıyor ve ışıkları yanıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": {
+                "frame": "video_segment_00:03",
+                "description": "Şüpheli bir kişi mağazanın kasasına yaklaşır ve ürün alır.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:33",
+            "event": {
+                "frame": "video_segment_00:33",
+                "description": "Bir oda içinde yangın çıkar ve kamera görüşü parlak ışıkla bozulur.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:34",
+            "event": {
+                "frame": "video_segment_01:34",
+                "description": "Mağazanın dışındaki bir yolda bir araç yanıyor ve kamera görüşü parlak ışıkla bozulur.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştü ve motosikleti kaldırdı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü kalktı ve çevredeki araçlarla etkileşime girdi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:03",
+            "event": "Gri araba kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:17",
+            "event": "İki beyaz araç kavşakta çarpıştı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:26",
+            "event": "Kırmızı araç kavşakta duran siyah araca çarptı ve kavşakta duran beyaz minibüle çarptı.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Taksi ve otomobiller yol üzerinde ilerliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Bir kamyonet yolun sol tarafında geçiyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Taksi ve diğer araçlar yol üzerinde ilerliyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Bir kamyon yolun sol tarafında geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "İşçiler, araçtan uzaklaşırken bir yaya yolu üzerinde çalışırken yanlarında bir araç var.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": "Güvenlik görevlileri, yaya yolu boyunca ilerliyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:06",
+            "event": "Yaya yolu üzerindeki yaya trafiği devam ediyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "İşçiler, bir araçla ilgili çalışma yapıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": {
+                "frame": "video_segment_00:03",
+                "description": "Güvenlik görevlileri yaya yolu boyunca ilerliyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:06",
+            "event": {
+                "frame": "video_segment_00:06",
+                "description": "Yaya yolu üzerindeki insanlar geçiş yapıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Güvenlik görevlisi, kırmızı halı üzerinde yürüyerek bina girişine yaklaşıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:06",
+            "event": "Bir erkek, kırmızı halı üzerinde yürüyerek bina girişine giriyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:18",
+            "event": "İki kadın, kırmızı halı üzerinde yürüyerek bina girişine giriyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Güvenlik görevlisi, kırmızı halı üzerinde yürüyerek bina içine giriyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:06",
+            "event": {
+                "frame": "video_segment_00:06",
+                "description": "Bir erkek, kırmızı halı üzerinde yürüyerek bina içine giriyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:18",
+            "event": {
+                "frame": "video_segment_00:18",
+                "description": "İki kadın, kırmızı halı üzerinde yürüyerek bina içine giriyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Araçlar yolun her iki yönünde hareket ediyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "Bir otobüs diğer araçların arasından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:00",
+            "event": {
+                "frame": "video_segment_01:00",
+                "description": "Trafik ışıklarında duran araçlar harekete geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:30",
+            "event": {
+                "frame": "video_segment_01:30",
+                "description": "Araçlar birbirlerine yakın geçiş yapıyorlar",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "02:00",
+            "event": {
+                "frame": "video_segment_02:00",
+                "description": "Trafik yoğunluğu artıyor ve araçlar yavaşlıyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": "Bir erkek personel ofis içinde yürüyerek bir kadın çalışanın masasına yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Erkek personel, kadın çalışanın masasına oturarak onunla konuşmaya başlar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": "Erkek personel, konuşmasını sürdürebilmesi için elini kaldırarak dikkat çekmeye çalışır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:50",
+            "event": "Erkek personel, konuşmasını sonlandırır ve elini kaldırarak durur.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:24",
+            "event": {
+                "frame": "video_segment_00:24",
+                "description": "Bir erkek çalışan ofis içinde yürüyerek bir kadın çalışanın masasına yaklaşır.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "Erkek çalışan, kadın çalışanın masasına oturarak onunla konuşmaya başlar.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:40",
+            "event": {
+                "frame": "video_segment_00:40",
+                "description": "Erkek çalışan konuşurken elini kafasına götürür.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:49",
+            "event": {
+                "frame": "video_segment_00:49",
+                "description": "Erkek çalışan konuşmayı bırakır ve masadan ayrılır.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "İki kişi park alanına giriyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Kırmızı araç park alanında ilerliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:28",
+            "event": "Gri minivan park alanında ilerliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": "Beyaz araç park alanında ilerliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:54",
+            "event": "Motosiklet park alanında geçiyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "İki kişi park alanına giriyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Kırmızı araç park alanından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:28",
+            "event": {
+                "frame": "video_segment_00:28",
+                "description": "Gri araç park alanından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:35",
+            "event": {
+                "frame": "video_segment_00:35",
+                "description": "Beyaz araç park alanından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:54",
+            "event": {
+                "frame": "video_segment_00:54",
+                "description": "Motosiklet park alanından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Bir kişi masasından kalkıyor ve bir çanta alıyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Kişi, bir koltuk kapağı gibi bir nesneyi alıyor ve dışarıya doğru ilerliyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Kişi, ofis girişine yaklaşırken başka kişilerle etkileşime giriyor.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Bir kişi masasından kalkıyor ve bir çanta alıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Kişi, bir koltuk kapağı gibi bir nesneyi alıyor ve dışarıya doğru götürüyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Kişi, ofis dışına doğru yürürken diğer kişilerle etkileşime giriyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "Ofis çalışanı masasında oturuyor ve bilgisayar kullanıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Bir kadın ve çocuk, alışveriş merkezi koridorunda yürüyorlar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:03",
+            "event": "Kadın ve çocuk, bir süre durup konuşur, sonra uzaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": "Tekerlekli sandalyede bir kadın, koridoru yavaşça geçer.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Bir kadın ve çocuk, alışveriş merkezi koridorunda yürüyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:02",
+            "event": {
+                "frame": "video_segment_00:02",
+                "description": "Bir kadın, alışveriş merkezi koridorunda yürüyerek uzaklaşıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:07",
+            "event": {
+                "frame": "video_segment_00:07",
+                "description": "Bir kadın, alışveriş merkezi koridorunda yürüyerek uzaklaşıyor.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Müşteri, kasaya yaklaşır ve ödeme yapmak için para verir.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Müşteri, ödeme tamamlandıktan sonra kasadan ayrılır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Bir alışveriş arabası kasadan uzaklaşırken görünür.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Müşteri, kasaya yaklaşır ve ödeme yapmak için para verir.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Müşteri, ödeme sonrası kasadan ayrılır.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:29",
+            "event": {
+                "frame": "video_segment_00:29",
+                "description": "Bir alışveriş arabası kasadan uzaklaşır.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:00",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:02",
+            "event": "Bir kamyonet yolun ortasından geçiyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:04",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:06",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:08",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:10",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00:12",
+            "event": "Bir araç sağdan sola geçiş yapıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Bir araç sağdan sola geçiş yapıyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:02",
+            "event": {
+                "frame": "video_segment_00:02",
+                "description": "Bir kamyonet yolun ortasından geçiyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:04",
+            "event": {
+                "frame": "video_segment_00:04",
+                "description": "Bir beyaz otomobil sağdan sola geçiş yapıyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:06",
+            "event": {
+                "frame": "video_segment_00:06",
+                "description": "Bir araç park alanında duruyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:08",
+            "event": {
+                "frame": "video_segment_00:08",
+                "description": "Bir araç park alanında duruyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Bir araç sağdan sola geçiş yapıyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:12",
+            "event": {
+                "frame": "video_segment_00:12",
+                "description": "Bir araç sağdan sola geçiş yapıyor",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": "Köpek, koridor boyunca ilerler.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": "Köpek, sarı ve mor çöp konteynerlerine yaklaşır.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:45",
+            "event": "Köpek, sarı konteynerin üzerine oturur ve kendi kendine oynar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:30",
+            "event": "Köpek, sarı konteynerin üzerine oturur ve kendi kendine oynar.",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Köpek, koridor boyunca ilerler.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:30",
+            "event": {
+                "frame": "video_segment_00:30",
+                "description": "Köpek, sarı ve mor çöp konteynerlerine yaklaşır.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:45",
+            "event": {
+                "frame": "video_segment_00:45",
+                "description": "Köpek, sarı konteynerin üzerine oturur ve içindeki kırmızı nesneye bakar.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "01:30",
+            "event": {
+                "frame": "video_segment_01:30",
+                "description": "Köpek, sarı konteynerin üzerine oturur ve içindeki kırmızı nesneye bakar.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştü ve motosiklet devrildi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü kalktı ve motosikletin yanında durdu",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, çevredeki araçlarla etkileşime girdi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, yere düşen motosikletinin yanında durdu ve çevreye bakındı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Yaralı sürücü, yere düşen motosikletinin yanında kaldı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Yaralı sürücü, yere düşen motosikletinin yanında kaldı ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletinin yanında duran başka bir kişiyle etkileşime girdi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, devrilen motosikletin yanında durdu ve durumu kontrol etmeye çalıştı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu ve çevreye bakındı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı ve yardım istemedi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu ve çevreye bakındı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştü ve motosiklet devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü kalktı ve motosikletin yanında durdu",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, çevredeki araçlarla etkileşime girdi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştü ve motosiklet devrildi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": {
+                "frame": "video_segment_00:19",
+                "description": "Sürücü kalktı ve motosikletin yanında durdu",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, çevredeki araçlarla etkileşime girdi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve çevreye bakındı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu ve yardım bekledi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Motosiklet sürücüsü devrildi ve yere düştü",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": "Sürücü yere düştükten sonra kendi kendine kalktı",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:19",
+            "event": "Sürücü, yere düşen motosikletin yanında durdu ve yardım bekledi",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Motosiklet sürücüsü devrildi ve yere düştü",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:16",
+            "event": {
+                "frame": "video_segment_00:16",
+                "description": "Sürücü yere düştükten sonra kendi kendine kalktı",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Sürücü, yere düşen motosikletinin yanında durdu ve yardım bekledi",
+                "has_risk": true,
+                "risk_type": "Yüksek"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:00",
+            "event": {
+                "frame": "video_segment_00:00",
+                "description": "Olay bulunamadı.",
+                "has_risk": false,
+                "risk_type": "Düşük"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama sonucu büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar oluşuyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar oluşuyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar oluşuyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama sonucu büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama sonucu büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama sonucu büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama sonucu büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
@@ -1101,7 +4312,70 @@
         "Yüksek",
         "Yüksek",
         "Yüksek",
-        "Yüksek"
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Yüksek",
+        "Orta",
+        "Yüksek",
+        "Orta",
+        "Yüksek",
+        "Yüksek",
+        "Kritik",
+        "Yüksek",
+        "Orta",
+        "Yüksek",
+        "Yüksek",
+        "Orta",
+        "Yüksek",
+        "Kritik",
+        "Yüksek",
+        "Yüksek",
+        "Düşük",
+        "Yüksek",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Düşük",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Düşük",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Düşük",
+        "Kritik",
+        "Düşük",
+        "Düşük",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Düşük",
+        "Düşük",
+        "Kritik",
+        "Kritik"
     ],
     "tool_history": [
         {
@@ -1220,6 +4494,1131 @@
                 "ui_action": "WARNING_YELLOW_BORDER",
                 "audio_alert_triggered": false
             }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanından geçerken yere düşer"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanından geçerken yere düşer",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanından geçerken yere düşer."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanından geçerken yere düşer.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanından geçerken yere düşter"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanından geçerken yere düşter",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanından geçerken yere düşer."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanından geçerken yere düşer.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "işçi, kamyonun yanına girdi ve yere düştü."
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: işçi, kamyonun yanına girdi ve yere düştü.",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "Olay bulunamadı."
+            },
+            "result": []
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "20",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün yere düşmesi"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün yere düşmesi",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "20",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün kalkması",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "20",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün kalkması",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "20",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "20",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Motosiklet devrilmesi ve sürücünün kalkması"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Motosiklet devrilmesi ve sürücünün kalkması",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "olay bulunamadı"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "0",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "olay bulunamadı"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "0",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "15",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "fabrikada yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "fabrikada yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
         }
     ]
 }

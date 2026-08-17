@@ -1,38 +1,4 @@
 TOOLS = [
-    # {
-    #     "type": "function",
-    #     "function": {
-    #         "name": "saglik_ekibini_cagir",
-    #         "description": "Sahada acil tıbbi müdahale gerektiren bir durum tespit edildiğinde sağlık ekibini çağırmak için kullanılır.",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "sebep": {
-    #                     "type": "string",
-    #                     "description": "Sağlık ekibinin çağrılma nedeni"
-    #                 }
-    #             },
-    #             "required": ["sebep"]
-    #         }
-    #     }
-    # },
-    # {
-    #     "type": "function",
-    #     "function": {
-    #         "name": "guvenligi_uyar",
-    #         "description": "Sahada güvenlik personelinin müdahale etmesi gereken durumlarda kullanılır.",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "mesaj": {
-    #                     "type": "string",
-    #                     "description": "Güvenlik personeline iletilecek uyarı mesajı"
-    #                 }
-    #             },
-    #             "required": ["mesaj"]
-    #         }
-    #     }
-    # },
     {
         "type": "function",
         "function": {
@@ -51,6 +17,44 @@ TOOLS = [
                     }
                 },
                 "required": ["alert_level", "raw_incident_context"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "query_previous_incidents",
+            "description": "Geçmişte benzer olayların yaşanıp yaşanmadığını sorgular. Örneğin 'forklift devrilmesi' gibi anahtar kelimelerle geçmiş vakaları arar. Eğer benzer vaka varsa, bu bilgi risk değerlendirmesini etkiler.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "incident_keywords": {
+                        "type": "string",
+                        "description": "Sorgulanacak olay türü veya anahtar kelimeler (örn: 'forklift devrilmesi', 'kimyasal sızıntı')"
+                    }
+                },
+                "required": ["incident_keywords"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_personnel_on_duty",
+            "description": "Belirli bir zaman damgasında ve bölgede görevli personel listesini getirir. Bu bilgi, acil durumda kimi arayacağını bilmek için kullanılır.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "integer",
+                        "description": "Sorgulanacak zaman damgası (saniye cinsinden TAM SAYI, örn: 15)"
+                    },
+                    "zone": {
+                        "type": "string",
+                        "description": "Bölge adı (örn: 'Lojistik Saha - Peron 3')"
+                    }
+                },
+                "required": ["timestamp", "zone"]
             }
         }
     }

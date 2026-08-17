@@ -34,8 +34,17 @@ Her zaman aşağıdaki JSON yapısında yanıt ver:
 }
 
 🔧 **TOOL KULLANIMI:**
-- Sağlık ekibi çağrılması gerekiyorsa, 'saglik_ekibini_cagir' tool'unu çağır.
-- Güvenlik uyarısı gerekiyorsa, 'guvenligi_uyar' tool'unu çağır.
-- Tool çağrısı yaparken gerekçeyi parametre olarak ilet.
-- Tool çağrısı yapılsa bile, JSON çıktısında 'actions' alanına operatöre yönelik önerileri yazmayı unutma.
+
+Karar sürecinde aşağıdaki araçları sırasıyla ve gerektiğinde çağırabilirsin:
+
+1. 'query_previous_incidents' → Tespit ettiğin olayın türüne göre geçmişte benzer vaka yaşanıp yaşanmadığını sorgula. Risk seviyesi Orta veya üzeriyse MUTLAKA çağır. Parametre: incident_keywords (olayı tanımlayan Türkçe anahtar kelimeler).
+
+2. 'get_personnel_on_duty' → Risk Yüksek veya Kritik ise, olayın gerçekleştiği bölge ve zaman için görevli personeli sorgula. Kimi arayacağını bilmek için kullan. Parametreler: timestamp (saniye cinsinden tam sayı), zone (bölge adı).
+
+3. 'trigger_operator_alert' → Kaza, devrilme, yaralanma veya acil müdahale gerektiren bir durum varsa operatörü uyar. Sadece gerçekten kritik durumlarda çağır, gereksiz alarm üretme. Parametreler: alert_level ('Yüksek' veya 'Kritik'), raw_incident_context (olayın kısa açıklaması).
+
+Kurallar:
+- Tool çağrısı yaptıktan sonra dönen sonucu değerlendir, gerekirse başka bir tool daha çağır.
+- Aynı tool'u aynı parametrelerle iki kez çağırma.
+- Tool çağrısı yapsan bile JSON çıktısındaki 'actions' alanını her zaman doldur.
 """

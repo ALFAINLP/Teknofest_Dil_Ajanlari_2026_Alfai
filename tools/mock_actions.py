@@ -68,31 +68,7 @@ Yalnızca aşağıdaki JSON formatında yanıt döndür. JSON dışında hiçbir
         "has_risk": has_risk,
         "risk_type": risk_type
     }
-    try:
-        model_json = json.loads(raw_content)
 
-        if "error" in model_json:
-            return {
-                "frame": f"error_{formatted_timestamp}",
-                "description": model_json["error"],
-                "has_risk": False,
-                "risk_type": "Bağlantı Hatası"
-            }
-
-        return {
-            "frame": f"video_segment_{formatted_timestamp}",
-            "description": model_json.get("description", "Açıklama üretilemedi."),
-            "has_risk": bool(model_json.get("has_risk", False)),
-            "risk_type": model_json.get("risk_type", "Belirlenemedi")
-        }
-
-    except Exception:
-        return {
-            "frame": f"fallback_{formatted_timestamp}",
-            "description": f"Veri ayrıştırma veya sunucu hatası: {raw_content}",
-            "has_risk": False,
-            "risk_type": "Sistem Hatası"
-        }
 @tool
 def analyze_risk(chronological_events: List[dict]) -> dict:
     """
