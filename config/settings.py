@@ -5,7 +5,7 @@ from typing import Dict, Any
 class Settings(BaseSettings):
     PROJECT_NAME: str = "TEKNOFEST AI Agent"
     DEBUG: bool = True
-    REASONING_MODEL: str = "Llama-3.1-70B"
+    REASONING_MODEL: str = "meta-llama/Meta-Llama-3.1-70B-Instruct"
     VISION_MODEL: str = "Qwen/Qwen3-VL-8B-Instruct"
     VISION_SERVER_URL: str = "http://localhost:8000"
     BRAIN_SERVER_URL: str = "http://localhost:8001"

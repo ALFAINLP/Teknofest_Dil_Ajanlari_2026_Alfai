@@ -4266,6 +4266,878 @@
             },
             "motion_density": 0.0,
             "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama sonucu büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar oluşuyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar oluşuyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama sonucu büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama sonucu büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "Yangın hızla yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": "Patlama meydana geliyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Fabrikada büyük hasar oluşuyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama sonucu büyük hasar ve duman yayılıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "Yangın hızla yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:20",
+            "event": {
+                "frame": "video_segment_00:20",
+                "description": "Patlama meydana geliyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Fabrikada büyük hasar ve duman yayılıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": "Makinede yangın başlıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": "İşçiler yangından kaçıyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": "Yangın patlama ile devam ediyor",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": "Patlama ve büyük hasar",
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:05",
+            "event": {
+                "frame": "video_segment_00:05",
+                "description": "Makinede yangın başlıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:10",
+            "event": {
+                "frame": "video_segment_00:10",
+                "description": "İşçiler yangından kaçıyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:15",
+            "event": {
+                "frame": "video_segment_00:15",
+                "description": "Yangın patlama ile devam ediyor",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
+        },
+        {
+            "time": "00:25",
+            "event": {
+                "frame": "video_segment_00:25",
+                "description": "Patlama ve büyük hasar",
+                "has_risk": true,
+                "risk_type": "Kritik"
+            },
+            "motion_density": 0.0,
+            "zone": "Genel Saha"
         }
     ],
     "risk_history": [
@@ -4374,6 +5246,18 @@
         "Kritik",
         "Düşük",
         "Düşük",
+        "Kritik",
+        "Kritik",
+        "Düşük",
+        "Düşük",
+        "Kritik",
+        "Kritik",
+        "Kritik",
+        "Düşük",
+        "Düşük",
+        "Kritik",
+        "Kritik",
+        "Kritik",
         "Kritik",
         "Kritik"
     ],
@@ -5619,6 +6503,731 @@
                 "incident_keywords": "yangın ve patlama"
             },
             "result": []
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Yangın ve patlama ile devam ediyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Yangın ve patlama ile devam ediyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "patlama sonucu yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Patlama ve yangın sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Patlama ve yangın sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "patlama sonucu yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Patlama ve yangın sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Patlama ve yangın sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Yılmaz",
+                    "role": "Forklift Operatörü",
+                    "contact_ext": "N/A"
+                },
+                {
+                    "name": "Dr. Ayşe Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "1122"
+                },
+                {
+                    "name": "Mehmet Demir",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "9111"
+                }
+            ]
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve duman"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": []
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi (Yedek Mod)",
+                "dispatched_message": "DİKKAT: Saha Operasyon Alanında Şüpheli Akış/Risk Sinyali! Veri: Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor",
+                "ui_action": "WARNING_YELLOW_BORDER",
+                "audio_alert_triggered": false
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": [
+                {
+                    "date": "2026-02-28",
+                    "zone": "Mühimmat Deposu Şarj Alanı",
+                    "root_cause": "Aşırı ısınan batarya bloğunun duman salınımı yapması",
+                    "preventive_action_taken": "Anlık ısı sensörleri entegre edildi, otonom havalandırma kurgulandı."
+                }
+            ]
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Osman Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu büyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi / Canlı Arayüze Push Edildi",
+                "dispatched_message": "Fabrikada yangın ve patlama var! İtfaiye ve sağlık ekibini yönlendirin.",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true,
+                "technical_details": {
+                    "input_level": "Kritik",
+                    "audio_mode": "HIGH_SIREN"
+                }
+            }
+        },
+        {
+            "tool": "query_previous_incidents",
+            "args": {
+                "incident_keywords": "yangın ve patlama"
+            },
+            "result": [
+                {
+                    "date": "2026-02-28",
+                    "zone": "Mühimmat Deposu Şarj Alanı",
+                    "root_cause": "Aşırı ısınan batarya bloğunun duman salınımı yapması",
+                    "preventive_action_taken": "Anlık ısı sensörleri entegre edildi, otonom havalandırma kurgulandı."
+                }
+            ]
+        },
+        {
+            "tool": "get_personnel_on_duty",
+            "args": {
+                "timestamp": "25",
+                "zone": "Genel Saha"
+            },
+            "result": [
+                {
+                    "name": "Ahmet Demir",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "1234"
+                },
+                {
+                    "name": "Mehmet Yılmaz",
+                    "role": "Saha Operatörü",
+                    "contact_ext": "5678"
+                },
+                {
+                    "name": "Fatma Kaya",
+                    "role": "Nöbetçi İş Yeri Hekimi",
+                    "contact_ext": "9012"
+                },
+                {
+                    "name": "Ömer Çelik",
+                    "role": "Saha Güvenlik Şefi",
+                    "contact_ext": "1111"
+                }
+            ]
+        },
+        {
+            "tool": "trigger_operator_alert",
+            "args": {
+                "alert_level": "Kritik",
+                "raw_incident_context": "Fabrikada yangın ve patlama sonucu bükyük hasar ve duman yayılıyor"
+            },
+            "result": {
+                "status": "Sinyal Gönderildi / Canlı Arayüze Push Edildi",
+                "dispatched_message": "Fabrikada yangın ve patlama meydana geldi! İtfaiye ve sağlık ekibini yönlendirin.",
+                "ui_action": "CRITICAL_RED_FLASH",
+                "audio_alert_triggered": true,
+                "technical_details": {
+                    "input_level": "Kritik",
+                    "audio_mode": "HIGH_SIREN"
+                }
+            }
         }
     ]
 }
