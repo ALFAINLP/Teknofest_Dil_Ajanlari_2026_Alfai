@@ -422,20 +422,35 @@ def compile_report_node(state: AgentState) -> AgentState:
         })
 
     # ==========================
-    # Nihai Özet
+    # Nihai Özet — Dinamik & Anlamlı
     # ==========================
-    highest_risk = state.get("risk_assessments", ["Düşük"])[0] # <-- EKLENECEK SATIR
+    highest_risk = state.get("risk_assessments", ["Düşük"])[0]
+
+    # Brain'in decision metni (technical_summary) en az 15 karakter ve anlamlıysa kullan
+    brain_decision = state.get("technical_summary", "").strip()
+    has_meaningful_decision = (
+        len(brain_decision) >= 15
+        and brain_decision not in ["Analiz tamamlandı.", "Model yanıt vermedi, varsayılan durum."]
+    )
+
+    if has_meaningful_decision:
+        base_summary = brain_decision
+    else:
+        # Tespit edilen ilk 1-2 olaydan dinamik özet üret
+        event_texts = [e["event"] for e in cleaned_events if e.get("event")][:2]
+        if event_texts:
+            joined = " ".join(event_texts)
+            # 120 karakteri aşarsa kırp
+            base_summary = joined[:120] + ("..." if len(joined) > 120 else "")
+        else:
+            base_summary = "Saha görüntüleri incelendi."
 
     if highest_risk in ["Yüksek", "Kritik"]:
-        final_summary = (
-            f"{state.get('technical_summary', 'Kritik iş kazası tespiti.')}"
-            f"{temporal_summary}"
-        )
+        final_summary = f"{base_summary}{temporal_summary}"
     else:
-        final_summary = (
-            "Rutin operasyon gözlenmiştir."
-            f"{temporal_summary}"
-        )
+        final_summary = f"{base_summary}{temporal_summary}"
+
+
 
     report_data = {
         "summary": final_summary,

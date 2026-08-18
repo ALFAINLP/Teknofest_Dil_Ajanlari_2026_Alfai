@@ -61,9 +61,13 @@ function formatTimelineTime(seconds) {
 }
 
 function buildStrategicRecommendations(eventRows, modelActions = []) {
-  if (eventRows.length === 0) return modelActions
+  // Tool isimlerini filtrele: snake_case olan, Türkçe kelime içermeyen string'ler tool adıdır
+  const isToolName = (s) => /^[a-z][a-z0-9_]{2,}$/.test(String(s).trim())
+  const humanActions = modelActions.filter(action => String(action).trim() && !isToolName(action))
 
-  const recommendations = modelActions.filter(action => String(action).trim())
+  if (eventRows.length === 0) return humanActions
+
+  const recommendations = [...humanActions]
   const criticalCount = eventRows.filter(event => event.risk === 'Kritik').length
   const elevatedCount = eventRows.filter(event => event.risk === 'Yüksek' || event.risk === 'Orta').length
   const zoneCounts = eventRows.reduce((counts, event) => {
