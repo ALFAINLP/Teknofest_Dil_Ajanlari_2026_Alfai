@@ -36,21 +36,23 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     zone = scene_meta.get("zone_name", "Genel Saha")
     state["current_zone"] = zone
     
-    qwen_output = analyze_video(state["video_path"])
-    
-    critical_seconds = flag_critical_timestamps.invoke({"video_path": state["video_path"]})
+    # web_api.py zaten Vision modelini çalıştırdı ve detected_events'ı state'e koydu.
+    # Burada tekrar analyze_video çağırmak gereksizdir, state'teki mevcut olayları kullanıyoruz.
     detected = []
-    for event_item in qwen_output.get("events", []):
+    for event_item in state.get("detected_events", []):
+        event_content = event_item if isinstance(event_item, dict) else {"event": str(event_item)}
         detected.append({
-            "time": event_item.get("time", "00:00"),
-            "event": event_item.get("event", event_item.get("description", "Bilinmeyen Olay")),
-            "motion_density": 0.0, 
-            "zone": zone
+            "time": event_content.get("time", "00:00"),
+            "event": event_content.get("event", event_content.get("description", "Bilinmeyen Olay")),
+            "motion_density": event_content.get("motion_density", 0.0),
+            "zone": event_content.get("zone", zone)
         })
         
     state["detected_events"] = detected
     
+    
 
+    critical_seconds = flag_critical_timestamps.invoke({"video_path": state["video_path"]})
     current_segments = state.get("current_time_segments", [])
     target_segments = sorted(list(set(current_segments + critical_seconds)))
     
@@ -305,7 +307,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             else:
                 raise ValueError("JSON bulunamadı")
             
-            highest_risk = brain_json.get("risk_level", "Düşük")
+            highest_risk = brain_json.get("risk", brain_json.get("risk_level", "Düşük"))
             actions_from_brain = brain_json.get("actions", [])
             impact_desc = brain_json.get("decision", "Analiz tamamlandı.")
             if not actions_from_brain:

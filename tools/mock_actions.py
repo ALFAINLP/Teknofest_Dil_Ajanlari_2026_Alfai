@@ -434,7 +434,7 @@ def get_personnel_on_duty(timestamp: int, zone: str) -> List[dict]:
             {"name": "Dr. Ayşe Kaya", "role": "Nöbetçi İş Yeri Hekimi", "contact_ext": "1122"},
             {"name": "Mehmet Demir", "role": "Saha Güvenlik Şefi", "contact_ext": "9111"}
         ]
-    
+
 @tool
 def assess_environmental_hazards(zone: str) -> dict:
     """Verilen fiziksel bölge bilgisini alarak, lokal LLM (Llama-3.1-70B / Qwen2.5-72B) mimarisi üzerinden 
@@ -501,13 +501,13 @@ def assess_environmental_hazards(zone: str) -> dict:
             "chemical_storage_proximity": f"Veri tabanına erişilemedi: {str(e)}",
             "secondary_hazard_trigger": False
         }
-
 try:
     import pynvml
     pynvml.nvmlInit()
     NVIDIA_GPU_AVAILABLE = True
 except Exception:
     NVIDIA_GPU_AVAILABLE = False
+
 
 @tool
 def monitor_hardware_telemetry() -> dict:
@@ -699,6 +699,7 @@ def trigger_operator_alert(alert_level: str, raw_incident_context: str) -> dict:
             "ui_action": "CRITICAL_RED_FLASH",
             "audio_alert_triggered": True
         }
+
     
 @tool
 def query_previous_incidents(incident_keywords: str) -> List[dict]:
@@ -761,7 +762,8 @@ def query_previous_incidents(incident_keywords: str) -> List[dict]:
         
     except Exception:
         return []
-    
+
+
 @tool
 def export_to_incident_management_system(report_json: str) -> bool:
     """Gelişmiş LangGraph ve vLLM süreçlerinden çıkan Pydantic onaylı nihai kurumsal rapor JSON string verisini alır; 
@@ -800,3 +802,4 @@ def export_to_incident_management_system(report_json: str) -> bool:
     except Exception as e:
         print(f"[CMS Export Mock] Dış sisteme erişilemedi ({e}), otonom aktarım simüle edildi.")
         return True
+

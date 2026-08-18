@@ -327,15 +327,6 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         logger.info(f"🏁 [TAMAMLANDI] Toplam İşlem Süresi: {elapsed_time:.2f} saniye.")
         logger.debug(f"📤 Frontend'e dönen final JSON: Risk={final_response.get('risk')}, Olay={len(final_response.get('events', []))}")
 
-        t0 = time.time()
-        model_output = await run_in_threadpool(analyze_video, temporary_path)
-        logger.info(f"⏱️ Vision süresi: {time.time()-t0:.2f}s")
-
-        t1 = time.time()
-        final_state = await run_in_threadpool(langgraph_app.invoke, initial_state)
-        logger.info(f"⏱️ LangGraph süresi: {time.time()-t1:.2f}s")
-
-
         return final_response
 
     except Exception as error:

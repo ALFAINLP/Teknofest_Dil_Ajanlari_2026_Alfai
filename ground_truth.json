@@ -36,7 +36,7 @@
     ]
   },
   {
-    "video_id": "test_video_forklift_002.mp4",
+    "video_id": "test_video_002.mp4",
     "duration_sec": 65,
     "summary": "Forklift operatörü makineden inip ön mast mekanizmasına müdahale ederken yukarıda asılı duran çatal/asansör mekanizması aniden üzerine düşmüş, operatör ezilerek ağır şekilde yaralanmış ve çevredekiler yardıma koşmuştur.",
     "risk": "Yüksek",
@@ -79,7 +79,7 @@
     ]
   },
   {
-    "video_id": "test_video_theft_003.mp4",
+    "video_id": "test_video_003.mp4",
     "duration_sec": 116,
     "summary": "Sokağa gelen şüpheli beyaz bir araçtan inen iki şahıs, sokakta park halinde duran aracın kaputunu zorla açarak akü/motor parçası hırsızlığı gerçekleştirmiş ve araçlarına binerek olay yerinden kaçmıştır.",
     "risk": "Yüksek",
@@ -122,7 +122,7 @@
     ]
   },
   {
-  "video_id": "test_video_fighting_004.mp4",
+  "video_id": "test_video_004.mp4",
   "duration_sec": 7,
   "summary": "Mekanda bulunan şahıslar arasında aniden başlayan kavga ve fiziki arbede sonucunda sandalyeler fırlatılmış, içerideki müşteriler panikle kaçışırken ortamda yüksek güvenlik riski oluşmuştur.",
   "risk": "Yüksek",
@@ -157,7 +157,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_factory_005.mp4",
+  "video_id": "test_video_005.mp4",
   "duration_sec": 47,
   "summary": "Atölyede çalışan işçinin eli ve gövdesi dönen rulo/silindir makinesine kaptırılmış, durumu fark eden çevredekiler acil durdurma yaparak sıkışan işçiyi makineden kurtarmıştır.",
   "risk": "Yüksek",
@@ -199,7 +199,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_construction_006.mp4",
+  "video_id": "test_video_006.mp4",
   "duration_sec": 17,
   "summary": "Köprü/şantiye inşaat sahasında çelik palplanş ve ray profilinin vinçle çekilmesi esnasında gerilen metal parça aniden fırlayarak hatta duran işçiye çarpmış ve ağır iş kazası gerçekleşmiştir.",
   "risk": "Yüksek",
@@ -234,7 +234,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_steel_coil_007.mp4",
+  "video_id": "test_video_007.mp4",
   "duration_sec": 13,
   "summary": "Tır dorsesi üzerinde çelik rulo saç yüklemesi yapılırken forkliftin yükü kontrolsüz şekilde dorseye bırakması sonucu tonlarca ağırlıktaki rulo devrilmiş, dorse üzerindeki işçi ani refleksle ezilmekten son anda kurtularak yere kapaklanmıştır.",
   "risk": "Yüksek",
@@ -269,7 +269,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_explosion_008.mp4",
+  "video_id": "test_video_008.mp4",
   "duration_sec": 35,
   "summary": "Endüstriyel metal işleme ve döküm tesisindeki pres/ekstrüzyon hattında hidrolik sızıntı sonucu şiddetli alev parlaması başlamış, çalışanlar tahliye edilmeye çalışırken hat boyunca büyük bir infilak/patlama gerçekleşerek tesis ağır hasar almıştır.",
   "risk": "Kritik",
@@ -304,7 +304,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_gas_station_009.mp4",
+  "video_id": "test_video_009.mp4",
   "duration_sec": 108,
   "summary": "Akaryakıt istasyonuna kontrolsüz giren bir aracın yakıt pompasına şiddetle çarpması sonucu büyük bir patlama ve yangın meydana gelmiş, istasyondaki vatandaşlar kaçışırken yaralı bir kişi alevlerin arasından sürüklenerek tahliye edilmiştir.",
   "risk": "Kritik",
@@ -346,7 +346,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_battery_explosion_010.mp4",
+  "video_id": "test_video_010.mp4",
   "duration_sec": 26,
   "summary": "Elektronik tamir atölyesinde oturan şahsın cebindeki lityum batarya/elektronik cihaz aniden alev alarak patlamış, şahıs panikle kıyafetini söndürüp cihazı yere fırlatmış ve odada yoğun duman oluşmuştur.",
   "risk": "Yüksek",
@@ -381,7 +381,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_atm_burglary_011.mp4",
+  "video_id": "test_video_011.mp4",
   "duration_sec": 60,
   "summary": "Gece saatlerinde dükkanın cam giriş kapısını minibüs/kamyonet ile geri manevra yaparak kıran maskeli hırsızlar, içerideki ATM/para kasasını zorla söküp araca yükleyerek olay yerinden kaçmıştır.",
   "risk": "Kritik",
@@ -423,7 +423,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_store_crash_burglary_012.mp4",
+  "video_id": "test_video_012.mp4",
   "duration_sec": 113,
   "summary": "Gece saatlerinde bir SUV/aracın marketin cam vitrinine çarparak içeri girmesi sonucu dükkan tahrip edilmiş, ardından maskeli ve kapüşonlu iki şahıs içeri girerek tütün/ürün ve kasa hırsızlığı yapıp olay yerinden uzaklaşmıştır.",
   "risk": "Kritik",
@@ -465,7 +465,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_forklift_cargo_collapse_013.mp4",
+  "video_id": "test_video_013.mp4",
   "duration_sec": 26,
   "summary": "Yolda aşırı yüksek ve dengesiz ahşap/panel yükü taşıyan forkliftin dengesini kaybederek ön aksı üzerine yatması sonucu yük yere devrilmiş, bu esnada forkliftin önünden geçen motosikletli sürücü yükün altında kalmaktan son anda kurtulmuştur.",
   "risk": "Yüksek",
@@ -500,7 +500,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_street_assault_014.mp4",
+  "video_id": "test_video_014.mp4",
   "duration_sec": 75,
   "summary": "Sokakta yürüyen şahsa arkadan yaklaşan saldırganların sopalarla saldırması sonucu kargaşa çıkmış, çevredeki dükkan sahipleri kapılarını kapatarak korunmaya çalışırken olay yerine kalabalık toplanmıştır.",
   "risk": "Yüksek",
@@ -542,7 +542,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_hospital_fire_015.mp4",
+  "video_id": "test_video_015.mp4",
   "duration_sec": 111,
   "summary": "Diyaliz / hastane tedavi odasında bir şahsın diğer bir hastanın üzerine yanıcı madde dökerek ateşe vermesi sonucu şiddetli patlama ve yangın çıkmış, oda saniyeler içinde alev ve yoğun dumanla kaplanmıştır.",
   "risk": "Kritik",
@@ -577,7 +577,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_car_arson_016.mp4",
+  "video_id": "test_video_016.mp4",
   "duration_sec": 38,
   "summary": "Gece saatlerinde park halindeki aracın yanına elinde bidonla gelen bir şahıs, ön kaputa ve ön cama yanıcı madde dökerek aracı ateşe vermiş ve alevlerin hızla büyümesiyle olay yerinden kaçmıştır.",
   "risk": "Kritik",
@@ -612,7 +612,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_commercial_arson_017.mp4",
+  "video_id": "test_video_017.mp4",
   "duration_sec": 134,
   "summary": "Gece saatlerinde ticari işletmenin resepsiyon / giriş alanına giren kapüşonlu şüpheli, tezgah ve zemin üzerine yanıcı madde dökerek mekanı kasıtlı olarak ateşe vermiş ve büyük bir kundaklama yangını başlatarak kaçmıştır.",
   "risk": "Kritik",
@@ -647,7 +647,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_normal_station_018.mp4",
+  "video_id": "test_video_018.avi",
   "duration_sec": 17,
   "summary": "Tren/metro istasyonu çıkışında yayalar ve yolcular rutin şekilde yürümekte, ön planda bir kişi dans pratiği/hareketi yapmakta olup sahada herhangi bir güvenlik tehdidi veya kaza durumu gözlenmemektedir.",
   "risk": "Düşük",
@@ -672,7 +672,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_station_019.mp4",
+  "video_id": "test_video_019.avi",
   "duration_sec": 19,
   "summary": "İstasyon önü yaya alanında bir kişinin çantasını havaya atıp tutarak şakalaştığı/oynadığı, yayaların rutin şekilde istasyondan girip çıktığı görülmekte olup sahada herhangi bir güvenlik tehdidi veya acil durum riski bulunmamaktadır.",
   "risk": "Düşük",
@@ -697,7 +697,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_warehouse_collapse_020.mp4",
+  "video_id": "test_video_020.mp4",
   "duration_sec": 124,
   "summary": "Lojistik depoda koridorda duran personelin hemen arkasındaki ağır depolama rafları yapısal arıza/aşırı yük nedeniyle zincirleme şekilde çökmüş, çalışan saniyelerle enkaz altında kalmaktan kaçarak kurtulmuş ve tüm depo koridoru tonlarca malzeme ile kapanmıştır.",
   "risk": "Kritik",
@@ -732,7 +732,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_traffic_accident_021.mp4",
+  "video_id": "test_video_021.mp4",
   "duration_sec": 29,
   "summary": "Yoğun akan ana yolda şerit değiştiren beyaz SUV'un sıkıştırması sonucu motosiklet sürücüsü dengesini kaybederek yola devrilmiş, arkadan gelen araçlar ani fren yaparak durmuş ve sürücüler trafiği durdurarak yaralıya yardıma koşmuştur.",
   "risk": "Yüksek",
@@ -767,7 +767,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_intersection_accidents_022.mp4",
+  "video_id": "test_video_022.mp4",
   "duration_sec": 40,
   "summary": "Kavşak noktasında geçiş önceliği ve trafik kurallarına uyulmaması nedeniyle farklı zaman dilimlerinde peş peşe çoklu araç çarpışmaları ve maddi hasarlı/yaralanmalı trafik kazaları meydana gelmiştir.",
   "risk": "Yüksek",
@@ -802,7 +802,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_ambulance_accident_023.mp4",
+  "video_id": "test_video_023.mp4",
   "duration_sec": 30,
   "summary": "Kavşaktan geçiş yapan hasta taşıyan ambulans ile kavşaktaki kırmızı binek otomobilin şiddetle çarpışması sonucu ambulans takla atarak yan yatmış, yaralanmalı ve yüksek riskli ağır bir trafik kazası meydana gelmiştir.",
   "risk": "Kritik",
@@ -837,7 +837,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_normal_traffic_024.mp4",
+  "video_id": "test_video_024.mp4",
   "duration_sec": 24,
   "summary": "Gece saatlerinde şehir içi caddede ticari taksiler, binek araçlar ve ağır vasıtalar rutin trafik akışında güvenle seyretmekte olup herhangi bir kaza, ihlal veya risk durumu gözlenmemektedir.",
   "risk": "Düşük",
@@ -862,7 +862,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_street_patrol_025.mp4",
+  "video_id": "test_video_025.mp4",
   "duration_sec": 15,
   "summary": "Trafiğe kapalı yaya caddesinde üniformalı zabıta/belediye personeli rutin devriye yürüyüşü yapmakta, arka planda belediye bakım aracı çalışmakta ve yayalar güvenli şekilde alışveriş yapmaktadır.",
   "risk": "Düşük",
@@ -887,7 +887,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_building_entrance_026.mp4",
+  "video_id": "test_video_026.mp4",
   "duration_sec": 35,
   "summary": "Plaza/bina ana giriş kapısında çalışanlar, temizlik personeli ve ziyaretçiler düzenli şekilde binaya giriş çıkış yapmakta olup alanda herhangi bir güvenlik ihlali, tehlike veya kaza unsuru bulunmamaktadır.",
   "risk": "Düşük",
@@ -912,7 +912,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_avenue_027.mp4",
+  "video_id": "test_video_027.mp4",
   "duration_sec": 140,
   "summary": "Çok şeritli şehir içi ana arterde belediye otobüsleri, ticari taksiler ve binek araçlar trafik ışıkları ve şerit kurallarına uygun şekilde düzenli akışını sürdürmekte olup herhangi bir tehlike, ihlal veya kaza durumu gözlenmemektedir.",
   "risk": "Düşük",
@@ -937,7 +937,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_office_harassment_028.mp4",
+  "video_id": "test_video_028.mp4",
   "duration_sec": 55,
   "summary": "Açık ofis ortamında çalışanların bulunduğu sırada, bir erkek personelin kadın çalışanın yanına gelerek izinsiz ve uygunsuz fiziksel temasta (sarılma/omzuna dokunma) bulunduğu, olayın işyeri tacizi şüphesi taşıdığı gözlenmiştir.",
   "risk": "Orta",
@@ -971,7 +971,7 @@
     "export_to_incident_management_system"
   ]
 },{
-  "video_id": "test_video_normal_parking_street_029.mp4",
+  "video_id": "test_video_029.mp4",
   "duration_sec": 55,
   "summary": "Otopark ve sokak alanında yayalar yürümekte, araçlar nizami hızda manevra ve dönüş yaparak ilerlemekte olup alanda herhangi bir güvenlik ihlali, tehlike veya kaza durumu gözlenmemektedir.",
   "risk": "Düşük",
@@ -996,7 +996,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_office_maintenance_030.mp4",
+  "video_id": "test_video_030.mp4",
   "duration_sec": 56,
   "summary": "Ofis ve müşteri hizmetleri alanında çalışanlar masa başında rutin işlemlerini sürdürürken, teknik personel merdiven taşıyarak alanda bakım çalışması yapmakta olup herhangi bir güvenlik ihlali veya kaza riski bulunmamaktadır.",
   "risk": "Düşük",
@@ -1021,7 +1021,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_mall_walkway_031.mp4",
+  "video_id": "test_video_031.mp4",
   "duration_sec": 15,
   "summary": "Alışveriş merkezinin yürüme koridorunda bakım platformunun bulunduğu alanda ziyaretçiler ve aileler rutin şekilde yürüyüş ve alışveriş yapmakta olup herhangi bir güvenlik tehdidi, kaza veya risk durumu bulunmamaktadır.",
   "risk": "Düşük",
@@ -1046,7 +1046,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_cashier_032.mp4",
+  "video_id": "test_video_032.mp4",
   "duration_sec": 49,
   "summary": "Market/restoran kasasında kasiyer ve müşteri arasında nakit para ile standart ödeme ve para üstü alışverişi gerçekleşmekte olup herhangi bir hırsızlık, gasp veya güvenlik tehdidi bulunmamaktadır.",
   "risk": "Düşük",
@@ -1071,7 +1071,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_normal_traffic_intersection_033.mp4",
+  "video_id": "test_video_033.mp4",
   "duration_sec": 14,
   "summary": "Gündüz saatlerinde şehir içi sinyalize kavşakta binek araçlar, kamyonetler ve yayalar trafik akışına uygun şekilde güvenle hareket etmekte olup alanda herhangi bir kaza, ihlal veya güvenlik riski bulunmamaktadır.",
   "risk": "Düşük",
@@ -1096,7 +1096,7 @@
     "log_kpi_metrics"
   ]
 },{
-  "video_id": "test_video_stray_dog_corridor_034.mp4",
+  "video_id": "test_video_034.mp4",
   "duration_sec": 93,
   "summary": "Bina koridoruna giren sokak köpeği kapı önündeki çöp kutusunu devirerek içerisindeki poşeti ve çöpleri çevreye saçmış, ardından koridordan uzaklaşmıştır.",
   "risk": "Düşük",

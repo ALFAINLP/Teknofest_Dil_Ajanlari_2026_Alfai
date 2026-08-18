@@ -81,8 +81,20 @@ def _build_context_block(analysis_context: dict | None, memory: dict | None) -> 
     if memory:
         event_history = memory.get("event_history", [])
         risk_history = memory.get("risk_history", [])
+        context_summary = memory.get("context_summary", "")
         lines.append("\n## Geçmiş Hafıza")
         lines.append(f"- Toplam geçmiş olay sayısı: {len(event_history)}")
         if risk_history:
             lines.append(f"- Geçmiş risk seviyeleri (son 5): {risk_history[-5:]}")
+        if context_summary:
+            lines.append(f"- Geçmiş Trend Özeti: {context_summary}")
+            
+        # DİKKAT: Modelin benzerlik kurabilmesi için son geçmiş olayların içeriğini veriyoruz
+        if event_history:
+            lines.append("\n### Geçmişteki Son Önemli Olaylar")
+            # Sadece son 3 olayı veriyoruz ki context çok şişmesin
+            for past_evt in event_history[-3:]:
+                lines.append(f"  - {past_evt}")
+    
+    
     return "\n".join(lines)

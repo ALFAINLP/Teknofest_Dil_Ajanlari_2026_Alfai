@@ -125,4 +125,3 @@ def analyze_video(video_path: str):
     vision_output = response.choices[0].message.content
 
     return _parse_vision_json(vision_output)
-
