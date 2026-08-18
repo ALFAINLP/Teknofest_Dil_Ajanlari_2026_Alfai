@@ -1,7 +1,7 @@
 #bilisimvadisi2026
 Qwen Modeli (Görsel ve Metin Analizi)
 
-bash'''
+bash```
 sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
   -p 8000:8000 \
@@ -12,4 +12,4 @@ sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   --gpu-memory-utilization 0.95 \
   --max-model-len 32768 \
   --enable-chunked-prefill
-  '''
+```
