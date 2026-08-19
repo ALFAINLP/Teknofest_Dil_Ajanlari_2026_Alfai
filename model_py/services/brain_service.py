@@ -7,12 +7,17 @@ from model_py.config.settings import (
 from model_py.tools.tool_definitions import TOOLS
 from model_py.prompts.brain_prompt import build_brain_prompt
 
-def analyze_state(messages: list):
+def analyze_state(messages: list, force_json: bool = True):
     """
     ReAct döngüsü boyunca gelen LangGraph mesaj geçmişini alır,
     dinamik sistem promptunu başa ekler, OpenAI uyumlu sözlük yapısına 
     dönüştürür ve Brain modeline iletir.
+    
+    force_json=False → Tool çağrısı yapılabilmesi için response_format kaldırılır.
+    force_json=True  → Son adım: JSON format zorunlu, tools gönderilmez.
     """
+    print(f"DEBUG - force_json değeri: {force_json}")
+    print(f"DEBUG - TOOLS listesi uzunluğu: {len(TOOLS) if TOOLS else 0}")
     formatted_messages = []
     
     # 1. Dinamik Sistem Promptunu mesajların en başına ekle
@@ -73,13 +78,25 @@ def analyze_state(messages: list):
         formatted_messages.append(msg_dict)
 
     # 2. OpenAI API İsteği
-    response = brain_client.chat.completions.create(
-        model=BRAIN_MODEL,
-        messages=formatted_messages,
-        tools=TOOLS if TOOLS else None,
-        tool_choice="auto" if TOOLS else None,
-        temperature=TEMPERATURE,
-        response_format={"type": "json_object"}  # JSON formatını kesinleştirir
-    )
+    if force_json:
+        # Son adım: JSON karar özeti — tools gönderilmez, JSON format zorunlu
+        response = brain_client.chat.completions.create(
+            model=BRAIN_MODEL,
+            messages=formatted_messages,
+            tools=None,
+            tool_choice=None,
+            temperature=TEMPERATURE,
+            response_format={"type": "json_object"}
+        )
+    else:
+        # ReAct adımı: Tool çağrısına izin ver — response_format YOK (çakışır)
+        active_tools = TOOLS if TOOLS else None
+        response = brain_client.chat.completions.create(
+            model=BRAIN_MODEL,
+            messages=formatted_messages,
+            tools=active_tools,
+            tool_choice="auto" if active_tools else None,
+            temperature=TEMPERATURE,
+        )
 
     return response.choices[0].message

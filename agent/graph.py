@@ -45,7 +45,11 @@ def extract_video_info_node(state: AgentState) -> AgentState:
             "time": event_content.get("time", "00:00"),
             "event": event_content.get("event", event_content.get("description", "Bilinmeyen Olay")),
             "motion_density": event_content.get("motion_density", 0.0),
-            "zone": event_content.get("zone", zone)
+            "zone": event_content.get("zone", zone),
+            "risk": event_content.get("risk"),
+            "confidence": event_content.get("confidence"),
+            "center": event_content.get("center"),
+            "bbox": event_content.get("bbox")
         })
         
     state["detected_events"] = detected
@@ -118,15 +122,181 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     return state
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
-    # ================================================================
-    # 🔧 HATA 10 (ÇÖZÜLDÜ): get_scene_metadata API'sini TEKRAR çağırma!
-    # Artık extract_video_info_node'da state'e yazılan current_zone'u okuyoruz.
-    # (agent/state.py'e 'current_zone: str' eklemeyi unutmayın)
-    # ================================================================
-    zone = state.get("current_zone", "Genel Saha")  # API çağrısı yok, cache'ten okuyor.
-    
-    # Çevresel riskler hala gerekliyse (mock) çağrılabilir, ama bu fonksiyon sadece 1 kez çalışacak artık.
+    zone = state.get("current_zone", "Genel Saha")
     env_hazards = assess_environmental_hazards.invoke({"zone": zone})
+
+    # Olayları formatla
+    events_for_brain = []
+    for item in state["detected_events"]:
+        event_content = item.get("event", "Açıklama bulunamadı.")
+        if isinstance(event_content, dict):
+            event_text = event_content.get("description", str(event_content))
+        else:
+            event_text = str(event_content)
+        
+        motion = item.get('motion_density', 0)
+        has_risk_flag = item.get('has_risk', False)
+        time = item.get('time', '00:00')
+        
+        events_for_brain.append(
+            f"Zaman: {time} | Olay: {event_text} | "
+            f"Hareket Yoğunluğu: %{motion:.1f} | Risk Varlığı: {'Evet' if has_risk_flag else 'Hayır'}"
+        )
+
+    # Geçmiş hafızayı özet olarak hazırla
+    risk_history_summary = state.get("risk_history", [])[-5:]
+    risk_trend = state.get("risk_trend", "Stabil (Yetersiz Veri)")
+    context_summary = state.get("context_summary", {})
+    tool_history_recent = state.get("tool_history", [])[-3:]
+
+    memory_block = (
+        f"\n--- HAFIZA & BAĞLAM ---\n"
+        f"Son 5 Risk Geçmişi: {risk_history_summary}\n"
+        f"Risk Trendi: {risk_trend}\n"
+        f"Temporal Analiz: Toplam {context_summary.get('total_events', 0)} geçmiş olay. "
+        f"Baskın Bölge: {context_summary.get('dominant_zone', 'Bilinmiyor')}. "
+        f"Sistematik Risk Var mı: {'Evet' if context_summary.get('systematic_risk') else 'Hayır'}. "
+        f"Önerilen Aksiyon: {context_summary.get('recommended_action', 'Normal İzleme')}.\n"
+        f"Son Kullanılan Araçlar: {tool_history_recent}\n"
+        f"--- HAFIZA SONU ---\n"
+    )
+
+    clean_user_prompt = (
+        f"Şu anki bölge: {zone}.\n"
+        f"Çevresel riskler: {env_hazards}.\n"
+        f"{memory_block}"
+        f"Aşağıdaki olayları incele ve risk seviyesini belirle:\n"
+        f"{chr(10).join(events_for_brain)}"
+    )
+
+    logger.info(f"🔍 evaluate_risks_node çalışıyor. Mevcut state: {state.keys()}")
+
+    recommendations = set()
+    highest_risk = "Düşük"
+    tool_history_entries = state.get("tool_history", [])
+    
+    react_messages = [
+        {"role": "system", "content": BRAIN_SYSTEM_PROMPT},
+        {"role": "user", "content": clean_user_prompt}
+    ]
+
+    MAX_REACT_STEPS = 5
+    react_step = 0
+    brain_response = None
+
+    # ================================================================
+    # ASIL REACT DÖNGÜSÜ (BURASI ÇALIŞACAK)
+    # ================================================================
+    while react_step < MAX_REACT_STEPS:
+        react_step += 1
+        logger.info(f"🔄 ReAct Adım {react_step}: Brain çağrılıyor...")
+
+        # BURADA force_json=False olduğu için API'ye araçlar GİDECEK
+        brain_response = analyze_state(react_messages, force_json=False)
+        assistant_msg = {"role": "assistant", "content": brain_response.content or ""}
+
+        if hasattr(brain_response, "tool_calls") and brain_response.tool_calls:
+            assistant_msg["tool_calls"] = [
+                {
+                    "id": tc.id,
+                    "type": "function",
+                    "function": {
+                        "name": tc.function.name,
+                        "arguments": tc.function.arguments
+                    }
+                }
+                for tc in brain_response.tool_calls
+            ]
+
+        react_messages.append(assistant_msg)
+
+        if not hasattr(brain_response, "tool_calls") or not brain_response.tool_calls:
+            logger.info(f"🔄 ReAct Adım {react_step}: Tool çağrısı yok, JSON yanıt isteniyor...")
+            brain_response = analyze_state(react_messages, force_json=True)
+            break
+
+        # Araçları çalıştır ve mesaj geçmişine ekle
+        for tool_call in brain_response.tool_calls:
+            tool_name = tool_call.function.name
+            args = json.loads(tool_call.function.arguments)
+            tool_result = None
+
+            logger.info(f"🛠️ Brain '{tool_name}' aracını çağırdı. Argümanlar: {args}")
+
+            # İlgili tool çağrıları...
+            if tool_name == "trigger_operator_alert":
+                tool_result = trigger_operator_alert.invoke(args)
+                tool_history_entries.append({"tool": tool_name, "args": args, "result": tool_result})
+                recommendations.add(f"Operatör uyarısı: {args.get('raw_incident_context', '')}")
+                if highest_risk not in ["Kritik", "Yüksek"]: highest_risk = "Yüksek"
+
+            elif tool_name == "query_previous_incidents":
+                tool_result = query_previous_incidents.invoke(args)
+                tool_history_entries.append({"tool": tool_name, "args": args, "result": tool_result})
+                if tool_result: recommendations.add(f"Geçmişte benzer olay: {tool_result[0].get('root_cause', '')}")
+                if highest_risk not in ["Kritik", "Yüksek"]: highest_risk = "Yüksek"
+
+            elif tool_name == "get_personnel_on_duty":
+                tool_result = get_personnel_on_duty.invoke(args)
+                tool_history_entries.append({"tool": tool_name, "args": args, "result": tool_result})
+                if tool_result: recommendations.add(f"Görevli personel: {', '.join([p.get('name', '?') for p in tool_result])}")
+                
+            elif tool_name == "assess_environmental_hazards":
+                tool_result = assess_environmental_hazards.invoke(args)
+                tool_history_entries.append({"tool": tool_name, "args": args, "result": tool_result})
+            
+            elif tool_name == "log_kpi_metrics":
+                tool_result = log_kpi_metrics.invoke(args)
+                tool_history_entries.append({"tool": tool_name, "args": args, "result": tool_result})
+
+            react_messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call.id,
+                "name": tool_name,
+                "content": json.dumps(tool_result, ensure_ascii=False)
+            })
+
+    # JSON parse işlemleri
+    brain_content = brain_response.content if brain_response else ""
+    impact_desc = "Analiz tamamlandı."
+    
+    if brain_content:
+        try:
+            start = brain_content.find('{')
+            end = brain_content.rfind('}') + 1
+            if start != -1 and end > start:
+                json_str = brain_content[start:end]
+                brain_json = json.loads(json_str)
+                highest_risk = brain_json.get("risk", highest_risk)
+                impact_desc = brain_json.get("decision", impact_desc)
+                
+                for action in brain_json.get("actions", []):
+                    if action not in recommendations: recommendations.add(action)
+        except Exception as e:
+            logger.warning(f"⚠️ Brain JSON parse hatası: {e}")
+
+    if not recommendations:
+        recommendations.add("Rutin saha izlemesi devam ediyor, anomali tespiti bekleniyor.")
+
+    # Adaptive Risk
+    medium_count = MemoryManager.recent_risk_count(state.get("risk_history", []), "Orta")
+    if highest_risk == "Orta" and medium_count >= 2:
+        highest_risk = "Yüksek"
+        state["messages"].append({
+            "role": "assistant",
+            "content": f"⚠️ Risk seviyesi 'Orta' olan {medium_count} olay tekrarlandığı için otomatik olarak 'Yüksek'e çıkarıldı."
+        })
+
+    # State güncellemeleri
+    state["actions_recommended"] = list(recommendations)
+    state["risk_assessments"] = [highest_risk]
+    state["technical_summary"] = impact_desc
+    state["tool_history"] = tool_history_entries
+    state["risk_history"] = MemoryManager.add_risk(state.get("risk_history", []), highest_risk)
+    state["risk_trend"] = MemoryManager.calculate_risk_trend(state["risk_history"])
+    state["next_step"] = "compile_report"
+
+    return state
 
     # ================================================================
     # 🔧 HATA 2 & 6 (ÇÖZÜLDÜ): Brain'e sadece olay değil, 
@@ -215,7 +385,9 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         react_step += 1
         logger.info(f"🔄 ReAct Adım {react_step}: Brain çağrılıyor...")
 
-        brain_response = analyze_state(react_messages)
+        # Tool çağrısı beklenen adımlarda JSON format zorunluluğu kaldırılıyor
+        # (response_format=json_object tool_calls ile çakışır — model JSON seçer, tool'u pas geçer)
+        brain_response = analyze_state(react_messages, force_json=False)
 
         # Brain'in bu turki cevabını geçmişe ekle
         assistant_msg = {"role": "assistant", "content": brain_response.content or ""}
@@ -236,9 +408,12 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
 
         react_messages.append(assistant_msg)
 
-        # Tool çağrısı yoksa döngüyü bitir
+        # Tool çağrısı yoksa döngüyü bitir — son yanıtı JSON formatıyla al
         if not hasattr(brain_response, "tool_calls") or not brain_response.tool_calls:
-            logger.info(f"✅ ReAct döngüsü {react_step}. adımda tamamlandı, tool çağrısı yok.")
+            logger.info(f"🔄 ReAct Adım {react_step}: Tool çağrısı yok, JSON yanıt isteniyor...")
+            # Son adımda JSON formatında karar özeti iste
+            brain_response = analyze_state(react_messages, force_json=True)
+            logger.info(f"✅ ReAct döngüsü {react_step}. adımda tamamlandı.")
             break
 
         # Tool çağrısı varsa her birini çalıştır ve sonucu geçmişe ekle
@@ -418,7 +593,9 @@ def compile_report_node(state: AgentState) -> AgentState:
 
         cleaned_events.append({
             "time": item["time"],
-            "event": event_text
+            "event": event_text,
+            "center": item.get("center"),
+            "bbox": item.get("bbox")
         })
 
     # ==========================
@@ -476,9 +653,14 @@ def compile_report_node(state: AgentState) -> AgentState:
     except Exception:
         json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
 
-    export_to_incident_management_system.invoke({
-        "report_json": json_report
-    })
+    # Risk seviyesine göre koşullu CMS export — Düşük riskli olaylar sistemi gereksiz meşgul etmemeli
+    if highest_risk in ["Yüksek", "Kritik", "Orta"]:
+        export_to_incident_management_system.invoke({
+            "report_json": json_report
+        })
+        logger.info(f"📋 Incident exported to CMS: {highest_risk} seviyeli olay")
+    else:
+        logger.info("ℹ️ Düşük risk — CMS export atlandı (şartname kuralı)")
 
     log_kpi_metrics.invoke({
         "metrics_data": {
@@ -501,33 +683,39 @@ def compile_report_node(state: AgentState) -> AgentState:
 
     state["next_step"] = "complete"
     
+    # Reasoning chain log — compile node'un yaptıklarını göster
+    tool_calls_log = [
+        {
+            "name": "log_kpi_metrics",
+            "args": {
+                "total_events": len(state.get("detected_events", [])),
+                "highest_risk": state["risk_assessments"][0] if state.get("risk_assessments") else "Bilinmiyor",
+                "processing_status": "Başarılı"
+            },
+            "id": "call_kpi_005"
+        }
+    ]
+    # Sadece orta/yüksek/kritik riskte CMS export çağrısı loglanır
+    if highest_risk in ["Yüksek", "Kritik", "Orta"]:
+        tool_calls_log.insert(0, {
+            "name": "export_to_incident_management_system",
+            "args": {
+                "report_summary": state.get("video_summary", "Rapor hazırlandı"),
+                "risk_level": highest_risk,
+                "event_count": len(state.get("detected_events", []))
+            },
+            "id": "call_export_004"
+        })
+
     log_message = {
         "role": "assistant",
-        "content": "Nihai risk raporu başarıyla derlendi, CMS'e aktarıldı ve KPI metrikleri loglandı.",
-        "tool_calls": [
-            {
-                "name": "export_to_incident_management_system",
-                "args": {
-                    "report_summary": state.get("video_summary", "Rapor hazırlandı"),
-                    "risk_level": state["risk_assessments"][0] if state.get("risk_assessments") else "Bilinmiyor",
-                    "event_count": len(state.get("detected_events", []))
-                },
-                "id": "call_export_004"
-            },
-            {
-                "name": "log_kpi_metrics",
-                "args": {
-                    "total_events": len(state.get("detected_events", [])),
-                    "highest_risk": state["risk_assessments"][0] if state.get("risk_assessments") else "Bilinmiyor",
-                    "processing_status": "Başarılı"
-                },
-                "id": "call_kpi_005"
-            }
-        ]
+        "content": "Nihai risk raporu başarıyla derlendi, KPI metrikleri loglandı.",
+        "tool_calls": tool_calls_log
     }
+    # Duplicate önleme: son mesaj aynı içerikse ekleme
     last_msg = state["messages"][-1] if state["messages"] else None
     last_content = last_msg.get("content", "") if isinstance(last_msg, dict) else getattr(last_msg, "content", "")
-    if not last_msg or last_content != "Nihai risk raporu başarıyla derlendi, CMS'e aktarıldı ve KPI metrikleri loglandı.":
+    if last_content != log_message["content"]:
         state["messages"].append(log_message)
     logger.info(f"🔍 compile_report_node çalışıyor. Mevcut state: {state.keys()}")
 

@@ -18,18 +18,24 @@ class MemoryManager:
     - Semantic Memory
     """
 
+    MAX_EVENT_HISTORY = 50   # Tutulacak maksimum olay sayısı
+    MAX_RISK_HISTORY  = 20   # Tutulacak maksimum risk geçmişi
+
     @staticmethod
     def add_events(
         memory: List[Dict[str, Any]],
         events: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """
-        Yeni olayları hafızaya ekler.
+        Yeni olayları hafızaya ekler. Maksimum 50 olayda tutar (en yeniler korunur).
         """
         if memory is None:
             memory = []
 
         memory.extend(events)
+        # Sınırsız büyümeyi engelle: son MAX_EVENT_HISTORY kaydı tut
+        if len(memory) > MemoryManager.MAX_EVENT_HISTORY:
+            memory = memory[-MemoryManager.MAX_EVENT_HISTORY:]
         return memory
 
     @staticmethod
@@ -38,12 +44,15 @@ class MemoryManager:
         risk: str
     ) -> List[str]:
         """
-        Yeni risk seviyesini hafızaya ekler.
+        Yeni risk seviyesini hafızaya ekler. Maksimum 20 kayıtta tutar.
         """
         if memory is None:
             memory = []
 
         memory.append(risk)
+        # Sınırsız büyümeyi engelle
+        if len(memory) > MemoryManager.MAX_RISK_HISTORY:
+            memory = memory[-MemoryManager.MAX_RISK_HISTORY:]
         return memory
 
     @staticmethod

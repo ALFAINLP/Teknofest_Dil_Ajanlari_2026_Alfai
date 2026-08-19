@@ -6,12 +6,10 @@ import os
 from typing import Dict, Any, List
 from datetime import datetime
 from langchain_core.tools import tool
-from model_py.services.brain_service import analyze_state
 from config.settings import settings  # Sunucu URL'si ve konfigürasyonları çekmek için 
 from schemas.output_schema import FinalReportSchema
 from tools.helpers import _format_timestamp, _call_vllm_api
 from model_py.services.vision_service import analyze_video
-from model_py.services.brain_service import analyze_state
 _world_state_cache = {}
 def _get_world_state(video_path: str):
     if video_path not in _world_state_cache:
@@ -75,6 +73,7 @@ def analyze_risk(chronological_events: List[dict]) -> dict:
     Vision katmanından gelen kronolojik olayları Brain modeline göndererek
     genel risk seviyesini belirler.
     """
+    from model_py.services.brain_service import analyze_state
 
     world_state = {
         "summary": "",

@@ -8,11 +8,12 @@ from urllib.request import urlopen
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 
 from model_py.services.vision_service import analyze_video
+from model_py.services.camera_triage_service import analyze_camera_triage
 from model_py.config.settings import VISION_BASE_URL, VISION_MODEL
 
 from pydantic import BaseModel
@@ -94,6 +95,8 @@ def _normalize_event(event: Any, index: int) -> dict:
         "zone": event.get("zone") or "Genel Saha",
         "risk": event.get("risk") or "Orta",
         "confidence": confidence,
+        "center": event.get("center"),
+        "bbox": event.get("bbox"),
         "evidence": event.get("evidence") or [
             {
                 "time": timestamp,
@@ -170,6 +173,40 @@ def health() -> dict:
             "model_ready": False,
             "detail": str(error),
         }
+
+
+@app.post("/api/triage-cameras")
+async def triage_cameras(
+    files: list[UploadFile] = File(...),
+    camera_ids: list[str] = Form(...),
+) -> dict:
+    """Az sayıda temsilî kareyle kameraları tek Qwen isteğinde önceliklendirir."""
+    if not files or len(files) > 4:
+        raise HTTPException(status_code=400, detail="1 ile 4 arasında video yüklenmelidir.")
+    if len(files) != len(camera_ids):
+        raise HTTPException(status_code=400, detail="Kamera kimliği ve video sayısı eşleşmiyor.")
+
+    temporary_paths = []
+    try:
+        for upload in files:
+            suffix = Path(upload.filename or "video.mp4").suffix or ".mp4"
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temporary_file:
+                temporary_paths.append(temporary_file.name)
+                while chunk := await upload.read(1024 * 1024):
+                    temporary_file.write(chunk)
+
+        camera_videos = list(zip(camera_ids, temporary_paths))
+        logger.info("🎥 [HIZLI TRİYAJ] %s kamera tek Qwen isteğiyle taranıyor.", len(camera_videos))
+        return await run_in_threadpool(analyze_camera_triage, camera_videos)
+    except Exception as error:
+        logger.error("💥 Kamera triyajı başarısız: %s", error, exc_info=True)
+        raise HTTPException(status_code=502, detail=f"Kamera triyajı başarısız: {error}") from error
+    finally:
+        for upload in files:
+            await upload.close()
+        for path in temporary_paths:
+            if os.path.exists(path):
+                os.remove(path)
 
 
 @app.post("/api/analyze-video")

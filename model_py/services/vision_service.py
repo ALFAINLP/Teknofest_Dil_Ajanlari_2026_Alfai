@@ -16,6 +16,48 @@ from model_py.prompts.vision_prompt import (
 logger = logging.getLogger("ALFAI_API")
 
 
+def _validate_coordinate(value):
+    try:
+        numeric = float(value)
+        return numeric if 0.0 <= numeric <= 1.0 else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _normalize_spatial_fields(result: dict) -> dict:
+    """Model koordinatlarını doğrular; geçersiz değerlerden konum uydurmaz."""
+    for event in result.get("events", []):
+        if not isinstance(event, dict):
+            continue
+
+        bbox = event.get("bbox")
+        if isinstance(bbox, (list, tuple)) and len(bbox) == 4:
+            bbox = dict(zip(("x1", "y1", "x2", "y2"), bbox))
+        if isinstance(bbox, dict):
+            normalized_bbox = {key: _validate_coordinate(bbox.get(key)) for key in ("x1", "y1", "x2", "y2")}
+            if all(value is not None for value in normalized_bbox.values()) and normalized_bbox["x1"] < normalized_bbox["x2"] and normalized_bbox["y1"] < normalized_bbox["y2"]:
+                event["bbox"] = normalized_bbox
+            else:
+                event["bbox"] = None
+        else:
+            event["bbox"] = None
+
+        center = event.get("center")
+        if isinstance(center, (list, tuple)) and len(center) == 2:
+            center = {"x": center[0], "y": center[1]}
+        if isinstance(center, dict):
+            x, y = _validate_coordinate(center.get("x")), _validate_coordinate(center.get("y"))
+            event["center"] = {"x": x, "y": y} if x is not None and y is not None else None
+        elif event["bbox"]:
+            event["center"] = {
+                "x": round((event["bbox"]["x1"] + event["bbox"]["x2"]) / 2, 4),
+                "y": round((event["bbox"]["y1"] + event["bbox"]["y2"]) / 2, 4),
+            }
+        else:
+            event["center"] = None
+    return result
+
+
 def _parse_vision_json(raw_text: str) -> dict:
     """
     Vision modelinden gelen ham metni temizler, JSON formatına sokar
@@ -124,4 +166,4 @@ def analyze_video(video_path: str):
 
     vision_output = response.choices[0].message.content
 
-    return _parse_vision_json(vision_output)
+    return _normalize_spatial_fields(_parse_vision_json(vision_output))
