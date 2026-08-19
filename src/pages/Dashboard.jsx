@@ -19,6 +19,7 @@ import { analyzeVideo } from '@/services/analysisApi'
 import { eventToLog, normalizeAnalysisEvent } from '@/features/analysis/eventMapper'
 import { useOperatorFeedback } from '@/hooks/useOperatorFeedback'
 import ChatAssistant from '@/components/ChatAssistant'
+import MultiCameraAnalysis from '@/components/MultiCameraAnalysis'
 
 // ─── Sabitler ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -127,11 +128,13 @@ function getRiskGuidance(riskScore) {
 }
 
 const CAMERAS = [
-  { id: 'CAM_01', zone: 'Depo Girişi',     status: 'active' },
-  { id: 'CAM_02', zone: 'Üretim Hattı A',  status: 'active' },
-  { id: 'CAM_03', zone: 'Yükleme Rampası', status: 'warn'   },
-  { id: 'CAM_04', zone: 'Ana Giriş',       status: 'active' },
+  { id: 'CAM_01', zone: 'Depo Girişi' },
+  { id: 'CAM_02', zone: 'Üretim Hattı A' },
+  { id: 'CAM_03', zone: 'Yükleme Rampası' },
+  { id: 'CAM_04', zone: 'Ana Giriş' },
 ]
+
+const CAMERA_RISK_PRIORITY = { Kritik: 4, Yüksek: 3, Orta: 2, Düşük: 1 }
 
 // ─── JSON Syntax Renklendirme ─────────────────────────────────────────────────
 function JsonSyntax({ json }) {
@@ -218,15 +221,16 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
   const [riskFilter, setRiskFilter] = useState('all')
   const [focusedEvent, setFocusedEvent] = useState(null)
   const riskColors = { Kritik: '#ff6b6b', Yüksek: '#ff9f43', Orta: '#a3e635', Düşük: '#60a5fa' }
-  const maximumTime = Math.max(...eventRows.map(event => event.end_time ?? event.start_time ?? 0), 1)
   const visibleEvents = eventRows.filter(event => riskFilter === 'all' || event.risk === riskFilter)
-  const points = visibleEvents.map((event, index) => {
-    const seconds = event.start_time ?? 0
+  const locatedEvents = visibleEvents.filter(event =>
+    Number.isFinite(Number(event.center?.x)) && Number.isFinite(Number(event.center?.y)))
+  const missingLocationCount = visibleEvents.length - locatedEvents.length
+  const points = locatedEvents.map((event) => {
     const confidence = Number.parseFloat(String(event.conf ?? '85').replace('%', '')) || 85
     return {
       event,
-      left: `${10 + (seconds / maximumTime) * 80}%`,
-      top: `${18 + ((index * 31) % 64)}%`,
+      left: `${Number(event.center.x) * 100}%`,
+      top: `${Number(event.center.y) * 100}%`,
       size: 80 + confidence,
       color: riskColors[event.risk] ?? riskColors.Düşük,
     }
@@ -245,6 +249,11 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
           Isı haritası için önce bir video analiz edin
         </div>
       )}
+      {eventRows.length > 0 && points.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center px-8 text-center font-sans text-sm text-[#8b919d]">
+          Model bu analizde güvenilir mekânsal koordinat üretmedi. Yanlış konum göstermemek için nokta çizilmedi.
+        </div>
+      )}
       {focusedEvent && (
         <div className="absolute left-5 top-14 max-w-sm rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 p-3 shadow-xl">
           <div className="flex items-center justify-between gap-4">
@@ -256,7 +265,8 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
         </div>
       )}
       <div className="absolute top-4 left-5">
-        <p className="font-sans text-[10px] uppercase tracking-widest text-[#414752]">Model olay yoğunluğu · {visibleEvents.length} olay</p>
+        <p className="font-sans text-[10px] uppercase tracking-widest text-[#8b919d]">Video karesi olay konumları · {points.length}/{visibleEvents.length} konumlu</p>
+        {missingLocationCount > 0 && <p className="mt-1 font-sans text-[9px] text-[#ffb77d]">{missingLocationCount} olay için konum üretilemedi</p>}
       </div>
       <div className="absolute bottom-4 left-5 glass rounded-lg p-3 space-y-1.5">
         {Object.entries(riskColors).map(([label, color]) => (
@@ -716,6 +726,8 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
   const videoRef     = useRef(null)
   const [videoDuration, setVideoDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
+  const [feedbackDraft, setFeedbackDraft] = useState(null)
+  const [feedbackSaved, setFeedbackSaved] = useState(false)
 
   const lastEventTime = Math.max(...eventRows.map(event => event.end_time ?? event.start_time ?? 0), 0)
   const timelineDuration = Math.max(videoDuration, lastEventTime, 1)
@@ -735,6 +747,11 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
     videoRef.current.currentTime = selectedEvent.start_time ?? 0
     videoRef.current.play().catch(() => {})
   }, [selectedEvent])
+
+  useEffect(() => {
+    setFeedbackDraft(selectedEvent ? (feedbackMap[selectedEvent.id] ?? null) : null)
+    setFeedbackSaved(false)
+  }, [selectedEvent?.id])
 
   return (
     <div className="space-y-3 w-full">
@@ -844,16 +861,31 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
                 ['wrong_risk', 'Risk yanlış'],
                 ['wrong_time', 'Zaman yanlış'],
               ].map(([value, label]) => (
-                <button key={value} type="button" onClick={() => onFeedback(selectedEvent, value)}
+                <button key={value} type="button" onClick={() => { setFeedbackDraft(value); setFeedbackSaved(false) }}
                   className={cn(
                     'rounded-md border px-2.5 py-1 font-sans text-[10px] transition-colors',
-                    feedbackMap[selectedEvent.id] === value
-                      ? 'border-[#4ade80]/50 bg-[#052e16]/40 text-[#86efac]'
+                    feedbackDraft === value
+                      ? 'border-[#a2c9ff]/60 bg-[#a2c9ff]/10 text-[#a2c9ff]'
                       : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/40 hover:text-[#dae3ee]'
                   )}>
                   {label}
                 </button>
               ))}
+              <button type="button" disabled={!feedbackDraft}
+                onClick={() => {
+                  if (!feedbackDraft) return
+                  onFeedback(selectedEvent, feedbackDraft)
+                  setFeedbackSaved(true)
+                }}
+                className={cn(
+                  'ml-auto rounded-md border px-3 py-1 font-sans text-[10px] font-semibold transition-colors',
+                  feedbackDraft
+                    ? 'border-[#4ade80]/50 bg-[#052e16]/50 text-[#86efac] hover:bg-[#14532d]/50'
+                    : 'cursor-not-allowed border-[#2a3540] text-[#414752]'
+                )}>
+                Değerlendirmeyi Kaydet
+              </button>
+              {feedbackSaved && <span className="font-sans text-[10px] text-[#4ade80]">✓ Kaydedildi</span>}
             </div>
           </CardContent>
         </Card>
@@ -914,7 +946,7 @@ export default function Dashboard() {
   const [logs, setLogs]                   = useState([])
   const [eventRows, setEventRows]         = useState([])
   const [selectedEvent, setSelectedEvent] = useState(null)
-  const { feedbackMap, saveFeedback }     = useOperatorFeedback()
+  const { feedbackMap, saveFeedback, clearFeedback } = useOperatorFeedback()
   const [tick, setTick]                   = useState(0)
   const [videoSrc, setVideoSrc]           = useState(null)
   const [videoFileName, setVideoFileName] = useState(null)
@@ -991,6 +1023,7 @@ export default function Dashboard() {
     setAnalysis(null)
     setAnalysisError(null)
     setAlerts([])
+    clearFeedback()
     setAnalyzing(true)
 
     try {
@@ -1117,7 +1150,9 @@ export default function Dashboard() {
         <div className="flex-1 overflow-hidden">
           <div className="h-full flex flex-col overflow-hidden px-5 py-4">
 
-            {activeNav === 'cameras'  && <CamerasPage videoSrc={videoSrc} isDark={isDark} />}
+            <div className={cn('h-full min-h-0', activeNav === 'cameras' ? 'flex' : 'hidden')}>
+              <MultiCameraAnalysis />
+            </div>
             {activeNav === 'heatmap'  && (
               <div className="flex-1 flex flex-col overflow-hidden gap-3">
                 <div className="shrink-0">

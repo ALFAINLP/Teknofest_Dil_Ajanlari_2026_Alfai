@@ -253,7 +253,18 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             # 1. NİHAİ KARAR ARACI (Döngüyü bitiren sinyal)
             # ================================================================
             if tool_name == "submit_final_decision":
-                highest_risk = args.get("risk_level", highest_risk)
+                raw_risk = args.get("risk_level", highest_risk).strip().lower()
+                
+                # 🟢 DÜZELTME: Modelin yapabileceği imla hatalarını (Döşük, Döşk vb.) standart kategorilere eşitleme
+                if "kritik" in raw_risk:
+                    highest_risk = "Kritik"
+                elif "yüksek" in raw_risk or "yuksek" in raw_risk:
+                    highest_risk = "Yüksek"
+                elif "orta" in raw_risk:
+                    highest_risk = "Orta"
+                else:
+                    highest_risk = "Düşük" # 'Düşk' gibi hatalı yazımlar otomatik olarak 'Düşük' kabul edilir
+
                 impact_desc = args.get("decision_summary", impact_desc)
                 decision_made = True
                 tool_result = {"status": "Karar sisteme başarıyla kaydedildi, görevi sonlandır."}
@@ -372,55 +383,43 @@ def compile_report_node(state: AgentState) -> AgentState:
     # ==========================
     highest_risk = state.get("risk_assessments", ["Düşük"])[0]
 
-    # Brain'in decision metni (technical_summary) en az 15 karakter ve anlamlıysa kullan
-    brain_decision = state.get("technical_summary", "").strip()
-    has_meaningful_decision = (
-        len(brain_decision) >= 15
-        and brain_decision not in ["Analiz tamamlandı.", "Model yanıt vermedi, varsayılan durum."]
-    )
+    base_summary = "Saha görüntüleri incelendi."
+    event_texts = [e["event"] for e in cleaned_events if e.get("event")][:2]
+    if event_texts:
+        joined = " ".join(event_texts)
+        base_summary = joined[:120] + ("..." if len(joined) > 120 else "")
 
-    if has_meaningful_decision:
-        base_summary = brain_decision
-    else:
-        # Tespit edilen ilk 1-2 olaydan dinamik özet üret
-        event_texts = [e["event"] for e in cleaned_events if e.get("event")][:2]
-        if event_texts:
-            joined = " ".join(event_texts)
-            # 120 karakteri aşarsa kırp
-            base_summary = joined[:120] + ("..." if len(joined) > 120 else "")
-        else:
-            base_summary = "Saha görüntüleri incelendi."
-
-    if highest_risk in ["Yüksek", "Kritik"]:
-        final_summary = f"{base_summary}{temporal_summary}"
-    else:
-        final_summary = f"{base_summary}{temporal_summary}"
-
-
+    final_summary = f"{base_summary}{temporal_summary}"
 
     report_data = {
         "summary": final_summary,
         "events": cleaned_events,
-        "risk": state["risk_assessments"][0],
-        
-        # YENİ: State'ten trendi alıp LLM'e gönderilecek veriye ekliyoruz
-        "risk_trend": state.get("risk_trend", "Bilinmiyor"), 
-        
+        "risk": highest_risk,
+        "risk_trend": state.get("risk_trend", "Bilinmiyor"),
         "actions": state["actions_recommended"]
     }
 
 
-    report_data["kpi_metrics"] = {
-        "ai_processing_status": "Başarılı / Kritik Müdahale Devrede" if highest_risk in ["Yüksek", "Kritik"] else "Başarılı",
-        "confidence_score": 0.96,
-        "is_schema_validated": True
-    }
-
+    json_report = None
     try:
-        validated = FinalReportSchema(**report_data)
-        json_report = validated.model_dump_json(indent=2)
-    except Exception:
-        json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
+        logger.info("✨ generate_final_report aracı çağrılıyor (LLM Kurumsal Özet)...")
+        json_report = generate_final_report.invoke({"data_dict": report_data})
+    except Exception as e:
+        logger.warning(f"⚠️ generate_final_report aracı hatası: {e}. Manuel şema şablonuna geçiliyor.")
+
+    # Eğer araç bir sebepten başarısız olursa güvenli fallback mekanizması devreye girer
+    if not json_report or "error" in json_report:
+        report_data["kpi_metrics"] = {
+            "ai_processing_status": "Başarılı / Kritik Müdahale Devrede" if highest_risk in ["Yüksek", "Kritik"] else "Başarılı",
+            "confidence_score": 0.96,
+            "is_schema_validated": True
+        }
+        try:
+            validated = FinalReportSchema(**report_data)
+            json_report = validated.model_dump_json(indent=2)
+        except Exception:
+            json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
+
 
     # Risk seviyesine göre koşullu CMS export — Düşük riskli olaylar sistemi gereksiz meşgul etmemeli
     if highest_risk in ["Yüksek", "Kritik", "Orta"]:
@@ -455,15 +454,21 @@ def compile_report_node(state: AgentState) -> AgentState:
     # Reasoning chain log — compile node'un yaptıklarını göster
     tool_calls_log = [
         {
+            "name": "generate_final_report",
+            "args": {"data_dict": "Ham rapor sözlüğü"},
+            "id": "call_report_004"
+        },
+        {
             "name": "log_kpi_metrics",
             "args": {
                 "total_events": len(state.get("detected_events", [])),
-                "highest_risk": state["risk_assessments"][0] if state.get("risk_assessments") else "Bilinmiyor",
+                "highest_risk": highest_risk,
                 "processing_status": "Başarılı"
             },
             "id": "call_kpi_005"
         }
     ]
+
     # Sadece orta/yüksek/kritik riskte CMS export çağrısı loglanır
     if highest_risk in ["Yüksek", "Kritik", "Orta"]:
         tool_calls_log.insert(0, {

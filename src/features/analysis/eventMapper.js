@@ -28,6 +28,8 @@ export function normalizeAnalysisEvent(event, fallbackId) {
     event: event.event,
     risk: event.risk,
     conf: event.confidence,
+    center: event.center ?? null,
+    bbox: event.bbox ?? null,
     evidence: event.evidence ?? [
       { time: formatTimestamp(startTime), seconds: startTime, description: `${event.event} bulgusu bu kare aralığında tespit edildi.` },
       { time: formatTimestamp(endTime), seconds: endTime, description: 'Olayın gelişimi ve çevresel bağlam kontrol edildi.' },
@@ -44,4 +46,3 @@ export function eventToLog(event) {
     level: riskToLogLevel(event.risk),
   }
 }
-

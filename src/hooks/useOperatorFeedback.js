@@ -20,6 +20,10 @@ export function useOperatorFeedback() {
     })
   }
 
-  return { feedbackMap, saveFeedback }
-}
+  function clearFeedback() {
+    localStorage.removeItem(APP_CONFIG.operatorFeedbackStorageKey)
+    setFeedbackMap({})
+  }
 
+  return { feedbackMap, saveFeedback, clearFeedback }
+}

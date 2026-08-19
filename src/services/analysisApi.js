@@ -8,26 +8,43 @@ export class AnalysisApiError extends Error {
   }
 }
 
+async function readError(response, fallback) {
+  try {
+    const payload = await response.json()
+    return payload.detail ? `${fallback}: ${payload.detail}` : fallback
+  } catch {
+    return fallback
+  }
+}
+
 export async function analyzeVideo(file, { signal } = {}) {
   const formData = new FormData()
   formData.append('file', file)
-
   let response
   try {
-    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/analyze-video`, {
-      method: 'POST',
-      body: formData,
-      signal,
-    })
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/analyze-video`, { method: 'POST', body: formData, signal })
   } catch (error) {
     if (error.name === 'AbortError') throw error
-    throw new AnalysisApiError('Backend bağlantısı kurulamadı. 8000 portundaki servisi kontrol edin.')
+    throw new AnalysisApiError('Backend bağlantısı kurulamadı. 8080 portundaki servisi kontrol edin.')
   }
+  if (!response.ok) throw new AnalysisApiError(await readError(response, `Sunucu hatası ${response.status}`), response.status)
+  return response.json()
+}
 
-  if (!response.ok) {
-    throw new AnalysisApiError(`Sunucu hatası: ${response.status}`, response.status)
+export async function triageCameras(cameraEntries, { signal } = {}) {
+  const formData = new FormData()
+  cameraEntries.forEach(({ cameraId, file }) => {
+    formData.append('files', file)
+    formData.append('camera_ids', cameraId)
+  })
+  let response
+  try {
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/triage-cameras`, { method: 'POST', body: formData, signal })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new AnalysisApiError('Hızlı kamera triyaj servisine bağlanılamadı.')
   }
-
+  if (!response.ok) throw new AnalysisApiError(await readError(response, `Triyaj sunucu hatası ${response.status}`), response.status)
   return response.json()
 }
 
@@ -37,32 +54,15 @@ export async function sendChatMessage({ message, analysisContext = null, history
     response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        analysis_context: analysisContext,
-        history,
-      }),
+      body: JSON.stringify({ message, analysis_context: analysisContext, history }),
       signal,
     })
   } catch (error) {
     if (error.name === 'AbortError') throw error
     throw new AnalysisApiError('Chat servisine bağlanılamadı. Backend ve Llama servislerini kontrol edin.')
   }
-
-  if (!response.ok) {
-    let detail = ''
-    try {
-      const payload = await response.json()
-      detail = payload.detail ? `: ${payload.detail}` : ''
-    } catch {
-      // Sunucu JSON döndürmediyse durum kodunu göstermek yeterlidir.
-    }
-    throw new AnalysisApiError(`Chat sunucu hatası ${response.status}${detail}`, response.status)
-  }
-
+  if (!response.ok) throw new AnalysisApiError(await readError(response, `Chat sunucu hatası ${response.status}`), response.status)
   const payload = await response.json()
-  if (!payload.reply || typeof payload.reply !== 'string') {
-    throw new AnalysisApiError('Chat servisi geçerli bir yanıt döndürmedi.')
-  }
+  if (!payload.reply || typeof payload.reply !== 'string') throw new AnalysisApiError('Chat servisi geçerli bir yanıt döndürmedi.')
   return payload
 }
