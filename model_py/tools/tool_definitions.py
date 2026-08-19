@@ -10,7 +10,8 @@ LANGCHAIN_TOOLS = [
     mock_actions.query_previous_incidents,
     mock_actions.trigger_operator_alert,
     mock_actions.log_kpi_metrics,
-    mock_actions.detect_motion_density
+    mock_actions.detect_motion_density,
+    mock_actions.submit_final_decision
 ]
 
 def get_openai_tools_schema() -> List[Dict[str, Any]]:

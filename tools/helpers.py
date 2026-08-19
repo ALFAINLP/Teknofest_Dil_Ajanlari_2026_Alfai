@@ -3,6 +3,7 @@
 import json
 import httpx
 from config.settings import settings
+import pathlib
 
 def _format_timestamp(time_seconds: int) -> str:
     """
@@ -21,25 +22,38 @@ def _call_vllm_api(system_prompt: str, user_prompt: str, model_name: str, max_to
     Hata yakalamayı, HTTP durum kontrollerini ve markdown JSON temizliğini otonom yapar.
     """
     if "qwen" in model_name.lower() or video_path is not None:
-        base_url = getattr(settings, "VISION_SERVER_URL", "http://localhost:8000")
+        # VISION portunu kesin olarak 8000'e sabitliyoruz
+        base_url = getattr(settings, "VISION_BASE_URL", "http://localhost:8000/v1")
     else:
-        base_url = getattr(settings, "BRAIN_SERVER_URL", "http://localhost:8001")
+        base_url = getattr(settings, "BRAIN_BASE_URL", "http://localhost:8001/v1")
 
-    vllm_url = f"{base_url}/v1/chat/completions"
+    if base_url.endswith("/v1"):
+        vllm_url = f"{base_url}/chat/completions"
+    else:
+        vllm_url = f"{base_url}/v1/chat/completions"
     
     # Çoklu modallı (Video + Metin) veya Salt Metin durumuna göre payload yapısı
+    # 🟢 DÜZELTME: vLLM'in beklediği katı role/content yapısına ve OpenAI standardına uyum
     user_content = []
     if video_path:
-        user_content.append({"type": "video", "video_url": f"file:///{video_path}"})
+        # Qwen-VL vLLM dökümantasyonuna uygun standart format
+        abs_path = str(pathlib.Path(video_path).absolute())
+        
+        user_content.append({
+            "type": "video_url",
+            "video_url": {"url": f"file://{abs_path}"}
+        })
+        
     user_content.append({"type": "text", "text": user_prompt})
 
     payload = {
         "model": model_name,
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_content}
+            # Eğer video yoksa direkt string gönderelim (bazı LLM'ler listeyi sevmez)
+            {"role": "user", "content": user_content if video_path else user_prompt} 
         ],
-        "temperature": 0.1,  # Nesnel/kararlı analiz standardı
+        "temperature": 0.1,
         "max_tokens": max_tokens
     }
     

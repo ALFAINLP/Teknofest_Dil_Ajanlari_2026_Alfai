@@ -247,7 +247,7 @@ def detect_motion_density(start_time: int, end_time: int, video_path: str) -> di
     raw_content = _call_vllm_api(
         system_prompt=system_prompt,
         user_prompt=user_prompt,
-        model_name="Qwen3-VL-8B-Instruct",
+        model_name="Qwen/Qwen3-VL-8B-Instruct",
         max_tokens=250,
         video_path=video_path
     )
@@ -336,7 +336,7 @@ def get_scene_metadata(video_path: str) -> dict:
     raw_content = _call_vllm_api(
         system_prompt=system_prompt,
         user_prompt=user_prompt,
-        model_name="Qwen3-VL-8B-Instruct",
+        model_name="Qwen/Qwen3-VL-8B-Instruct",
         max_tokens=250,
         video_path=video_path
     )
@@ -802,3 +802,16 @@ def export_to_incident_management_system(report_json: str) -> bool:
         print(f"[CMS Export Mock] Dış sisteme erişilemedi ({e}), otonom aktarım simüle edildi.")
         return True
 
+@tool
+def submit_final_decision(risk_level: str, decision_summary: str) -> dict:
+    """Ajanın analiz ve bilgi toplama sürecini bitirip, bulduğu nihai kararı sisteme ilettiği GÖREV SONLANDIRMA aracıdır.
+    'risk_level': 'Düşük', 'Orta', 'Yüksek' veya 'Kritik' olmalıdır.
+    'decision_summary': Kararın alınma gerekçesinin kısa, net Türkçe açıklaması olmalıdır.
+    """
+    # Bu fonksiyon aslında LangGraph akışında (graph.py) bir sinyal olarak kullanılacak.
+    # Modelin verdiği kararı sisteme döndürüyoruz.
+    return {
+        "status": "FINAL_DECISION_RECEIVED",
+        "risk_level": risk_level,
+        "decision": decision_summary
+    }
