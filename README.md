@@ -6,6 +6,7 @@
 ```bash
 sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
+  -v /tmp:/tmp \
   -p 8000:8000 \
   --ipc=host \
   vllm/vllm-openai:latest \
@@ -13,7 +14,8 @@ sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   --tensor-parallel-size 2 \
   --gpu-memory-utilization 0.95 \
   --max-model-len 32768 \
-  --enable-chunked-prefill
+  --enable-chunked-prefill \
+  --allowed-local-media-path /tmp
 ```
 
 **Llama Modeli (Akıl Yürütme ve Karar)**
