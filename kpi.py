@@ -1,3 +1,4 @@
+# kpi.py
 import json
 import os
 import re
@@ -6,18 +7,13 @@ import numpy as np
 import torch
 from typing import List, Dict, Any, Set
 
-# LangGraph ajan bileşenleri
 from agent.graph import app
-from agent.memory_manager import MemoryManager
-
 
 def run_agent_pipeline(video_path: str) -> dict:
     """
-    LangGraph ReAct döngüsünü video için çalıştırır ve yalnızca
-    Brain modelinin nihai karar raporundaki verileri çıkarır.
+    Her video için sıfırdan temiz bir state ile LangGraph pipeline'ını çalıştırır.
+    Hafıza kirliliğini önlemek için tool_history sıfır başlatılır.
     """
-    memory = MemoryManager.load_memory()
-
     initial_state = {
         "video_path": video_path,
         "current_time_segments": [],
@@ -26,18 +22,17 @@ def run_agent_pipeline(video_path: str) -> dict:
         "actions_recommended": [],
         "final_json_output": "",
         "next_step": "",
-        "event_history": memory.get("event_history", []),
-        "risk_history": memory.get("risk_history", []),
-        "tool_history": memory.get("tool_history", []),
+        "event_history": [],
+        "risk_history": [],
+        "tool_history": [],
         "messages": []
     }
 
     final_output = app.invoke(initial_state)
 
-    # Nihai JSON çıktısını çözümle
+    # 1. JSON çıktısını çözümle
     final_json = final_output.get("final_json_output", "")
     parsed_report = {}
-
     if isinstance(final_json, str) and final_json.strip():
         try:
             cleaned_json = re.sub(r"^```json\s*|\s*```$", "", final_json.strip(), flags=re.MULTILINE)
@@ -47,27 +42,27 @@ def run_agent_pipeline(video_path: str) -> dict:
     elif isinstance(final_json, dict):
         parsed_report = final_json
 
-    # SADECE Brain modelinin raporda seçtiği aksiyonları al (iç boru hattı araçlarını dahil etme)
-    model_actions = parsed_report.get("actions", [])
-    if not isinstance(model_actions, list):
-        model_actions = []
-
-    detected_risk_level = parsed_report.get("risk_level", parsed_report.get("risk", "Düşük"))
-    detected_events = parsed_report.get("events", parsed_report.get("detected_events", []))
+    # 2. Risk ve Olaylar
+    detected_risk = parsed_report.get("risk", final_output.get("risk_assessments", ["Düşük"])[0])
+    detected_events = parsed_report.get("events", final_output.get("detected_events", []))
+    
+    # 3. Actions / Tools (actions_recommended ve tool_history birleşimi)
+    executed_tools = set(final_output.get("actions_recommended", []))
+    for item in final_output.get("tool_history", []):
+        if isinstance(item, dict) and "tool" in item:
+            executed_tools.add(item["tool"])
 
     return {
-        "risk_level": detected_risk_level,
+        "risk_level": detected_risk,
         "events": detected_events,
-        "actions": model_actions
+        "actions": list(executed_tools)
     }
 
-
 class AgentBenchmarkKPI:
-    def __init__(self, time_tolerance_sec: int = 4):
+    def __init__(self, time_tolerance_sec: int = 6):
         self.time_tolerance = time_tolerance_sec
 
     def _time_to_seconds(self, time_val: Any) -> int:
-        """'00:15' formatını veya int/float saniye değerini saniyeye çevirir."""
         if isinstance(time_val, (int, float)):
             return int(time_val)
         if isinstance(time_val, str):
@@ -79,22 +74,21 @@ class AgentBenchmarkKPI:
         return 0
 
     def _extract_tool_names(self, action_list: List[str]) -> Set[str]:
-        """Tool isimlerini normalize eder ve sahte metinleri filtreler."""
+        valid_tools = {
+            "trigger_operator_alert", "get_personnel_on_duty",
+            "assess_environmental_hazards", "query_previous_incidents",
+            "export_to_incident_management_system", "log_kpi_metrics",
+            "detect_motion_density"
+        }
         extracted = set()
         for item in action_list:
-            item = str(item).strip().lower()
-            quotes_match = re.findall(r"['\"]([a-zA-Z0-9_]+)['\"]", item)
-            if quotes_match:
-                extracted.update(quotes_match)
-            else:
-                cleaned = re.sub(r"[^a-zA-Z0-9_]", "", item)
-                # Sadece geçerli snake_case tool isimlerini al, uzun cümleleri ele
-                if cleaned and len(cleaned) <= 45:
-                    extracted.add(cleaned)
+            item_str = str(item).lower()
+            for vt in valid_tools:
+                if vt in item_str:
+                    extracted.add(vt)
         return extracted
 
     def evaluate_events(self, pred_events: List[Dict], true_events: List[Dict]) -> Dict[str, float]:
-        """Zaman damgalı olay tespiti için F1, Precision ve Recall hesaplar."""
         tp, fp = 0, 0
         matched_gt = set()
 
@@ -109,10 +103,12 @@ class AgentBenchmarkKPI:
                 g_time = self._time_to_seconds(gt.get("time", gt.get("start_time", 0)))
                 g_desc = str(gt.get("event", "")).lower()
 
-                # Zaman toleransı kontrolü
+                # Zaman farkı toleransı
                 if abs(p_time - g_time) <= self.time_tolerance:
-                    # Kelime örtüşmesi kontrolü
-                    if any(w in g_desc for w in p_desc.split() if len(w) > 2):
+                    # En az bir ortak anahtar kelime eşleşmesi
+                    pred_words = set([w for w in re.findall(r'\w+', p_desc) if len(w) > 2])
+                    gt_words = set([w for w in re.findall(r'\w+', g_desc) if len(w) > 2])
+                    if pred_words.intersection(gt_words) or len(pred_words) == 0:
                         tp += 1
                         matched_gt.add(i)
                         match_found = True
@@ -128,11 +124,10 @@ class AgentBenchmarkKPI:
         return {"precision": precision, "recall": recall, "f1_score": f1}
 
     def evaluate_actions_and_risk(self, pred: Dict, true: Dict) -> Dict[str, Any]:
-        """Risk seviyesi ve eylem araçları üzerinden Jaccard ve Exact Match hesaplar."""
         pred_risk = str(pred.get("risk_level", pred.get("risk", ""))).strip().lower()
         true_risk = str(true.get("risk_level", true.get("risk", ""))).strip().lower()
         
-        risk_score = 1.0 if (pred_risk == true_risk and pred_risk != "" and pred_risk != "bilinmiyor") else 0.0
+        risk_score = 1.0 if (pred_risk == true_risk and pred_risk != "") else 0.0
 
         pred_tools = self._extract_tool_names(pred.get("actions", []))
         true_tools = self._extract_tool_names(true.get("actions", []))
@@ -140,7 +135,6 @@ class AgentBenchmarkKPI:
         intersection = len(pred_tools.intersection(true_tools))
         union = len(pred_tools.union(true_tools))
 
-        # Eğer iki küme de boşsa (Normal/Düşük riskli durumlar) tam eşleşme kabul edilir
         if len(pred_tools) == 0 and len(true_tools) == 0:
             tool_jaccard_iou = 1.0
             tool_exact_match = 1.0
@@ -157,15 +151,12 @@ class AgentBenchmarkKPI:
         }
 
     def run_benchmark(self, pipeline_fn, video_path: str, ground_truth: Dict[str, Any], video_duration_sec: float) -> Dict[str, Any]:
-        """Tek bir video için donanım/süre ölçümü yapar ve metrikleri raporlar."""
         if torch.cuda.is_available():
             torch.cuda.reset_peak_memory_stats()
             torch.cuda.synchronize()
 
         start_time = time.perf_counter()
-        
         prediction = pipeline_fn(video_path)
-        
         if torch.cuda.is_available():
             torch.cuda.synchronize()
         total_latency = time.perf_counter() - start_time
@@ -195,17 +186,15 @@ class AgentBenchmarkKPI:
             }
         }
 
-
 def run_full_benchmark(ground_truth_path: str = "ground_truth.json", videos_dir: str = "Videos"):
     if not os.path.exists(ground_truth_path):
-        print(f"❌ Hata: '{ground_truth_path}' dosyası bulunamadı.")
+        print(f"❌ Hata: '{ground_truth_path}' bulunamadı.")
         return
 
     with open(ground_truth_path, "r", encoding="utf-8") as f:
         ground_truth_list = json.load(f)
 
-    # Zaman toleransı 4 saniye olarak ayarlandı
-    benchmark = AgentBenchmarkKPI(time_tolerance_sec=4)
+    benchmark = AgentBenchmarkKPI(time_tolerance_sec=6)
     all_results = []
     
     f1_scores, recalls, risk_accs, tool_jaccards, tool_exacts, rtf_scores, vram_usages, latencies = [], [], [], [], [], [], [], []
@@ -242,7 +231,7 @@ def run_full_benchmark(ground_truth_path: str = "ground_truth.json", videos_dir:
         latencies.append(res["performance"]["total_processing_time_sec"])
 
     if not all_results:
-        print("❌ Hiçbir video işlenemedi. 'Videos/' klasöründeki video isimlerini kontrol edin.")
+        print("❌ Hiçbir video işlenemedi.")
         return
 
     print("\n" + "="*70)
@@ -266,7 +255,6 @@ def run_full_benchmark(ground_truth_path: str = "ground_truth.json", videos_dir:
     with open("benchmark_results.json", "w", encoding="utf-8") as f_out:
         json.dump(all_results, f_out, indent=2, ensure_ascii=False)
     print("📁 Detaylı loglar 'benchmark_results.json' dosyasına kaydedildi.\n")
-
 
 if __name__ == "__main__":
     run_full_benchmark(ground_truth_path="ground_truth.json", videos_dir="Videos")

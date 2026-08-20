@@ -1,50 +1,35 @@
+# model_py/services/brain_service.py
 import json
 from model_py.services.client import brain_client
-from model_py.config.settings import (
-    BRAIN_MODEL,
-    TEMPERATURE,
-)
+from model_py.config.settings import BRAIN_MODEL, TEMPERATURE
 from model_py.tools.tool_definitions import TOOLS
 from model_py.prompts.brain_prompt import build_brain_prompt
 
-def analyze_state(messages: list, force_json: bool = True):
+def analyze_state(messages: list, force_json: bool = False):
     """
-    ReAct döngüsü boyunca gelen LangGraph mesaj geçmişini alır,
-    dinamik sistem promptunu başa ekler, OpenAI uyumlu sözlük yapısına 
-    dönüştürür ve Brain modeline iletir.
-    
-    force_json=False → Tool çağrısı yapılabilmesi için response_format kaldırılır.
-    force_json=True  → Son adım: JSON format zorunlu, tools gönderilmez.
+    ReAct döngüsü mesaj geçmişini OpenAI / vLLM standardına çevirir.
     """
-    print(f"DEBUG - force_json değeri: {force_json}")
-    print(f"DEBUG - TOOLS listesi uzunluğu: {len(TOOLS) if TOOLS else 0}")
     formatted_messages = []
     
-    # 1. Dinamik Sistem Promptunu mesajların en başına ekle
-    system_prompt_content = build_brain_prompt()
+    # 1. En başa tek bir System Prompt ekle
     formatted_messages.append({
         "role": "system",
-        "content": system_prompt_content
+        "content": build_brain_prompt()
     })
     
     for msg in messages:
-        # Mesaj zaten system mesajıysa (eski prompt kalıntısı) dinamik prompt ile ezildiği için atla
-        if isinstance(msg, dict) and msg.get("role") == "system":
-            continue
-        if msg.__class__.__name__ == "SystemMessage":
-            continue
-
-        # Eğer mesaj zaten bir sözlük ise ekle
+        # State içinden gelen mükerrer system mesajlarını atla
         if isinstance(msg, dict):
+            if msg.get("role") == "system":
+                continue
             formatted_messages.append(msg)
             continue
             
-        # Eğer mesaj düz bir string ise ekle
+        if msg.__class__.__name__ == "SystemMessage":
+            continue
+
         if isinstance(msg, str):
-            formatted_messages.append({
-                "role": "user",
-                "content": msg
-            })
+            formatted_messages.append({"role": "user", "content": msg})
             continue
             
         role = "user"
@@ -53,12 +38,8 @@ def analyze_state(messages: list, force_json: bool = True):
         elif msg.__class__.__name__ == "ToolMessage":
             role = "tool"
             
-        msg_dict = {
-            "role": role,
-            "content": msg.content or ""
-        }
+        msg_dict = {"role": role, "content": msg.content or ""}
         
-        # Model bir araç çağırdıysa detayları ekle
         if role == "assistant" and getattr(msg, "tool_calls", None):
             msg_dict["tool_calls"] = [
                 {
@@ -77,9 +58,8 @@ def analyze_state(messages: list, force_json: bool = True):
             
         formatted_messages.append(msg_dict)
 
-    # 2. OpenAI API İsteği
+    # 2. OpenAI / vLLM API İsteği
     if force_json:
-        # Son adım: JSON karar özeti — tools gönderilmez, JSON format zorunlu
         response = brain_client.chat.completions.create(
             model=BRAIN_MODEL,
             messages=formatted_messages,
@@ -89,14 +69,13 @@ def analyze_state(messages: list, force_json: bool = True):
             response_format={"type": "json_object"}
         )
     else:
-        # ReAct adımı: Tool çağrısına izin ver — response_format YOK (çakışır)
         active_tools = TOOLS if TOOLS else None
         response = brain_client.chat.completions.create(
             model=BRAIN_MODEL,
             messages=formatted_messages,
             tools=active_tools,
             tool_choice="auto" if active_tools else None,
-            temperature=TEMPERATURE,
+            temperature=0.0,  # Deterministik ve hatasız tool çağrısı için 0.0 önerilir
         )
 
     return response.choices[0].message
