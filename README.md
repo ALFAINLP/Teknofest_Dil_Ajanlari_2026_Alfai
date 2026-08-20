@@ -29,7 +29,7 @@ sudo docker run --runtime nvidia --gpus '"device=2,3,4,5"' \
   --model meta-llama/Meta-Llama-3.1-70B-Instruct \
   --tensor-parallel-size 4 \
   --gpu-memory-utilization 0.85 \
-  --max-model-len 8192 \
+  --max-model-len 16384 \
   --enable-prefix-caching \
   --enable-auto-tool-choice \
   --tool-call-parser llama3_json
