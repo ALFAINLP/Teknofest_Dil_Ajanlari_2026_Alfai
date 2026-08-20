@@ -8,5 +8,5 @@ BRAIN_MODEL = "meta-llama/Meta-Llama-3.1-70B-Instruct"
 
 VIDEO_PATH = "Videos/test2.mp4"
 
-MAX_TOKENS = 3000
+MAX_TOKENS = 5000
 TEMPERATURE = 0.1

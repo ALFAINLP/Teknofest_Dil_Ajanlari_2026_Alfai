@@ -66,7 +66,7 @@ response = client.chat.completions.create(
             ],
         }
     ],
-    max_tokens=1500,
+    max_tokens=3000,
     temperature=0.1,
     response_format={"type": "json_object"}          
 )

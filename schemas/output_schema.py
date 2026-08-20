@@ -14,6 +14,11 @@ class BoundingBox(BaseModel):
     x2: float = Field(..., ge=0, le=1)
     y2: float = Field(..., ge=0, le=1)
 
+class RankedAction(BaseModel):
+    rank: int = Field(..., ge=1, le=3)
+    label: str = Field(..., description="Operatörün uygulayabileceği aksiyon")
+    reason: str = Field(default="", description="Aksiyonun sıralama gerekçesi")
+
 class EventItem(BaseModel):
     time: str = Field(..., description="Olayın gerçekleştiği zaman damgası (Örn: '00:15')")
     # LangGraph Yapılandırma Hatası Çözümü dosyasındaki uyarılara istinaden:
@@ -21,6 +26,7 @@ class EventItem(BaseModel):
     event: Union[str, dict] = Field(..., description="Tespit edilen olayın Türkçe açıklaması veya detay objesi")
     center: Optional[CoordinatePoint] = Field(default=None, description="Video karesindeki normalize olay merkezi")
     bbox: Optional[BoundingBox] = Field(default=None, description="Video karesindeki normalize olay kutusu")
+    ranked_actions: List[RankedAction] = Field(default_factory=list, description="Olaya özel öncelik sıralı aksiyonlar")
 
 class KpiMetrics(BaseModel):
     ai_processing_status: str = Field(..., description="Yapay zeka işlem durumu (Örn: 'Başarılı / Kritik Müdahale Devrede')")

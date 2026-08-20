@@ -31,6 +31,18 @@ export async function analyzeVideo(file, { signal } = {}) {
   return response.json()
 }
 
+export async function fetchPerformance({ signal } = {}) {
+  let response
+  try {
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/performance`, { signal })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new AnalysisApiError('Performans telemetrisi alınamadı.')
+  }
+  if (!response.ok) throw new AnalysisApiError(await readError(response, `Telemetri hatası ${response.status}`), response.status)
+  return response.json()
+}
+
 export async function triageCameras(cameraEntries, { signal } = {}) {
   const formData = new FormData()
   cameraEntries.forEach(({ cameraId, file }) => {

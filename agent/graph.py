@@ -73,7 +73,16 @@ def extract_video_info_node(state: AgentState) -> AgentState:
             "event": event_content.get("event", event_content.get("description", "Bilinmeyen Olay")),
             "motion_density": event_content.get("motion_density", 0.0),
             "zone": event_content.get("zone", zone),
-            "is_critical": event_content.get("is_critical", False)
+            "is_critical": event_content.get("is_critical", False),
+            "phase": event_content.get("phase", ""),          
+            "event_type": event_content.get("event_type", ""),
+            "ranked_actions": event_content.get("ranked_actions", []),
+            "center": event_content.get("center"),
+            "bbox": event_content.get("bbox"),
+            "risk": event_content.get("risk", "Orta"),
+            "confidence": event_content.get("confidence", 0.85),
+            "evidence": event_content.get("evidence", []),
+            "uncertainties": event_content.get("uncertainties", [])
         })
         
     state["detected_events"] = normalized_events
@@ -101,20 +110,28 @@ def extract_video_info_node(state: AgentState) -> AgentState:
         minutes = t // 60
         seconds = t % 60
         time_str = f"{minutes:02d}:{seconds:02d}"
+
+        start_t_str = f"{(t)//60:02d}:{(t)%60:02d}"         
+        end_t_str = f"{(t+2)//60:02d}:{(t+2)%60:02d}"
         
-        detected.append({
+        normalized_events.append({                          # <-- DEĞİŞTİ (detected yerine)
             "time": time_str,
+            "start_time": start_t_str,                      
+            "end_time": end_t_str,                          
             "event": frame_info,
             "motion_density": motion.get("average_motion_density_percentage", 0.0),
-            "zone": zone
+            "zone": zone,
+            "phase": "",                                    
+            "event_type": "Ek Analiz",                      
+            "is_critical": False                            
         })
         
-    state["detected_events"] = detected
+    state["detected_events"] = normalized_events
 
     # Hafızaya olayları ekle
     state["event_history"] = MemoryManager.add_events(
         state.get("event_history", []),
-        detected
+        normalized_events
     )  
     # ==========================
     # Temporal Context
@@ -143,6 +160,7 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     state["messages"] = [log_message]
     
     return state
+
 def evaluate_risks_node(state: AgentState) -> AgentState:
     zone = state.get("current_zone", "Genel Saha")
     video_path = state.get("video_path", "")
@@ -154,13 +172,24 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         event_text = event_content.get("description", str(event_content)) if isinstance(event_content, dict) else str(event_content)
         motion = item.get('motion_density', 0)
         time = item.get('time', '00:00')
-        events_for_brain.append(
-            f"Zaman: {time} | Olay: {event_text} | Hareket Yoğunluğu: %{motion:.1f}"
+        phase = item.get("phase", "")                                 
+        is_critical = item.get("is_critical", False)                  
+        start_t = item.get("start_time", "")                          
+        end_t = item.get("end_time", "")                              
+        event_type = item.get("event_type", "")
+        events_for_brain.append(                                     
+            f"[{'KRİTİK' if is_critical else 'Normal'}] "
+            f"Zaman: {time} (Başlangıç: {start_t} → Bitiş: {end_t}) | "
+            f"Tür: {event_type} | Aşama: {phase} | "
+            f"Olay: {event_text} | Hareket: %{motion:.1f}"
         )
 
     risk_history_summary = state.get("risk_history", [])[-5:]
     risk_trend = state.get("risk_trend", "Stabil (Yetersiz Veri)")
     context_summary = state.get("context_summary", {})
+
+    # tool_history_recent = state.get("tool_history", [])[-3:]
+
 
     memory_block = (
         f"\n--- HAFIZA & BAĞLAM ---\n"
@@ -168,6 +197,9 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         f"Risk Trendi: {risk_trend}\n"
         f"Temporal Analiz: Toplam {context_summary.get('total_events', 0)} geçmiş olay.\n"
         f"Baskın Bölge: {context_summary.get('dominant_zone', 'Bilinmiyor')}\n"
+        # f"Sistematik Risk Var mı: {'Evet' if context_summary.get('systematic_risk') else 'Hayır'}. "
+        # f"Önerilen Aksiyon: {context_summary.get('recommended_action', 'Normal İzleme')}.\n"
+        # f"Son Kullanılan Araçlar: {[t.get('tool','?') if isinstance(t, dict) else str(t) for t in tool_history_recent]}\n"
         f"--- HAFIZA SONU ---\n"
     )
 
@@ -334,12 +366,16 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
                 executed_tools.add(tool_name)
                 tool_result = {"status": f"'{tool_name}' çalıştırıldı/onaylandı."}
 
-            # Tool sonucunu mesaj geçmişine ekle
+            # Tool sonucunu mesaj geçmişine ekle (Mevcut kodun yerine güvenli kırpma)
+            content_str = json.dumps(tool_result, ensure_ascii=False)
+            if len(content_str) > 1500:
+                content_str = content_str[:1500] + "... (kısaltıldı)"
+
             react_messages.append({
                 "role": "tool",
                 "tool_call_id": tool_call.id,
                 "name": tool_name,
-                "content": json.dumps(tool_result, ensure_ascii=False)
+                "content": content_str
             })
 
         if decision_made:
@@ -368,12 +404,17 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     state["messages"].extend(react_messages[1:])
 
     state["actions_recommended"] = list(executed_tools)  # Testin beklediği tool listesi
+    # state["actions_recommended"] = list(recommendations) if recommendations else ["Rutin saha izlemesi devam ediyor."]
     state["risk_assessments"] = [highest_risk]
     state["technical_summary"] = impact_desc
     state["tool_history"] = tool_history_entries
     state["risk_history"] = MemoryManager.add_risk(state.get("risk_history", []), highest_risk)
     state["risk_trend"] = MemoryManager.calculate_risk_trend(state["risk_history"])
     state["next_step"] = "compile_report"
+
+    # Döngü bittikten sonra, state güncellemelerinde:
+    # existing_tool_history = state.get("tool_history", [])
+    # state["tool_history"] = existing_tool_history + tool_history_entries
 
     return state
     
@@ -415,7 +456,13 @@ def compile_report_node(state: AgentState) -> AgentState:
             "event": event_text,
             "start_time": item.get("start_time", 0),
             "end_time": item.get("end_time", 0),
-            "is_critical": item.get("is_critical", False)
+            "is_critical": item.get("is_critical", False),
+            "ranked_actions": item.get("ranked_actions", []),
+            "center": item.get("center"),
+            "bbox": item.get("bbox"),
+            "zone": item.get("zone", "Genel Saha"),
+            "risk": item.get("risk", highest_risk if 'highest_risk' in locals() else "Orta"),
+            "confidence": item.get("confidence", 0.85)
         })
 
     # ==========================
@@ -558,3 +605,4 @@ workflow.add_edge("compile_report", END)
 
 print("🔍 GRAPH EDGES:", workflow.edges)
 app = workflow.compile()
+

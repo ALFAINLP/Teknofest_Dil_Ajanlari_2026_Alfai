@@ -2,6 +2,7 @@
 
 import os
 import tempfile
+import subprocess
 import json
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -60,6 +61,80 @@ RISK_SCORES = {
 }
 
 
+def _read_gpu_metrics() -> dict:
+    """NVIDIA sürücüsündeki anlık GPU ve VRAM değerlerini okur."""
+    try:
+        result = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=index,name,utilization.gpu,memory.used,memory.total",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=3,
+            check=True,
+        )
+        devices = []
+        for line in result.stdout.splitlines():
+            if not line.strip():
+                continue
+            index, name, utilization, memory_used, memory_total = [part.strip() for part in line.split(",", 4)]
+            devices.append({
+                "index": int(index),
+                "name": name,
+                "gpu_utilization_percent": float(utilization),
+                "vram_used_mb": float(memory_used),
+                "vram_total_mb": float(memory_total),
+            })
+
+        if not devices:
+            raise RuntimeError("GPU bilgisi dönmedi.")
+
+        used = sum(device["vram_used_mb"] for device in devices)
+        total = sum(device["vram_total_mb"] for device in devices)
+        return {
+            "available": True,
+            "gpu_utilization_percent": round(sum(device["gpu_utilization_percent"] for device in devices) / len(devices), 1),
+            "vram_used_mb": round(used, 1),
+            "vram_total_mb": round(total, 1),
+            "vram_utilization_percent": round((used / total) * 100, 1) if total else 0,
+            "devices": devices,
+        }
+    except (FileNotFoundError, subprocess.SubprocessError, ValueError, RuntimeError) as error:
+        return {"available": False, "detail": str(error)}
+
+
+def _normalize_ranked_actions(event: dict, description: str, zone: str) -> list[dict]:
+    raw_actions = event.get("ranked_actions") or []
+    actions = []
+    for fallback_rank, action in enumerate(raw_actions, start=1):
+        if isinstance(action, str):
+            action = {"label": action}
+        if not isinstance(action, dict):
+            continue
+        try:
+            rank = int(action.get("rank") or fallback_rank)
+        except (TypeError, ValueError):
+            rank = fallback_rank
+        if rank not in (1, 2, 3) or any(existing["rank"] == rank for existing in actions):
+            continue
+        actions.append({
+            "rank": rank,
+            "label": str(action.get("label") or action.get("action") or "Operatör incelemesi başlat"),
+            "reason": str(action.get("reason") or "Modelin olaya özel operasyon önerisi."),
+        })
+
+    fallbacks = [
+        {"rank": 1, "label": f"{zone} operatörüne bildir", "reason": f"'{description}' bulgusunun hızla doğrulanması için."},
+        {"rank": 2, "label": "Görüntüyü odağa al", "reason": "Olayın gelişimini ve çevresel bağlamı izlemek için."},
+        {"rank": 3, "label": "Önleyici inceleme oluştur", "reason": "Benzer olayların tekrarını azaltacak uzun vadeli önlemleri belirlemek için."},
+    ]
+    existing_ranks = {action["rank"] for action in actions}
+    actions.extend(action for action in fallbacks if action["rank"] not in existing_ranks)
+    return sorted(actions, key=lambda action: action["rank"])[:3]
+
+
 def _timestamp_to_seconds(timestamp: str) -> float:
     try:
         minutes, seconds = str(timestamp).split(":", maxsplit=1)
@@ -73,8 +148,11 @@ def _normalize_event(event: Any, index: int) -> dict:
         event = {"event": str(event)}
 
     timestamp = str(event.get("time") or "00:00")
-    start_time = float(event.get("start_time") or _timestamp_to_seconds(timestamp))
-    end_time = float(event.get("end_time") or start_time + 4)
+    raw_start = event.get("start_time") or timestamp
+    start_time = float(_timestamp_to_seconds(raw_start) if isinstance(raw_start, str) and ":" in raw_start else raw_start)
+
+    raw_end = event.get("end_time") or timestamp
+    end_time = float(_timestamp_to_seconds(raw_end) if isinstance(raw_end, str) and ":" in raw_end else raw_end)
     description = event.get("event") or event.get("description") or "Olay açıklaması bulunamadı."
     if isinstance(description, dict):
         description = description.get("description") or str(description)
@@ -85,6 +163,7 @@ def _normalize_event(event: Any, index: int) -> dict:
     else:
         confidence = str(confidence_value)
 
+    zone = event.get("zone") or "Genel Saha"
     return {
         "id": event.get("id") or f"EVT-{index:03d}",
         "time": timestamp,
@@ -92,7 +171,7 @@ def _normalize_event(event: Any, index: int) -> dict:
         "end_time": end_time,
         "end_time_label": event.get("end_time_label") or timestamp,
         "event": str(description),
-        "zone": event.get("zone") or "Genel Saha",
+        "zone": zone,
         "risk": event.get("risk") or "Orta",
         "confidence": confidence,
         "center": event.get("center"),
@@ -107,6 +186,7 @@ def _normalize_event(event: Any, index: int) -> dict:
         "uncertainties": event.get("uncertainties") or [
             "Model çıktısı operatör doğrulamasına açıktır."
         ],
+        "ranked_actions": _normalize_ranked_actions(event, str(description), zone),
     }
 
 
@@ -175,6 +255,12 @@ def health() -> dict:
         }
 
 
+@app.get("/api/performance")
+def performance() -> dict:
+    """Analiz sırasında panelin sorguladığı anlık donanım telemetrisi."""
+    return _read_gpu_metrics()
+
+
 @app.post("/api/triage-cameras")
 async def triage_cameras(
     files: list[UploadFile] = File(...),
@@ -227,7 +313,9 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         logger.debug(f"📁 Dosya geçici klasöre kaydedildi. Boyut: {file_size_mb:.2f} MB. Yol: {temporary_path}")
 
         logger.info("👁️ [AŞAMA 1] Vision modeli (Qwen3-VL) çalıştırılıyor...")
+        vision_started_at = time.perf_counter()
         model_output = await run_in_threadpool(analyze_video, temporary_path)
+        vision_inference_ms = round((time.perf_counter() - vision_started_at) * 1000, 1)
 
         if not isinstance(model_output, dict):
             logger.error("❌ Model çıktısı beklenen formatta (dict) değil!")
@@ -361,6 +449,11 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         final_response["risk_trend"] = graph_output.get("risk_trend", "Stabil")
         
         elapsed_time = time.time() - start_time
+        final_response["performance"] = {
+            "total_processing_seconds": round(elapsed_time, 2),
+            "vision_inference_ms": vision_inference_ms,
+            "gpu": _read_gpu_metrics(),
+        }
         logger.info(f"🏁 [TAMAMLANDI] Toplam İşlem Süresi: {elapsed_time:.2f} saniye.")
         logger.debug(f"📤 Frontend'e dönen final JSON: Risk={final_response.get('risk')}, Olay={len(final_response.get('events', []))}")
 

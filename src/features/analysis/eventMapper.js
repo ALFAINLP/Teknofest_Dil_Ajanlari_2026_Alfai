@@ -30,6 +30,9 @@ export function normalizeAnalysisEvent(event, fallbackId) {
     conf: event.confidence,
     center: event.center ?? null,
     bbox: event.bbox ?? null,
+    ranked_actions: [...(event.ranked_actions ?? [])]
+      .sort((first, second) => (first.rank ?? 99) - (second.rank ?? 99))
+      .slice(0, 3),
     evidence: event.evidence ?? [
       { time: formatTimestamp(startTime), seconds: startTime, description: `${event.event} bulgusu bu kare aralığında tespit edildi.` },
       { time: formatTimestamp(endTime), seconds: endTime, description: 'Olayın gelişimi ve çevresel bağlam kontrol edildi.' },

@@ -55,10 +55,24 @@ Yalnızca aşağıdaki JSON formatında yanıt döndür. JSON dışında hiçbir
     has_risk = world_state.get("risk", "Düşük") != "Düşük"
     risk_type = world_state.get("risk", "Düşük")
 
+    best_match = None
+    best_diff = float("inf")
+
     for event in world_state.get("events", []):
-        if event.get("time") == formatted_timestamp:
-            description = event.get("event", "")
-            break
+        try:
+            time_str = event.get("time", "00:00")
+            minute, second = time_str.split(":")
+            ev_seconds = int(minute) * 60 + int(second)
+            
+            diff = abs(ev_seconds - time)  # 'time' zaten fonksiyona gelen int saniye
+            if diff < best_diff:
+                best_diff = diff
+                best_match = event
+        except Exception:
+            continue
+
+    if best_match and best_diff <= 5:
+        description = best_match.get("event", "")
 
     return {
         "frame": f"video_segment_{formatted_timestamp}",
@@ -157,7 +171,7 @@ Yanıtını KESİNLİKLE aşağıdaki JSON şablonuna sadık kalarak döndür. J
         system_prompt=system_prompt,
         user_prompt=user_prompt,
         model_name=selected_model,
-        max_tokens=600
+        max_tokens=250
     )
 
     try:

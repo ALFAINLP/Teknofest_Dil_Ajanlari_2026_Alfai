@@ -4,12 +4,21 @@ JSON_SCHEMA = """
   "events": [
     {
       "time": "00:00",
+      "start_time": "00:00",
+      "end_time": "00:05",
       "event": "Kısa ve eylem odaklı olay açıklaması",
       "event_type": "Olay türü",
       "phase": "başlangıç/gelişim/sonuç",
       "zone": "Olay bölgesi",
       "risk": "Düşük/Orta/Yüksek/Kritik",
-      "is_critical_moment": false
+      "is_critical_moment": false,
+      "center": {"x": 0.50, "y": 0.50},
+      "bbox": {"x1": 0.40, "y1": 0.35, "x2": 0.60, "y2": 0.75},
+      "ranked_actions": [
+        {"rank": 1, "label": "En acil uygulanabilir aksiyon", "reason": "Neden ilk sırada olduğu"},
+        {"rank": 2, "label": "Alternatif aksiyon", "reason": "Hangi durumda uygulanacağı"},
+        {"rank": 3, "label": "Uzun vadeli önlem", "reason": "Tekrarı nasıl azaltacağı"}
+      ]
     }
   ],
   "risk": "Düşük/Orta/Yüksek/Kritik",
@@ -66,14 +75,27 @@ Yalnızca güvenlik ve operasyon açısından anlamlı olayları kronolojik
 olarak tespit et.
 
 Her olay için:
-- zaman,
-- olay türü,
+- start_time: olayın başladığı zaman damgası ("MM:SS" formatında),
+- end_time: olayın sona erdiği zaman damgası ("MM:SS" formatında),
+- time: olayın en kritik/belirleyici anı ("MM:SS" formatında),
+- olay türü (event_type),
 - kısa eylem açıklaması,
-- başlangıç/gelişim/sonuç aşaması,
+- başlangıç/gelişim/sonuç aşaması (phase),
 - bölge,
 - risk seviyesi
+- olayın kritik anındaki görsel konumu (`center` ve `bbox`)
 
 bilgilerini belirt.
+
+`center` ve `bbox` koordinatlarını video karesine göre normalize edilmiş
+0 ile 1 arasında değerlerle ver. Sol üst (0,0), sağ alt (1,1) kabul edilir.
+`center`, olayın merkez noktasıdır. `bbox`, olayı kapsayan kutudur.
+Konumu görsel olarak güvenilir biçimde belirleyemiyorsan her iki alanı da null yap;
+kesinlikle rastgele koordinat uydurma.
+
+Eğer olay anlık ise start_time ve end_time, time ile aynı olabilir.
+Eğer olay belirli bir süreye yayılıyorsa (örn. 00:10 - 00:25) bu
+aralığı start_time ve end_time olarak açıkça belirt.
 
 Bir olay zaman içerisinde gelişiyorsa başlangıç, gelişim ve sonuç
 ilişkisini koru.
@@ -92,6 +114,13 @@ genel riski "Düşük" olarak belirt.
 
 Aksiyonları tespit edilen olaylarla doğrudan ilişkilendir.
 
+Her olay için `ranked_actions` alanında tam 3 farklı ve uygulanabilir
+aksiyon üret. Birinci aksiyon en acil müdahale, ikinci aksiyon alternatif
+operasyon adımı, üçüncü aksiyon ise uzun vadeli önlem olmalıdır.
+Aksiyonları olayın türüne ve görünen duruma göre özelleştir;
+görüntüde bulunmayan bilgileri kesinmiş gibi kullanma.
+
 Çıktıyı yalnızca verilen JSON şemasına uygun olarak üret.
 Başka hiçbir şey yazma.
 """
+

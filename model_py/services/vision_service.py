@@ -116,7 +116,12 @@ def _parse_vision_json(raw_text: str) -> dict:
                 "event": "Saha görüntüsü incelendi, genel akış stabil.",
                 "zone": "Genel Saha",
                 "risk": "Düşük",
-                "confidence": 0.85
+                "confidence": 0.85,
+                "ranked_actions": [
+                    {"rank": 1, "label": "Saha operatörüne bildir", "reason": "Görsel bulgunun insan tarafından doğrulanması için."},
+                    {"rank": 2, "label": "Kamera kaydını odağa al", "reason": "Olayın gelişimini yakından izlemek için."},
+                    {"rank": 3, "label": "Olay sonrası inceleme oluştur", "reason": "Tekrarlayan riskleri azaltacak önlemleri belirlemek için."}
+                ]
             }
         ],
         "risk": "Düşük",

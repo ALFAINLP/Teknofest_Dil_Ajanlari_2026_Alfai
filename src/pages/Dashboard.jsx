@@ -12,19 +12,17 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import {
-  BarChart3, Target, ArrowRightLeft,
+  BarChart3, Target, ArrowRightLeft, RotateCcw, RotateCw, Gauge,
 } from 'lucide-react'
 import { APP_CONFIG } from '@/config/appConfig'
-import { analyzeVideo } from '@/services/analysisApi'
+import { analyzeVideo, fetchPerformance } from '@/services/analysisApi'
 import { eventToLog, normalizeAnalysisEvent } from '@/features/analysis/eventMapper'
 import { useOperatorFeedback } from '@/hooks/useOperatorFeedback'
 import ChatAssistant from '@/components/ChatAssistant'
-import MultiCameraAnalysis from '@/components/MultiCameraAnalysis'
 
 // ─── Sabitler ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'cameras',   label: 'Kameralar' },
   { id: 'heatmap',   label: 'Isı Haritası' },
   { id: 'tactical',  label: 'Taktiksel Raporlar' },
   { id: 'reports',   label: 'Raporlar' },
@@ -448,7 +446,7 @@ function JsonPage({ jsonOutput }) {
 }
 
 // ─── Raporlar ─────────────────────────────────────────────────────────────────
-function ReportsPage({ eventRows, analysis, feedbackMap, isDark = true }) {
+function ReportsPage({ eventRows, analysis, feedbackMap, operationOrders, isDark = true }) {
   const guidance = getRiskGuidance(analysis?.risk_score)
   const feedbackValues = eventRows.map(event => feedbackMap[event.id]).filter(Boolean)
   const disputedCount = feedbackValues.filter(value => value !== 'verified').length
@@ -516,6 +514,28 @@ function ReportsPage({ eventRows, analysis, feedbackMap, isDark = true }) {
                 {analysis.kpi_metrics.is_schema_validated ? '✓ Geçerli' : '✗ Geçersiz'}
               </p>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {Object.keys(operationOrders).length > 0 && (
+        <Card className="t-surface shrink-0 border-[#4ade80]/30">
+          <CardHeader className="px-4 py-3 t-border border-b">
+            <CardTitle className="font-sans text-[11px] uppercase tracking-widest text-[#4ade80]">
+              Kaydedilen Operasyon Emirleri · {Object.keys(operationOrders).length}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 p-3">
+            {Object.values(operationOrders).map(order => (
+              <div key={order.event_id} className="flex items-start justify-between gap-4 rounded-lg border border-[#2a3540] bg-[#0b141c] px-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="font-sans text-[10px] text-[#8b919d]">{order.event_time} · {order.zone}</p>
+                  <p className="mt-1 font-sans text-[12px] font-semibold text-[#dae3ee]">{order.action.label}</p>
+                  <p className="mt-1 font-sans text-[10px] text-[#607086]">{order.event_description}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-[#052e16] px-2 py-1 font-sans text-[9px] font-bold text-[#4ade80]">✓ Emir verildi</span>
+              </div>
+            ))}
           </CardContent>
         </Card>
       )}
@@ -721,13 +741,131 @@ function SettingsPage({ settings, onChange }) {
 }
 
 // ─── Video Analiz Görünümü ────────────────────────────────────────────────────
-function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent, onFeedback, feedbackMap }) {
+function RankedActionButtons({ event, selectedRank, savedOrder, onSelect, onSave, compact = false }) {
+  const actions = event?.ranked_actions ?? []
+  if (actions.length === 0) return <span className="font-sans text-[10px] text-[#414752]">Öneri bulunamadı</span>
+  const isSaved = Boolean(selectedRank && savedOrder?.action?.rank === selectedRank)
+
+  return (
+    <div className={cn('flex gap-2', compact ? 'min-w-[260px] flex-col' : 'mt-3 flex-col lg:grid lg:grid-cols-3')}>
+      {actions.map(action => (
+        <button key={`${event.id}-${action.rank}-${action.label}`} type="button" title={action.reason}
+          onClick={() => onSelect(event, action)}
+          className={cn('rounded-lg border px-3 py-2 text-left transition-colors',
+            selectedRank === action.rank
+              ? 'border-[#4ade80] bg-[#052e16]/70 text-[#86efac] ring-1 ring-[#4ade80]/30'
+              : action.rank === 1
+              ? 'border-[#ffb77d]/50 bg-[#4d2600]/20 text-[#ffca9f] hover:bg-[#4d2600]/40'
+              : 'border-[#2a3540] bg-[#0b141c] text-[#c0c7d4] hover:border-[#a2c9ff]/40')}>
+          <span className="block font-sans text-[9px] font-bold uppercase tracking-widest opacity-70">
+            {action.rank}. {action.rank === 1 ? 'En acil' : action.rank === 2 ? 'Alternatif' : 'Uzun vadeli'}
+          </span>
+          <span className="mt-1 block font-sans text-[11px] font-semibold">{action.label}</span>
+          {!compact && <span className="mt-1 block font-sans text-[10px] leading-relaxed opacity-70">{action.reason}</span>}
+        </button>
+      ))}
+      <button type="button" disabled={!selectedRank || isSaved}
+        onClick={() => onSave(event)}
+        className={cn(
+          'rounded-lg border px-3 py-2 text-center font-sans text-[10px] font-bold transition-colors',
+          selectedRank && !isSaved
+            ? 'border-[#4ade80]/60 bg-[#052e16]/50 text-[#86efac] hover:bg-[#14532d]/60'
+            : isSaved
+              ? 'cursor-default border-[#4ade80]/30 bg-[#052e16]/30 text-[#4ade80]'
+              : 'cursor-not-allowed border-[#2a3540] text-[#414752]',
+        )}>
+        {isSaved ? '✓ Operasyon emri kaydedildi' : 'Seçili Emri Kaydet'}
+      </button>
+    </div>
+  )
+}
+
+function ActionCenter({ open, events, actionDrafts, operationOrders, onSelect, onSave, onClose }) {
+  const riskOrder = { Kritik: 0, Yüksek: 1, Orta: 2, Düşük: 3 }
+  const orderedEvents = [...events].sort((first, second) => (riskOrder[first.risk] ?? 9) - (riskOrder[second.risk] ?? 9))
+  const pendingCount = events.filter(event => !operationOrders[event.id]).length
+
+  useEffect(() => {
+    if (!open) return undefined
+    function closeOnEscape(event) {
+      if (event.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [open, onClose])
+
+  if (!open) return null
+  return (
+    <aside role="dialog" aria-label="Aksiyon Merkezi"
+      className="fixed inset-y-0 right-0 z-50 flex w-[420px] max-w-[92vw] flex-col border-l border-[#2a3540] bg-[#0d1520] shadow-2xl">
+      <div className="flex shrink-0 items-start justify-between border-b border-[#2a3540] p-4">
+        <div>
+          <p className="font-sans text-[11px] font-bold uppercase tracking-widest text-[#a2c9ff]">Aksiyon Merkezi</p>
+          <p className="mt-1 font-sans text-[10px] text-[#8b919d]">{events.length} olay · {pendingCount} bekleyen emir</p>
+        </div>
+        <button type="button" onClick={onClose} aria-label="Aksiyon merkezini kapat"
+          className="rounded-lg border border-[#2a3540] px-3 py-1.5 font-sans text-[11px] text-[#8b919d] hover:border-[#a2c9ff]/40 hover:text-white">
+          Kapat ×
+        </button>
+      </div>
+      <div className="flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
+        {orderedEvents.map(event => (
+          <section key={event.id} className={cn('rounded-xl border p-3', operationOrders[event.id] ? 'border-[#4ade80]/30 bg-[#052e16]/10' : 'border-[#2a3540] bg-[#101b27]')}>
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-mono text-[9px] text-[#8b919d]">{event.time} · {event.zone}</p>
+                <p className="mt-1 font-sans text-[12px] font-semibold leading-relaxed text-[#dae3ee]">{event.event}</p>
+              </div>
+              <RiskBadge level={event.risk} />
+            </div>
+            <RankedActionButtons event={event}
+              selectedRank={actionDrafts[event.id]}
+              savedOrder={operationOrders[event.id]}
+              onSelect={onSelect}
+              onSave={onSave}
+              compact />
+          </section>
+        ))}
+      </div>
+    </aside>
+  )
+}
+
+function PerformancePanel({ analyzing, elapsedSeconds, analysis, telemetry }) {
+  const finalPerformance = analysis?.performance
+  const gpu = telemetry ?? finalPerformance?.gpu
+  if (!analyzing && !analysis) return null
+  const totalSeconds = analyzing ? elapsedSeconds : finalPerformance?.total_processing_seconds
+  const inferenceMs = finalPerformance?.vision_inference_ms
+  const usedGb = gpu?.available ? (gpu.vram_used_mb / 1024).toFixed(1) : null
+  const totalGb = gpu?.available ? (gpu.vram_total_mb / 1024).toFixed(1) : null
+
+  return (
+    <div className="mx-3 mb-3 shrink-0 rounded-xl border border-[#2a3540] bg-[#0b141c] p-3 shadow-lg">
+      <div className="mb-3 flex items-center justify-between">
+        <p className="font-sans text-[9px] font-bold uppercase tracking-widest text-[#a2c9ff]">Performans Paneli</p>
+        <span className={cn('rounded-full px-2 py-0.5 font-sans text-[9px] font-bold', analyzing ? 'bg-[#052e16] text-[#4ade80]' : 'bg-[#1d2b45] text-[#a2c9ff]')}>
+          {analyzing ? 'CANLI' : 'TAMAMLANDI'}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <div className="min-w-0 rounded-lg bg-[#101b27] p-2"><p className="font-sans text-[7px] uppercase tracking-wider text-[#607086]">Toplam süre</p><p className="mt-1 whitespace-nowrap font-mono text-[12px] font-bold text-[#dae3ee]">{totalSeconds != null ? `${Number(totalSeconds).toFixed(1)} sn` : '—'}</p></div>
+        <div className="min-w-0 rounded-lg bg-[#101b27] p-2"><p className="font-sans text-[7px] uppercase tracking-wider text-[#607086]">Model inference</p><p className="mt-1 whitespace-nowrap font-mono text-[11px] font-bold text-[#dae3ee]">{inferenceMs != null ? `${Number(inferenceMs).toFixed(0)} ms` : analyzing ? 'Ölçülüyor…' : '—'}</p></div>
+        <div className="min-w-0 rounded-lg bg-[#101b27] p-2"><p className="font-sans text-[7px] uppercase tracking-wider text-[#607086]">GPU kullanımı</p><p className="mt-1 whitespace-nowrap font-mono text-[12px] font-bold text-[#4ade80]">{gpu?.available ? `%${gpu.gpu_utilization_percent}` : 'Yok'}</p></div>
+        <div className="min-w-0 rounded-lg bg-[#101b27] p-2"><p className="font-sans text-[7px] uppercase tracking-wider text-[#607086]">VRAM</p><p className="mt-1 whitespace-nowrap font-mono text-[10px] font-bold text-[#ffb77d]">{gpu?.available ? `${usedGb}/${totalGb}` : '—'}</p>{gpu?.available && <p className="mt-0.5 whitespace-nowrap font-mono text-[8px] text-[#607086]">GB · %{gpu.vram_utilization_percent}</p>}</div>
+      </div>
+    </div>
+  )
+}
+
+function VideoView({ videoSrc, fileName, onFileSelect, onDeleteVideo, analyzing, eventRows, selectedEvent, onFeedback, feedbackMap, actionDrafts, operationOrders, onActionSelect, onOperationSave }) {
   const fileInputRef = useRef(null)
   const videoRef     = useRef(null)
   const [videoDuration, setVideoDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [feedbackDraft, setFeedbackDraft] = useState(null)
   const [feedbackSaved, setFeedbackSaved] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState(1)
 
   const lastEventTime = Math.max(...eventRows.map(event => event.end_time ?? event.start_time ?? 0), 0)
   const timelineDuration = Math.max(videoDuration, lastEventTime, 1)
@@ -738,6 +876,7 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
       setVideoDuration(0)
       setCurrentTime(0)
       videoRef.current.load()
+      videoRef.current.playbackRate = playbackRate
       videoRef.current.play().catch(() => {})
     }
   }, [videoSrc])
@@ -791,6 +930,17 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
               hover:bg-[#1d2b45] hover:text-white transition-colors">
             ↑ Video Yükle
           </Button>
+          {videoSrc && (
+            <Button size="sm" variant="outline"
+              title="Videoyu ve mevcut analiz sonucunu temizle"
+              onClick={() => {
+                onDeleteVideo()
+                if (fileInputRef.current) fileInputRef.current.value = ''
+              }}
+              className="h-7 border-[#ffb4ab]/50 bg-black/70 px-3 font-sans text-[11px] font-semibold text-[#ffb4ab] hover:bg-[#35191d]">
+              Videoyu Sil
+            </Button>
+          )}
         </div>
 
         {/* Alt HUD — sadece video yokken */}
@@ -815,6 +965,39 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
           </div>
         )}
       </div>
+
+      {videoSrc && (
+        <div className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-[#2a3540] bg-gradient-to-r from-[#0e1823] to-[#101b27] px-3 py-2 shadow-sm">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <button type="button" title="5 saniye geri" aria-label="Videoyu 5 saniye geri sar"
+              onClick={() => { if (videoRef.current) videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 5) }}
+              className="relative flex h-8 w-9 shrink-0 items-center justify-center rounded-lg border border-[#2a3540] bg-[#0b141c] text-[#c0c7d4] transition-colors hover:border-[#a2c9ff]/50 hover:text-[#a2c9ff]">
+              <RotateCcw className="h-4 w-4" /><span className="absolute text-[7px] font-bold">5</span>
+            </button>
+            <div className="min-w-[76px] whitespace-nowrap text-center font-mono text-[9px] text-[#a2c9ff]">
+              {formatTimelineTime(currentTime)} <span className="text-[#607086]">/</span> {formatTimelineTime(videoDuration)}
+            </div>
+            <button type="button" title="5 saniye ileri" aria-label="Videoyu 5 saniye ileri sar"
+              onClick={() => { if (videoRef.current) videoRef.current.currentTime = Math.min(videoDuration || Infinity, videoRef.current.currentTime + 5) }}
+              className="relative flex h-8 w-9 shrink-0 items-center justify-center rounded-lg border border-[#2a3540] bg-[#0b141c] text-[#c0c7d4] transition-colors hover:border-[#a2c9ff]/50 hover:text-[#a2c9ff]">
+              <RotateCw className="h-4 w-4" /><span className="absolute text-[7px] font-bold">5</span>
+            </button>
+          </div>
+          <label className="flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-[#2a3540] bg-[#0b141c] px-2 text-[#607086]">
+            <Gauge className="h-3.5 w-3.5" />
+            <span className="font-sans text-[8px] font-semibold uppercase tracking-wider">Hız</span>
+            <select value={playbackRate} onChange={event => {
+                  const rate = Number(event.target.value)
+                  setPlaybackRate(rate)
+                  if (videoRef.current) videoRef.current.playbackRate = rate
+                }}
+              aria-label="Video oynatma hızı"
+              className="cursor-pointer bg-transparent font-mono text-[10px] font-bold text-[#a2c9ff] outline-none">
+              {[0.5, 1, 1.5, 2].map(rate => <option key={rate} value={rate} className="bg-[#0b141c] text-white">{rate}x</option>)}
+            </select>
+          </label>
+        </div>
+      )}
 
       {selectedEvent && (
         <Card className="t-surface border-[#a2c9ff]/30 bg-[#101b27]">
@@ -853,39 +1036,52 @@ function VideoView({ videoSrc, fileName, onFileSelect, eventRows, selectedEvent,
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#2a3540] pt-3">
-              <span className="mr-1 font-sans text-[9px] uppercase tracking-widest text-[#414752]">Operatör doğrulaması</span>
-              {[
-                ['verified', 'Doğru tespit'],
-                ['false_alarm', 'Yanlış alarm'],
-                ['wrong_risk', 'Risk yanlış'],
-                ['wrong_time', 'Zaman yanlış'],
-              ].map(([value, label]) => (
-                <button key={value} type="button" onClick={() => { setFeedbackDraft(value); setFeedbackSaved(false) }}
+            <div className="mt-3 border-t border-[#2a3540] pt-3">
+              <p className="font-sans text-[9px] font-semibold uppercase tracking-widest text-[#a2c9ff]">Sıralı Aksiyon Önerileri</p>
+              <RankedActionButtons event={selectedEvent}
+                selectedRank={actionDrafts[selectedEvent.id]}
+                savedOrder={operationOrders[selectedEvent.id]}
+                onSelect={onActionSelect}
+                onSave={onOperationSave} />
+            </div>
+
+            <div className="mt-3 border-t border-[#2a3540] pt-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="mr-1 font-sans text-[9px] uppercase tracking-widest text-[#414752]">Operatör doğrulaması</span>
+                {[
+                  ['verified', 'Doğru tespit'],
+                  ['false_alarm', 'Yanlış alarm'],
+                  ['wrong_risk', 'Risk yanlış'],
+                  ['wrong_time', 'Zaman yanlış'],
+                ].map(([value, label]) => (
+                  <button key={value} type="button" onClick={() => { setFeedbackDraft(value); setFeedbackSaved(false) }}
+                    className={cn(
+                      'rounded-md border px-2.5 py-1 font-sans text-[10px] transition-colors',
+                      feedbackDraft === value
+                        ? 'border-[#a2c9ff]/60 bg-[#a2c9ff]/10 text-[#a2c9ff]'
+                        : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/40 hover:text-[#dae3ee]'
+                    )}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-4 flex items-center justify-end gap-3">
+                {feedbackSaved && <span className="font-sans text-[10px] text-[#4ade80]">✓ Değerlendirme kaydedildi</span>}
+                <button type="button" disabled={!feedbackDraft}
+                  onClick={() => {
+                    if (!feedbackDraft) return
+                    onFeedback(selectedEvent, feedbackDraft)
+                    setFeedbackSaved(true)
+                  }}
                   className={cn(
-                    'rounded-md border px-2.5 py-1 font-sans text-[10px] transition-colors',
-                    feedbackDraft === value
-                      ? 'border-[#a2c9ff]/60 bg-[#a2c9ff]/10 text-[#a2c9ff]'
-                      : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/40 hover:text-[#dae3ee]'
+                    'min-w-[190px] rounded-lg border px-5 py-2 font-sans text-[11px] font-semibold transition-colors',
+                    feedbackDraft
+                      ? 'border-[#4ade80]/50 bg-[#052e16]/50 text-[#86efac] hover:bg-[#14532d]/50'
+                      : 'cursor-not-allowed border-[#2a3540] text-[#414752]'
                   )}>
-                  {label}
+                  Değerlendirmeyi Kaydet
                 </button>
-              ))}
-              <button type="button" disabled={!feedbackDraft}
-                onClick={() => {
-                  if (!feedbackDraft) return
-                  onFeedback(selectedEvent, feedbackDraft)
-                  setFeedbackSaved(true)
-                }}
-                className={cn(
-                  'ml-auto rounded-md border px-3 py-1 font-sans text-[10px] font-semibold transition-colors',
-                  feedbackDraft
-                    ? 'border-[#4ade80]/50 bg-[#052e16]/50 text-[#86efac] hover:bg-[#14532d]/50'
-                    : 'cursor-not-allowed border-[#2a3540] text-[#414752]'
-                )}>
-                Değerlendirmeyi Kaydet
-              </button>
-              {feedbackSaved && <span className="font-sans text-[10px] text-[#4ade80]">✓ Kaydedildi</span>}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -957,7 +1153,16 @@ export default function Dashboard() {
   const [settings, setSettings]           = useState(readSavedSettings)
   const [alerts, setAlerts]               = useState([])
   const [serviceStatus, setServiceStatus] = useState('checking')
+  const [livePerformance, setLivePerformance] = useState(null)
+  const [analysisElapsed, setAnalysisElapsed] = useState(0)
+  const [operationNotice, setOperationNotice] = useState(null)
+  const [actionDrafts, setActionDrafts] = useState({})
+  const [operationOrders, setOperationOrders] = useState({})
+  const [actionCenterOpen, setActionCenterOpen] = useState(false)
   const eventIdCounter = useRef(1)
+  const analysisStartedAt = useRef(null)
+  const analysisAbortRef = useRef(null)
+  const actionCenterTimerRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.classList.remove('light')
@@ -988,6 +1193,30 @@ export default function Dashboard() {
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
   }, [settings])
 
+  useEffect(() => {
+    if (!analyzing) return undefined
+    let cancelled = false
+
+    async function updatePerformance() {
+      if (analysisStartedAt.current != null) {
+        setAnalysisElapsed((performance.now() - analysisStartedAt.current) / 1000)
+      }
+      try {
+        const telemetry = await fetchPerformance()
+        if (!cancelled) setLivePerformance(telemetry)
+      } catch {
+        // Analiz sonucu yine dönebilir; telemetri hatası analizi durdurmaz.
+      }
+    }
+
+    updatePerformance()
+    const timer = window.setInterval(updatePerformance, 1000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [analyzing])
+
   function updateSettings(patch) {
     setSettings(current => ({ ...current, ...patch }))
   }
@@ -1004,14 +1233,72 @@ export default function Dashboard() {
     }, 6000)
   }
 
-  const jsonOutput = analysis ? JSON.stringify(analysis, null, 2) : ''
+  const reportAnalysis = analysis
+    ? { ...analysis, operation_orders: Object.values(operationOrders) }
+    : null
+  const jsonOutput = reportAnalysis ? JSON.stringify(reportAnalysis, null, 2) : ''
 
   function showEvidence(event) {
     setSelectedEvent(event)
     setDashboardTab('video')
   }
 
+  function selectOperationAction(event, action) {
+    setActionDrafts(current => ({ ...current, [event.id]: action.rank }))
+  }
+
+  function saveOperationOrder(event) {
+    const selectedRank = actionDrafts[event.id]
+    const action = event.ranked_actions?.find(item => item.rank === selectedRank)
+    if (!action) return
+    const order = {
+      event_id: event.id,
+      event_time: event.time,
+      zone: event.zone,
+      event_description: event.event,
+      action,
+      status: 'Operasyon emri verildi',
+      saved_at: new Date().toISOString(),
+    }
+    setOperationOrders(current => ({ ...current, [event.id]: order }))
+    const notice = { id: Date.now(), event, action }
+    setOperationNotice(notice)
+    window.setTimeout(() => {
+      setOperationNotice(current => current?.id === notice.id ? null : current)
+    }, 5000)
+  }
+
+  function handleDeleteVideo() {
+    if (actionCenterTimerRef.current) window.clearTimeout(actionCenterTimerRef.current)
+    actionCenterTimerRef.current = null
+    analysisAbortRef.current?.abort()
+    analysisAbortRef.current = null
+    if (videoSrc) URL.revokeObjectURL(videoSrc)
+    setVideoSrc(null)
+    setVideoFileName(null)
+    setLogs([])
+    setEventRows([])
+    setSelectedEvent(null)
+    setTick(0)
+    setAnalysis(null)
+    setAnalysisError(null)
+    setAlerts([])
+    setAnalyzing(false)
+    setLivePerformance(null)
+    setAnalysisElapsed(0)
+    setOperationNotice(null)
+    setActionDrafts({})
+    setOperationOrders({})
+    setActionCenterOpen(false)
+    clearFeedback()
+  }
+
   async function handleFileSelect(file) {
+    if (actionCenterTimerRef.current) window.clearTimeout(actionCenterTimerRef.current)
+    actionCenterTimerRef.current = null
+    analysisAbortRef.current?.abort()
+    const controller = new AbortController()
+    analysisAbortRef.current = controller
     if (videoSrc) URL.revokeObjectURL(videoSrc)
     setVideoSrc(URL.createObjectURL(file))
     setVideoFileName(file.name)
@@ -1023,11 +1310,17 @@ export default function Dashboard() {
     setAnalysis(null)
     setAnalysisError(null)
     setAlerts([])
+    setActionDrafts({})
+    setOperationOrders({})
+    setActionCenterOpen(false)
+    setLivePerformance(null)
+    setAnalysisElapsed(0)
+    analysisStartedAt.current = performance.now()
     clearFeedback()
     setAnalyzing(true)
 
     try {
-      const data = await analyzeVideo(file)
+      const data = await analyzeVideo(file, { signal: controller.signal })
       const acceptedEvents = (data.events ?? []).filter(
         event => confidencePercent(event.confidence) >= settings.detectionThreshold,
       )
@@ -1043,13 +1336,24 @@ export default function Dashboard() {
       setTick(normalizedEvents.length)
       normalizedEvents.forEach(showEventAlert)
       setAnalyzing(false)
+      if (normalizedEvents.length > 0) {
+        actionCenterTimerRef.current = window.setTimeout(() => {
+          setActionCenterOpen(true)
+          actionCenterTimerRef.current = null
+        }, 3000)
+      }
     } catch (err) {
+      if (err?.name === 'AbortError') return
       setAnalysisError(err instanceof Error ? err.message : 'Analiz sırasında beklenmeyen bir hata oluştu.')
       setAnalyzing(false)
+    } finally {
+      if (analysisAbortRef.current === controller) analysisAbortRef.current = null
     }
   }
 
   useEffect(() => () => {
+    analysisAbortRef.current?.abort()
+    if (actionCenterTimerRef.current) window.clearTimeout(actionCenterTimerRef.current)
     if (videoSrc) URL.revokeObjectURL(videoSrc)
   }, [])
 
@@ -1082,8 +1386,27 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {operationNotice && (
+        <button type="button" onClick={() => setOperationNotice(null)}
+          className="fixed right-5 top-5 z-[60] w-80 rounded-xl border border-[#4ade80]/50 bg-[#052e16]/95 p-4 text-left shadow-2xl backdrop-blur">
+          <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#4ade80]">Operasyon emri verildi</p>
+          <p className="mt-1 font-sans text-sm font-semibold text-[#f1f5f9]">{operationNotice.action.label}</p>
+          <p className="mt-1 font-mono text-[10px] text-[#86efac]">{operationNotice.event.time} · {operationNotice.event.zone} · {operationNotice.action.rank}. sıra</p>
+          <p className="mt-2 font-sans text-[10px] text-[#8b919d]">Komut yerel operasyon kaydına işlendi.</p>
+        </button>
+      )}
+
+      <ActionCenter open={actionCenterOpen}
+        events={eventRows}
+        actionDrafts={actionDrafts}
+        operationOrders={operationOrders}
+        onSelect={selectOperationAction}
+        onSave={saveOperationOrder}
+        onClose={() => setActionCenterOpen(false)} />
+
+
       {/* ── Sidebar ────────────────────────────────────────────────── */}
-      <aside className="t-sidebar w-56 shrink-0 flex flex-col bg-[#0d1520] border-r border-[#2a3540]">
+      <aside className="t-sidebar w-60 shrink-0 flex flex-col overflow-y-auto overscroll-contain bg-[#0d1520] border-r border-[#2a3540]">
         <div className="px-5 py-5 t-border border-b border-[#2a3540]">
           <div className="flex items-center gap-2.5">
             <BarChart3 className="w-8 h-8 shrink-0 text-[#a2c9ff] drop-shadow-[0_0_6px_rgba(162,201,255,0.55)]" strokeWidth={2.25} />
@@ -1115,6 +1438,8 @@ export default function Dashboard() {
             </button>
           ))}
         </nav>
+
+        <PerformancePanel analyzing={analyzing} elapsedSeconds={analysisElapsed} analysis={analysis} telemetry={livePerformance} />
 
         {/* Global sayaçlar: her bölümde görünür, ana içerik yüksekliğini daraltmaz. */}
         <div className="t-border shrink-0 grid grid-cols-2 gap-2 p-3 border-t border-[#2a3540]">
@@ -1150,9 +1475,6 @@ export default function Dashboard() {
         <div className="flex-1 overflow-hidden">
           <div className="h-full flex flex-col overflow-hidden px-5 py-4">
 
-            <div className={cn('h-full min-h-0', activeNav === 'cameras' ? 'flex' : 'hidden')}>
-              <MultiCameraAnalysis />
-            </div>
             {activeNav === 'heatmap'  && (
               <div className="flex-1 flex flex-col overflow-hidden gap-3">
                 <div className="shrink-0">
@@ -1163,20 +1485,28 @@ export default function Dashboard() {
               </div>
             )}
             {activeNav === 'tactical' && <TacticalReportsPage eventRows={eventRows} analysis={analysis} isDark={isDark} />}
-            {activeNav === 'reports'  && <ReportsPage eventRows={eventRows} analysis={analysis} feedbackMap={feedbackMap} isDark={isDark} />}
+            {activeNav === 'reports'  && <ReportsPage eventRows={eventRows} analysis={reportAnalysis} feedbackMap={feedbackMap} operationOrders={operationOrders} isDark={isDark} />}
             {activeNav === 'json'     && <JsonPage jsonOutput={jsonOutput} />}
             {activeNav === 'settings' && <SettingsPage settings={settings} onChange={updateSettings} />}
 
             {activeNav === 'dashboard' && (
               <Tabs value={dashboardTab} onValueChange={setDashboardTab} className="flex-1 flex flex-col overflow-hidden">
-                <TabsList className="shrink-0 t-surface bg-[#141c24] border border-[#2a3540] rounded-lg p-1 mb-4 w-fit">
-                  {[['video','Video Analiz'],['events','Olay Tablosu']].map(([v, lbl]) => (
-                    <TabsTrigger key={v} value={v}
-                      className="font-sans text-[11px] uppercase tracking-widest data-[state=active]:bg-[#a2c9ff] data-[state=active]:text-[#00315c]">
-                      {lbl}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
+                <div className="mb-4 flex shrink-0 items-center justify-between gap-3">
+                  <TabsList className="t-surface w-fit rounded-lg border border-[#2a3540] bg-[#141c24] p-1">
+                    {[['video','Video Analiz'],['events','Olay Tablosu']].map(([v, lbl]) => (
+                      <TabsTrigger key={v} value={v}
+                        className="font-sans text-[11px] uppercase tracking-widest data-[state=active]:bg-[#a2c9ff] data-[state=active]:text-[#00315c]">
+                        {lbl}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  {eventRows.length > 0 && (
+                    <button type="button" onClick={() => setActionCenterOpen(true)}
+                      className="rounded-lg border border-[#a2c9ff]/40 bg-[#101b27] px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-widest text-[#a2c9ff] hover:bg-[#1d2b45]">
+                      Aksiyon Merkezi · {eventRows.filter(event => !operationOrders[event.id]).length} bekleyen
+                    </button>
+                  )}
+                </div>
 
                 {/* Video Analiz — 2/3 video + 1/3 log paneli */}
                 <TabsContent value="video" className="flex-1 overflow-hidden mt-0">
@@ -1188,10 +1518,16 @@ export default function Dashboard() {
                         videoSrc={videoSrc}
                         fileName={videoFileName}
                         onFileSelect={handleFileSelect}
+                        onDeleteVideo={handleDeleteVideo}
+                        analyzing={analyzing}
                         eventRows={eventRows}
                         selectedEvent={selectedEvent}
                         onFeedback={saveFeedback}
                         feedbackMap={feedbackMap}
+                        actionDrafts={actionDrafts}
+                        operationOrders={operationOrders}
+                        onActionSelect={selectOperationAction}
+                        onOperationSave={saveOperationOrder}
                       />
                     </div>
 
@@ -1275,7 +1611,7 @@ export default function Dashboard() {
                         <Table>
                           <TableHeader>
                             <TableRow className="t-border border-b border-[#2a3540] hover:bg-transparent">
-                              {['Zaman','Bölge','Olay','Risk','Güven','Kanıt'].map(h => (
+                              {['Zaman','Bölge','Olay','Risk','Güven','Aksiyonlar','Kanıt'].map(h => (
                                 <TableHead key={h} className="t-text-dim font-sans text-[10px] uppercase tracking-widest text-[#414752] h-9">{h}</TableHead>
                               ))}
                             </TableRow>
@@ -1288,6 +1624,12 @@ export default function Dashboard() {
                                 <TableCell className={cn('font-sans text-[13px]', isDark ? 'text-[#dae3ee]' : 'text-slate-800')}>{row.event}</TableCell>
                                 <TableCell><RiskBadge level={row.risk} isDark={isDark} /></TableCell>
                                 <TableCell className={cn('font-mono text-[12px]', isDark ? 'text-[#8b919d]' : 'text-slate-500')}>{row.conf}</TableCell>
+                                <TableCell><RankedActionButtons event={row}
+                                  selectedRank={actionDrafts[row.id]}
+                                  savedOrder={operationOrders[row.id]}
+                                  onSelect={selectOperationAction}
+                                  onSave={saveOperationOrder}
+                                  compact /></TableCell>
                                 <TableCell>
                                   <button type="button" onClick={() => showEvidence(row)}
                                     className="rounded-md border border-[#a2c9ff]/30 px-2.5 py-1 font-sans text-[10px] text-[#a2c9ff] transition-colors hover:bg-[#1d2b45]">
@@ -1311,3 +1653,4 @@ export default function Dashboard() {
     </div>
   )
 }
+

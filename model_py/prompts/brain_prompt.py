@@ -318,24 +318,26 @@ Aşağıdaki faktörleri birlikte değerlendir:
 - Zamansal olay zinciri
 - İkincil riskler
 
-Risk seviyeleri:
+### RİSK DEĞERLENDİRMESİ VE PUANLAMA KURALLARI
+Saha olaylarını analiz ederken aşağıdaki hiyerarşiye BİREBİR uyarak tek bir risk seviyesi seç:
 
-DÜŞÜK:
-Belirgin ve acil bir güvenlik tehdidi bulunmayan durum.
+1. KRİTİK(risk_score: 86 - 100):
+   - Tetikleyici: Yerde hareketsiz yatan kişi, baygınlık, ağır yaralanmalı kaza, aktif yangın, patlama veya acil can pazarı durumu.
+   - Sonuç: Doğrudan 112 / Acil Sağlık ve acil tahliye aksiyonu gerektirir.
+   
+2. YÜKSEK(risk_score: 61 - 85):
+   - Tetikleyici: Gerçekleşmiş bir kaza, araç/forklift devrilmesi, ciddi ekipman hasarı veya malzeme çökmesi (Doğrudan hareketsiz/ağır yaralı tespit edilmemiş olsa bile).
+   - Sonuç: Alan güvenliği sağlama, operasyonu durdurma ve teknik/güvenlik ekibi çağırma aksiyonu gerektirir.
 
-ORTA:
-Potansiyel güvenlik riski bulunan ancak doğrudan kritik sonuç
-oluşturmayan durum.
+3. ORTA(risk_score: 26 - 60):
+   - Tetikleyici: Kaza veya yaralanma YOKTUR. Ancak KKD eksikliği (baretsiz dolaşma vb.), yetkisiz alan ihlali, hatalı yük taşıma gibi proaktif önlem gerektiren güvenlik kuralı ihlalleri mevcuttur.
+   - Sonuç: Saha personeline uyarı, güvenlik kontrolü ve anons aksiyonu gerektirir.
 
-YÜKSEK:
-İnsan güvenliğini doğrudan tehdit eden veya ciddi operasyonel
-sonuç doğurma ihtimali bulunan durum.
+4. DÜŞÜK(risk_score: 0 - 25):
+   - Tetikleyici: Rutin operasyon, nizami çalışma, hiçbir kural ihlali veya kaza emaresi olmayan normal durumlar.
+   - Sonuç: Rutin kayıt ve periyodik izleme.
 
-KRİTİK:
-Acil müdahale gerektiren, devam eden veya ciddi insan güvenliği
-tehdidi oluşturan durum.
-
-Risk seviyesini gerekçelendir.
+NOT: Birden fazla seviyeye uyan olay varsa, her zaman EN YÜKSEK olan seviyeyi seç.
 
 
 ============================================================
