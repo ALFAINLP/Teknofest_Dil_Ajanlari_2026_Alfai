@@ -15,6 +15,7 @@ sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   --gpu-memory-utilization 0.95 \
   --max-model-len 32768 \
   --enable-chunked-prefill \
+  --mm-cache-preprocessor-workers 0
   --allowed-local-media-path /tmp
 ```
 
