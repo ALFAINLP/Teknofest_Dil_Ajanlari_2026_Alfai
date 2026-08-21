@@ -20,8 +20,7 @@ JSON_SCHEMA = """
   "risk": "Düşük/Orta/Yüksek/Kritik",
   "risk_score": 50,
   "actions": [
-    "Operatöre önerilen 1. aksiyon",
-    "Operatöre önerilen 2. aksiyon"
+    "Risk seviyesine göre 1-5 adet operatör aksiyonu"
   ]
 }
 """
@@ -35,14 +34,20 @@ Başka hiçbir açıklama metni ekleme.
 """
 
 VISION_USER_PROMPT = """
-Videoyu baştan sona saniye saniye analiz et.
+Videoyu baştan sona saniye saniye dikkatli biçimde analiz et.
 
 Tüm zaman damgalarını MM:SS formatında yaz. Örnek: 00:03, 01:22, 02:45.
 HH:MM:SS formatı kullanma.
 
 İnsan, araç ve nesne hareketlerini zaman sırasına göre incele.
-Küçük olayları da kaydet: kişi geçişi, araç hareketi, beklenmedik duruş,
-nesneyle etkileşim, yön değişikliği.
+Her türlü hareketi ve eylemi events listesine MUTLAKA ekle:
+- Kişi geçişi, yürüyüş, koşu, duruş, oturma
+- Araç hareketi, durması, kapı açılması
+- Nesneyle etkileşim, taşıma, bırakma
+- Yön değişikliği, ani hareket, toplanma
+- Çevresel değişim: ışık değişimi, kapı/geçit açılması
+
+Videoda hareket eden veya değişen HER ŞEY bir olaydır. Boş events döndürme.
 
 Her olay için start_time ve end_time belirt.
 Olaylar zaman içinde gelişiyorsa phase alanına başlangıç/gelişim/sonuç yaz.
@@ -59,8 +64,8 @@ Gereksiz görsel detaylara girme: renkler, arka plan, kamera açısı.
 Sadece temel eylemleri ve hareketleri kısa ve net Türkçe ile yaz.
 Videoda görülmeyen bilgi uydurma.
 
-Tespit edilen olaylara bağlı en az iki uygulanabilir aksiyon öner.
-Olay yoksa events listesini boş bırak, risk Düşük yaz.
+Tespit edilen olaylara bağlı en az iki uygulanabilir aksiyon öner. 
+Gerektiğinde daha fazla aksiyon önerisinde bulunabilirsin.
 
 Çıktını verilen JSON şemasına tamamen uygun oluştur.
 Başka hiçbir şey yazma.

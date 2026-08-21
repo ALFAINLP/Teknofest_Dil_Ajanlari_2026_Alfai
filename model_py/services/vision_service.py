@@ -3,6 +3,11 @@ import re
 import os
 import mimetypes
 import logging
+try:
+    from json_repair import repair_json as _json_repair
+    _HAS_JSON_REPAIR = True
+except ImportError:
+    _HAS_JSON_REPAIR = False
 from model_py.services.client import vision_client
 from model_py.utils.video_utils import encode_video_to_base64
 from model_py.config.settings import (
@@ -63,7 +68,15 @@ def _normalize_spatial_fields(result: dict) -> dict:
 def _parse_vision_json(raw_text: str) -> dict:
     """
     Vision modelinden gelen ham metni temizler, JSON formatına sokar
-    ve ayrıştırır. Hata durumlarında güvenli fallback döndürür.
+    ve ayrıştırır.
+
+    Onarım sırası:
+      1. Doğrudan json.loads
+      2. Kontrol karakteri temizleme + json.loads
+      3. json-repair kütüphanesi (virgül eksikliği, kapanmamış string vb.)
+      4. Manuel bracket/brace tamamlama + json.loads
+      5. Kısmi JSON kurtarma — sadece 'events' listesini çıkarmaya çalış
+      6. Güvenli fallback
     """
     if not raw_text or not raw_text.strip():
         raise ValueError("Model boş yanıt döndürdü.")
@@ -82,22 +95,39 @@ def _parse_vision_json(raw_text: str) -> dict:
     if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
         cleaned = cleaned[start_idx:end_idx + 1].strip()
 
-    # 1. Doğrudan ayrıştırma
+    # Token limit nedeniyle JSON kesildiyse uyar
+    if cleaned and cleaned[-1] not in ("}" , "]", '"'):
+        logger.warning(
+            f"⚠️ JSON muhtemelen token sınırında kesildi. "
+            f"Son karakter: {repr(cleaned[-1])} | Toplam uzunluk: {len(cleaned)}"
+        )
+
+    # ── 1. Doğrudan ayrıştırma ─────────────────────────────────────────────
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
         pass
 
-    # 2. Kontrol karakterleri ve geçersiz karakterleri temizleme
+    # ── 2. Kontrol karakterleri temizleme ──────────────────────────────────
     try:
         cleaned_ctrl = re.sub(r'[\x00-\x1f\x7f-\x9f]', ' ', cleaned)
         return json.loads(cleaned_ctrl)
     except json.JSONDecodeError:
-        pass
+        cleaned_ctrl = cleaned  # sonraki adımlarda kullan
 
-    # 3. Kesintiye uğramış (unterminated) JSON stringlerini tamamlama denemesi
+    # ── 3. json-repair kütüphanesi (virgül, tırnak, bracket hataları) ──────
+    if _HAS_JSON_REPAIR:
+        try:
+            repaired = _json_repair(cleaned_ctrl, return_objects=True)
+            if isinstance(repaired, dict):
+                logger.info("🔧 json-repair ile JSON başarıyla onarıldı.")
+                return repaired
+        except Exception as repair_err:
+            logger.warning(f"⚠️ json-repair başarısız: {repair_err}")
+
+    # ── 4. Manuel bracket/brace tamamlama ──────────────────────────────────
     try:
-        repair_text = cleaned
+        repair_text = cleaned_ctrl
         if repair_text.count('"') % 2 != 0:
             repair_text += '"'
         open_braces = repair_text.count('{') - repair_text.count('}')
@@ -106,9 +136,30 @@ def _parse_vision_json(raw_text: str) -> dict:
         repair_text += '}' * max(0, open_braces)
         return json.loads(repair_text)
     except Exception as err:
-        logger.warning(f"⚠️ Vision JSON Onarımı Başarısız: {err}")
+        logger.warning(f"⚠️ Manuel JSON onarımı başarısız: {err}")
 
-    # 4. Güvenli Fallback Yapısı
+    # ── 5. Kısmi kurtarma: sadece events listesini çıkar ───────────────────
+    try:
+        events_match = re.search(r'"events"\s*:\s*(\[.*?\])', cleaned_ctrl, re.DOTALL)
+        if events_match:
+            events_raw = events_match.group(1)
+            if _HAS_JSON_REPAIR:
+                events_list = _json_repair(events_raw, return_objects=True)
+            else:
+                events_list = json.loads(events_raw)
+            if isinstance(events_list, list) and events_list:
+                logger.warning("⚠️ Kısmi kurtarma: sadece 'events' listesi alındı.")
+                return {
+                    "summary": "Kısmi analiz — JSON onarımdan geçti.",
+                    "events": events_list,
+                    "risk": "Orta",
+                    "risk_score": 40,
+                    "actions": ["Kısmi veri ile operasyonel izleme sürdürülüyor."]
+                }
+    except Exception:
+        pass
+
+    # ── 6. Güvenli Fallback ────────────────────────────────────────────────
     logger.error("❌ Vision çıktısı geçerli bir JSON'a dönüştürülemedi, varsayılan şema yükleniyor.")
     return {
         "summary": "Görsel analiz verisi işlenirken biçim uyuşmazlığı tespit edildi. Otonom saha izlemesi aktif.",
@@ -198,10 +249,8 @@ def analyze_video(video_path: str):
         ],
         max_tokens=MAX_TOKENS,
         temperature=TEMPERATURE,
-        response_format={"type": "json_object"},
-        # Qwen3'ün thinking (düşünme) modunu kapat.
-        # Thinking modu açıkken model <think>...</think> bloğu üretir;
-        # bu blok JSON parse işlemini bozabilir.
+        # NOT: response_format={"type": "json_object"} Qwen3-VL ile uyumsuz olabilir;
+        # JSON çıktısı prompt üzerinden yönlendirilmektedir.
         extra_body={"chat_template_kwargs": {"enable_thinking": False}},
     )
 
@@ -212,4 +261,17 @@ def analyze_video(video_path: str):
     print(vision_output)
     print("=" * 80 + "\n")
 
-    return _normalize_spatial_fields(_parse_vision_json(vision_output))
+    parsed = _normalize_spatial_fields(_parse_vision_json(vision_output))
+
+    event_count = len(parsed.get("events", []))
+    if event_count == 0:
+        logger.warning(
+            f"⚠️ Vision modeli BOŞ events listesi döndürdü! "
+            f"Video: {video_path} | Summary: {parsed.get('summary', 'YOK')} | "
+            f"Risk: {parsed.get('risk', 'YOK')} | "
+            f"Raw output uzunluğu: {len(vision_output or '')} karakter"
+        )
+    else:
+        logger.info(f"✅ Vision analizi tamamlandı: {event_count} olay tespit edildi.")
+
+    return parsed
