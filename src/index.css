@@ -114,9 +114,14 @@ body {
 #root { width: 100%; min-height: 100vh; }
 
 /* ─── Scrollbar ────────────────────────────────────────────── */
-::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar       { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #0b141c; }
-::-webkit-scrollbar-thumb { background: #2a3540; border-radius: 2px; }
+::-webkit-scrollbar-thumb {
+  background: #3b4a5b;
+  border: 2px solid #0b141c;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: #607086; }
 
 /* ─── Yardımcı Sınıflar ────────────────────────────────────── */
 .glass {
@@ -167,3 +172,4 @@ body {
   stroke-dashoffset: 800;
   animation: chart-draw 2.5s ease-out forwards;
 }
+

@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     VLLM_SERVER_URL: str = "http://localhost:8001"
     CMS_EXPORT_URL: str = "http://localhost:8080/v1/incident/export"
     
+    TEMPERATURE: float = 0.0
+    MAX_TOKENS: int = 2048
+
     MOCK_VIDEO_TIMELINE: Dict[int, Dict[str, Any]] = {
         0: {
             "frame": "frame_0.jpg", 

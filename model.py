@@ -1,14 +1,27 @@
 import base64
 import json
+import os
+import shutil
+import uuid
+import random
 from openai import OpenAI
 
-# Videoyu yerel diskten okuyup metin formatına (base64) çeviriyoruz
-def encode_video_to_base64(video_path):
-    with open(video_path, "rb") as video_file:
-        return base64.b64encode(video_file.read()).decode('utf-8')
+video_yolu = "Videos/test2.mp4"
+temp_video_path = f"/tmp/video_{uuid.uuid4().hex[:8]}.mp4"
 
-video_yolu ="Videos/test2.mp4"
-base64_video = encode_video_to_base64(video_yolu)
+# 1. Videoyu geçici yola kopyala
+shutil.copy2(video_yolu, temp_video_path)
+
+# 2. 🔥 CACHE KIRICI HİLE (HASH BUSTER) 🔥
+# Dosyanın sonuna rastgele 4 byte ekliyoruz. Video kesinlikle bozulmaz.
+# Ama Base64 metni tamamen değişeceği için vLLM cache'i atlanmış olur!
+with open(temp_video_path, "ab") as f:
+    f.write(random.randbytes(4))
+
+# 3. Videoyu yeni ve benzersiz Base64'e çevir
+with open(temp_video_path, "rb") as video_file:
+    base64_video = base64.b64encode(video_file.read()).decode('utf-8')
+
 
 # vLLM Sunucuna Bağlan
 # Göz Modeli İstemcisi (Port 8000)
@@ -72,6 +85,9 @@ response = client.chat.completions.create(
 )
 
 vision_output = response.choices[0].message.content
+
+if os.path.exists(temp_video_path):
+    os.remove(temp_video_path)
 
 world_state = json.loads(vision_output)
 

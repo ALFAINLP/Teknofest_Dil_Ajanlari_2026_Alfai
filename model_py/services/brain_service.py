@@ -3,7 +3,7 @@ import json
 from model_py.services.client import brain_client
 from model_py.config.settings import BRAIN_MODEL, TEMPERATURE
 from model_py.tools.tool_definitions import TOOLS
-from model_py.prompts.brain_prompt import build_brain_prompt
+from model_py.prompts.brain_prompt import BRAIN_SYSTEM_PROMPT
 
 def analyze_state(messages: list, force_json: bool = False):
     """
@@ -14,7 +14,7 @@ def analyze_state(messages: list, force_json: bool = False):
     # 1. En başa tek bir System Prompt ekle
     formatted_messages.append({
         "role": "system",
-        "content": build_brain_prompt()
+        "content": BRAIN_SYSTEM_PROMPT
     })
     
     for msg in messages:

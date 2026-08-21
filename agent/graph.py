@@ -77,10 +77,13 @@ def extract_video_info_node(state: AgentState) -> AgentState:
             "phase": event_content.get("phase", ""),          
             "event_type": event_content.get("event_type", ""),
             "ranked_actions": event_content.get("ranked_actions", []),
-            "center": event_content.get("center"),
-            "bbox": event_content.get("bbox"),
             "risk": event_content.get("risk", "Orta"),
             "confidence": event_content.get("confidence", 0.85),
+            # Vision modelinin ürettiği normalize mekansal alanlari koru.
+            # Bu alanlar aktarilmazsa rapor ve isi haritasi tum olaylari
+            # konumsuz gorur.
+            "center": event_content.get("center"),
+            "bbox": event_content.get("bbox"),
             "evidence": event_content.get("evidence", []),
             "uncertainties": event_content.get("uncertainties", [])
         })
@@ -164,8 +167,9 @@ def extract_video_info_node(state: AgentState) -> AgentState:
 def evaluate_risks_node(state: AgentState) -> AgentState:
     zone = state.get("current_zone", "Genel Saha")
     video_path = state.get("video_path", "")
-    highest_risk = "Düşük"
-    # Olayları modele sunmak üzere hazırla
+    
+    # 🎯 DÜZELTME: Varsayılan riski "Düşük" değil, Vision'dan gelen gerçek risk yap
+    highest_risk = state.get("risk_assessments", ["Düşük"])[0] if state.get("risk_assessments") else "Düşük"
     events_for_brain = []
     for item in state.get("detected_events", []):
         event_content = item.get("event", "Açıklama bulunamadı.")
@@ -203,16 +207,36 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         f"--- HAFIZA SONU ---\n"
     )
 
+    # Kritik olayları zincir olarak grupla
+    critical_chain = []
+    for item in state.get("detected_events", []):
+        if item.get("is_critical_moment") or item.get("is_critical") or item.get("risk") in ["Yüksek", "Kritik"]:
+            t = item.get("time", "?")
+            etype = item.get("event_type", "")
+            etext = item.get("event", "")
+            if isinstance(etext, dict):
+                etext = etext.get("description", str(etext))
+            critical_chain.append(f"{t} [{etype}] {str(etext)[:80]}")
+
+    chain_summary = ""
+    if len(critical_chain) >= 2:
+        chain_summary = (
+            f"\n⚠️ ZAMANSAL OLAY ZİNCİRİ TESPİT EDİLDİ:\n"
+            + " → ".join(critical_chain)
+            + "\nBu olayları birbirine bağlı bir zincir olarak değerlendir.\n"
+        )
+        
+
     clean_user_prompt = (
         f"Saha Bölgesi: {zone}.\n"
         f"{memory_block}\n"
+        f"{chain_summary}"
         f"Aşağıdaki olayları incele, gerekiyorsa ek bilgi toplamak için uygun Tool'ları çağır ve en sonunda 'submit_final_decision' ile kararını bildir:\n"
         f"{chr(10).join(events_for_brain)}"
     )
 
     recommendations = set()
     executed_tools = set()
-    highest_risk = "Düşük"
     impact_desc = "Otonom yapay zeka analizi devrede."
     tool_history_entries = []
 
@@ -382,6 +406,16 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             logger.info("✅ Model nihai kararını bildirdi, ReAct döngüsü tamamlandı.")
             break
 
+
+    # Eğer model submit_final_decision çağırmadıysa ama metninde risk belirttiyse yakala:
+    if not decision_made and impact_desc:
+        lowered_impact = impact_desc.lower()
+        if "kritik" in lowered_impact:
+            highest_risk = "Kritik"
+        elif "yüksek" in lowered_impact or "yuksek" in lowered_impact:
+            highest_risk = "Yüksek"
+        elif "orta" in lowered_impact:
+            highest_risk = "Orta"
     if not recommendations:
         recommendations.add("Rutin saha izlemesi devam ediyor, anomali tespiti bekleniyor.")
 
@@ -403,8 +437,8 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
         state["messages"] = []
     state["messages"].extend(react_messages[1:])
 
-    state["actions_recommended"] = list(executed_tools)  # Testin beklediği tool listesi
-    # state["actions_recommended"] = list(recommendations) if recommendations else ["Rutin saha izlemesi devam ediyor."]
+    #state["actions_recommended"] = list(recommendations) if recommendations else ["Rutin saha izlemesi devam ediyor."]
+    state["actions_recommended"] = list(executed_tools) if executed_tools else list(recommendations)
     state["risk_assessments"] = [highest_risk]
     state["technical_summary"] = impact_desc
     state["tool_history"] = tool_history_entries
@@ -420,12 +454,9 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     
 def compile_report_node(state: AgentState) -> AgentState:
     # Dinamik keyword üretimi: detected_events içindeki olay metinlerinden türet
-    
+    highest_risk = state.get("risk_assessments", ["Düşük"])[0]
     previous_cases = []
 
-    # ==========================
-    # Temporal Context Summary
-    # ==========================
     context = state.get("context_summary", {})
 
     temporal_summary = ""
@@ -468,7 +499,6 @@ def compile_report_node(state: AgentState) -> AgentState:
     # ==========================
     # Nihai Özet — Dinamik & Anlamlı
     # ==========================
-    highest_risk = state.get("risk_assessments", ["Düşük"])[0]
 
     base_summary = "Saha görüntüleri incelendi."
     event_texts = [e["event"] for e in cleaned_events if e.get("event")][:2]
@@ -482,31 +512,26 @@ def compile_report_node(state: AgentState) -> AgentState:
         "summary": final_summary,
         "events": cleaned_events,
         "risk": highest_risk,
+        "risk_score": 95 if highest_risk == "Kritik" else 75 if highest_risk == "Yüksek" else 40 if highest_risk == "Orta" else 15,
         "risk_trend": state.get("risk_trend", "Bilinmiyor"),
         "actions": state["actions_recommended"]
     }
 
 
     json_report = None
-    try:
-        logger.info("✨ generate_final_report aracı çağrılıyor (LLM Kurumsal Özet)...")
-        json_report = generate_final_report.invoke({"data_dict": report_data})
-    except Exception as e:
-        logger.warning(f"⚠️ generate_final_report aracı hatası: {e}. Manuel şema şablonuna geçiliyor.")
-
+   
     # Eğer araç bir sebepten başarısız olursa güvenli fallback mekanizması devreye girer
     if not json_report or "error" in json_report:
         report_data["kpi_metrics"] = {
-            "ai_processing_status": "Başarılı / Kritik Müdahale Devrede" if highest_risk in ["Yüksek", "Kritik"] else "Başarılı",
-            "confidence_score": 0.96,
-            "is_schema_validated": True
-        }
-        try:
-            validated = FinalReportSchema(**report_data)
-            json_report = validated.model_dump_json(indent=2)
-        except Exception:
-            json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
-
+        "ai_processing_status": "Başarılı / Kritik Müdahale Devrede" if highest_risk in ["Yüksek", "Kritik"] else "Başarılı",
+        "confidence_score": 0.96,
+        "is_schema_validated": True
+    }
+    try:
+        validated = FinalReportSchema(**report_data)
+        json_report = validated.model_dump_json(indent=2)
+    except Exception:
+        json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
 
     # Risk seviyesine göre koşullu CMS export — Düşük riskli olaylar sistemi gereksiz meşgul etmemeli
     if highest_risk in ["Yüksek", "Kritik", "Orta"]:

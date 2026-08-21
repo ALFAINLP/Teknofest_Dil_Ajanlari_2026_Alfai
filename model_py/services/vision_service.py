@@ -1,5 +1,7 @@
 import json
 import re
+import os
+import mimetypes
 import logging
 from model_py.services.client import vision_client
 from model_py.utils.video_utils import encode_video_to_base64
@@ -133,11 +135,37 @@ def _parse_vision_json(raw_text: str) -> dict:
     }
 
 
+# Desteklenen video MIME type eşlemesi
+_MIME_MAP = {
+    ".mp4":  "video/mp4",
+    ".avi":  "video/x-msvideo",
+    ".mov":  "video/quicktime",
+    ".mkv":  "video/x-matroska",
+    ".webm": "video/webm",
+}
+
+# Qwen3-VL frame örnekleme ayarları
+# fps: saniyede kaç kare alınacak (düşük fps → daha az kare → daha hızlı ama daha az bağlam)
+# max_pixels: tek kare için maksimum piksel sayısı (büyük değer → daha net görüntü)
+# Eğer video uzunsa fps=1 ile başla; kısa videolar için fps=2
+VIDEO_FPS = 2           # saniyede 2 kare örnekle
+VIDEO_MAX_PIXELS = 384 * 384  # kare başına maks piksel (Qwen3-VL varsayılanı: 128*28*28)
+
+
 def analyze_video(video_path: str):
     """
     Vision modelini kullanarak videoyu analiz eder
     ve JSON çıktısını döndürür.
     """
+    # --- MIME type: uzantıya göre dinamik belirle ---
+    ext = os.path.splitext(video_path)[1].lower()
+    mime_type = _MIME_MAP.get(ext) or mimetypes.guess_type(video_path)[0] or "video/mp4"
+
+    file_size_mb = os.path.getsize(video_path) / (1024 * 1024)
+    logger.info(
+        f"🎞️ Video encode ediliyor | Yol: {video_path} | "
+        f"Boyut: {file_size_mb:.2f} MB | MIME: {mime_type}"
+    )
 
     base64_video = encode_video_to_base64(video_path)
 
@@ -156,9 +184,13 @@ def analyze_video(video_path: str):
                         "text": VISION_USER_PROMPT
                     },
                     {
+                        # fps ve max_pixels: Qwen3-VL'nin kaç kare işleyeceğini kontrol eder.
+                        # Bu parametreler vLLM tarafından desteklenir ve modele iletilir.
                         "type": "video_url",
                         "video_url": {
-                            "url": f"data:video/mp4;base64,{base64_video}"
+                            "url": f"data:{mime_type};base64,{base64_video}",
+                            "fps": VIDEO_FPS,
+                            "max_pixels": VIDEO_MAX_PIXELS,
                         }
                     }
                 ]
@@ -167,8 +199,17 @@ def analyze_video(video_path: str):
         max_tokens=MAX_TOKENS,
         temperature=TEMPERATURE,
         response_format={"type": "json_object"},
+        # Qwen3'ün thinking (düşünme) modunu kapat.
+        # Thinking modu açıkken model <think>...</think> bloğu üretir;
+        # bu blok JSON parse işlemini bozabilir.
+        extra_body={"chat_template_kwargs": {"enable_thinking": False}},
     )
 
     vision_output = response.choices[0].message.content
+    print("\n" + "=" * 80)
+    print("🔍 RAW VISION OUTPUT")
+    print("=" * 80)
+    print(vision_output)
+    print("=" * 80 + "\n")
 
     return _normalize_spatial_fields(_parse_vision_json(vision_output))

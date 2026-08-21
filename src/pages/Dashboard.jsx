@@ -1388,7 +1388,7 @@ export default function Dashboard() {
 
       {operationNotice && (
         <button type="button" onClick={() => setOperationNotice(null)}
-          className="fixed right-5 top-5 z-[60] w-80 rounded-xl border border-[#4ade80]/50 bg-[#052e16]/95 p-4 text-left shadow-2xl backdrop-blur">
+          className="fixed right-5 top-24 z-[60] w-80 rounded-xl border border-[#4ade80]/50 bg-[#052e16]/95 p-4 text-left shadow-2xl backdrop-blur">
           <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#4ade80]">Operasyon emri verildi</p>
           <p className="mt-1 font-sans text-sm font-semibold text-[#f1f5f9]">{operationNotice.action.label}</p>
           <p className="mt-1 font-mono text-[10px] text-[#86efac]">{operationNotice.event.time} · {operationNotice.event.zone} · {operationNotice.action.rank}. sıra</p>
