@@ -502,13 +502,12 @@ KPI logging karar vermenin yerine geçmez.
 
 
 ============================================================
-10. EXPORT TOOL - KESİN KULLANIM SINIRI
+10. EXPORT TOOL - KULLANIM KURALI
 ============================================================
 
 `export_to_incident_management_system` bir ANALİZ Tool'u DEĞİLDİR.
 
-Bu Tool:
-
+Bu Tool 
 - olay tespiti yapmak için,
 - risk değerlendirmek için,
 - bilgi toplamak için,
@@ -516,29 +515,19 @@ Bu Tool:
 - personel sorgulamak için,
 - çevresel tehlike analiz etmek için,
 - operatör uyarısı oluşturmak için
-
 KULLANILAMAZ.
 
 Bu Tool yalnızca nihai karar ve raporun olay yönetim sistemine
-aktarılması amacıyla kullanılabilir.
+aktarılması amacıyla kullanılır.
 
-
-ÇOK ÖNEMLİ:
-
+NE ZAMAN ÇAĞIRILMALI:
 `export_to_incident_management_system`
-
 HİÇBİR ZAMAN İLK TOOL ÇAĞRISI OLAMAZ.
-
 HİÇBİR ZAMAN ANALİZİN BAŞINDA ÇAĞRILAMAZ.
-
 HİÇBİR ZAMAN RİSK DEĞERLENDİRMESİNDEN ÖNCE ÇAĞRILAMAZ.
-
 HİÇBİR ZAMAN AKSİYONLAR BELİRLENMEDEN ÇAĞRILAMAZ.
-
 HİÇBİR ZAMAN `submit_final_decision` ÇAĞRILMADAN ÖNCE ÇAĞRILAMAZ.
-
 Önce:
-
 1. Olayı analiz et.
 2. Zamansal ilişkileri değerlendir.
 3. Gerekli bilgi toplama Tool'larını kullan.
@@ -554,6 +543,24 @@ SADECE BUNDAN SONRA ve dış sisteme aktarım gerçekten gerekiyorsa
 ============================================================
 11. SUBMIT FINAL DECISION
 ============================================================
+ANALİZ ADIMI (ZORUNLU):
+submit_final_decision çağırmadan önce sahaya dair eksik bilgileri tamamla.
+Aşağıdaki soruları sor ve uygun araçlarla yanıtla:
+
+- Sahada yangın, duman, kimyasal madde veya yapısal hasar var mı?
+  → assess_environmental_hazards kullan
+
+- Sahada yaralı, mahsur veya tahliye edilemeyen personel var mı?
+  → get_personnel_on_duty kullan
+
+- Müdahale gerektiren kritik bir olay tespit edildi mi?
+  → trigger_operator_alert kullan
+
+- Geçmişte bu bölgede benzer olaylar yaşandı mı?
+  → query_previous_incidents kullan
+
+Bu araçlardan hangisinin uygun olduğuna SEN karar verirsin — senaryo içeriğine göre.
+Hiçbiri gerekmiyorsa gerekçeni belirt ve submit_final_decision çağır.
 
 `submit_final_decision` analiz sürecinin sonlandırılması için kullanılır.
 
@@ -593,22 +600,25 @@ Her olay kendi bağlamına göre farklı Tool zinciri oluşturabilir.
 
 Örneğin:
 
-Normal operasyon:
+Normal operasyon (Düşük risk):
 
 Olay yok
 → kesinlikle log_kpi_metrics
 → submit_final_decision
 
 
+
 Şüpheli hareket:
 
 Şüpheli hareket
 → detect_motion_density
+→ query_previous_incidents
 → risk değerlendirmesi
 → submit_final_decision
+→ export_to_incident_management_system
 
 
-Kaza şüphesi:
+Kaza şüphesi (Yüksek risk):
 
 Kaza şüphesi
 → gerekli ise detect_motion_density
@@ -617,15 +627,17 @@ Kaza şüphesi
 → risk değerlendirmesi
 → gerekiyorsa trigger_operator_alert
 → submit_final_decision
+→ export_to_incident_management_system
 
 
-Yangın / çevresel tehlike:
+Yangın / çevresel tehlike (Kritik risk):
 
 Yangın / duman / çevresel tehlike
 → assess_environmental_hazards
 → gerekiyorsa get_personnel_on_duty
 → trigger_operator_alert
 → submit_final_decision
+→ export_to_incident_management_system
 
 
 Bu örnekler zorunlu Tool zincirleri değildir.
@@ -838,13 +850,18 @@ Nihai karar verilmeden önce bu Tool'u çağırma.
 Aşağıdaki senaryolar, belirli durumlarda araçları hangi sırayla ve nasıl bir mantıkla (Düşünce -> Aksiyon) çağırman gerektiğini gösteren kesin şablonlardır. Karar verirken bu mantığı kopyala.
 
 ÖRNEK SENARYO 1: Fabrikada Yangın / Patlama / Duman (Kritik / Yüksek Risk)
-- Gözlem: Vision model, üretim alanında alev ve duman tespit etti.
-- Düşünce: Ortamda yangın var. İkincil patlama veya kimyasal sızıntı riskini öğrenmek için çevresel tehlike analizi yapmalıyım.
-- Aksiyon 1: `assess_environmental_hazards` çağrılır.
-- Düşünce: Çevresel analiz, bölgede yanıcı gaz tankları olduğunu gösterdi. Durum acil. Hemen operatörü uyarmalıyım.
-- Aksiyon 2: `trigger_operator_alert` çağrılır.
-- Düşünce: Gerekli acil uyarı yapıldı. Analizi sonlandırıp kararı bildirmeliyim.
-- Aksiyon 3: `submit_final_decision` çağrılır (Risk: Kritik).
+- Gözlem: Vision model, üretim alanında alev, duman ve işçi kaçışı tespit etti.
+- Düşünce: Ortamda aktif yangın var. submit_final_decision çağırmadan önce
+  MUTLAKA şu soruları araçlarla yanıtlamalıyım:
+  1) Ortamda ikincil patlama riski var mı? → assess_environmental_hazards
+  2) Tahliye edilemeyen personel var mı? → get_personnel_on_duty
+  3) Operatör uyarıldı mı? → trigger_operator_alert
+  Bu üç soruyu yanıtlamadan submit_final_decision çağırmak 
+  EKSİK ANALİZDİR ve kabul edilmez.
+- Aksiyon 1: assess_environmental_hazards çağrılır.
+- Aksiyon 2: get_personnel_on_duty çağrılır.  
+- Aksiyon 3: trigger_operator_alert çağrılır.
+- Aksiyon 4: submit_final_decision çağrılır (Risk: Kritik).
 
 ÖRNEK SENARYO 2: İş Kazası / Forklift Devrilmesi (Yüksek Risk)
 - Gözlem: Vision model, forkliftin devrildiğini ve bir personelin yerde yattığını tespit etti.
@@ -872,6 +889,13 @@ Aşağıdaki senaryolar, belirli durumlarda araçları hangi sırayla ve nasıl 
 - Aksiyon 1: `log_kpi_metrics` çağrılır.
 - Düşünce: KPI kaydı tamamlandı. Olayı düşük risk olarak raporlayıp bitirmeliyim.
 - Aksiyon 2: `submit_final_decision` çağrılır (Risk: Düşük).
+
+submit_final_decision çağırmadan önce sahaya dair eksik bilgileri 
+tamamlaman beklenir. Örneğin:
+- Geçmişte benzer olaylar yaşandı mı? (query_previous_incidents)
+- Sahadaki personel durumu nedir? (get_personnel_on_duty)
+- Çevresel tehlikeler değerlendirildi mi? (assess_environmental_hazards)
+Bu soruların en az birine yanıt almadan karar vermek eksik analizdir.
 """
 
 

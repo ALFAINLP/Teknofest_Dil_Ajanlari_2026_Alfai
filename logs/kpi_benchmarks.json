@@ -3343,5 +3343,3950 @@
       "action_recommendation_count": 0,
       "highest_risk_detected": "Yüksek"
     }
+  },
+  {
+    "timestamp": "2026-08-22 11:22:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:23:00",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:23:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:25:00",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:25:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:26:01",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:26:56",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:27:29",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:28:21",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:29:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:29:49",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:30:49",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:31:14",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:33:03",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:33:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:34:31",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:35:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:35:33",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:36:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:36:44",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:37:22",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:37:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:38:30",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:39:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:40:05",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:40:36",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:42:41",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:43:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:43:41",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:46:14",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:46:44",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:47:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:47:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 11:48:25",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 12:30:23",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 12:44:51",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 12:51:44",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 12:52:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 12:58:36",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:03:42",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:05:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:10:25",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:15:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:19:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:23:10",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:25:28",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:27:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:30:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:31:15",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:34:30",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:38:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:39:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:43:21",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:44:23",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 13:59:33",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:01:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:02:28",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:06:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:07:15",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:07:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:16:58",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:17:05",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:18:13",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:24:01",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:26:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:27:48",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:29:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:30:23",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:38:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:38:49",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:39:48",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:40:34",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:41:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:41:55",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:43:06",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:51:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:52:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:54:13",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:54:57",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:55:33",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:57:40",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:58:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:59:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 14:59:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:00:41",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:01:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:01:55",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:02:25",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:03:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:03:58",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:04:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:05:02",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:07:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:08:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:08:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:09:47",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:10:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:11:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:11:40",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:12:42",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:17:42",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:24:57",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:27:51",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:31:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:37:06",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:57:56",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:58:54",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 15:59:54",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:00:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:01:54",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:02:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:03:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:04:01",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:05:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:06:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:07:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:08:31",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:09:21",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:10:02",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:11:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:12:25",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:13:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:14:29",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:15:02",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:15:44",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:16:01",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:16:36",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:17:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:17:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:18:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:19:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:20:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:22:35",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:23:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:24:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:24:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:25:39",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:26:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:26:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:29:14",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:54:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:56:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:57:19",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 16:59:03",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:04:02",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:09:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:13:36",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:19:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:20:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:21:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:22:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:26:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:28:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:29:56",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:31:13",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:31:57",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:33:06",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:34:48",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:42:26",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:43:35",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:44:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:45:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:46:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:47:07",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:47:40",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:48:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:49:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:51:05",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:52:13",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:53:15",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:54:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:54:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:56:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:57:47",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:58:32",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 17:59:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:00:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:01:03",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:01:35",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:02:34",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:03:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:03:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:04:06",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:04:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:05:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:07:40",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:08:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:09:02",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:09:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:09:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:10:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:11:03",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:13:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:17:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:18:51",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:19:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:20:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:21:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:22:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:23:06",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:23:55",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:25:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:26:15",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:27:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:28:09",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:28:42",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:30:35",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:31:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:32:28",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:33:25",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:33:56",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:34:54",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:35:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:35:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:36:22",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:36:57",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:37:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Orta"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:37:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:38:37",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:40:46",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:41:23",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:42:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:42:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:43:39",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:44:12",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:44:39",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:45:19",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:52:03",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 18:53:10",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:00:58",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:32:55",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:34:21",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:34:55",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:41:58",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:44:36",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:48:17",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:56:29",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 19:57:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:00:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:02:00",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:04:08",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:04:50",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:05:39",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:06:27",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:06:32",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:07:11",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:07:23",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:08:18",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:26:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:27:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:28:16",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:37:42",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:41:14",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:42:00",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:44:20",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:46:15",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:48:24",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:49:43",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:52:05",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:52:10",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:52:45",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:52:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 20:53:32",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
   }
 ]

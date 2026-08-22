@@ -5,6 +5,13 @@ from model_py.config.settings import BRAIN_MODEL, TEMPERATURE
 from model_py.tools.tool_definitions import TOOLS
 from model_py.prompts.brain_prompt import BRAIN_SYSTEM_PROMPT
 
+def sanitize_text(text):
+    """Geçersiz Unicode (surrogate) karakterlerini temizleyerek sistemin çökmesini engeller."""
+    if not isinstance(text, str):
+        return text
+    # 'ignore' parametresi bozuk karakterleri hata vermeden siler
+    return text.encode('utf-8', 'ignore').decode('utf-8')
+
 def analyze_state(messages: list, force_json: bool = False):
     """
     ReAct döngüsü mesaj geçmişini OpenAI / vLLM standardına çevirir.
@@ -14,7 +21,7 @@ def analyze_state(messages: list, force_json: bool = False):
     # 1. En başa tek bir System Prompt ekle
     formatted_messages.append({
         "role": "system",
-        "content": BRAIN_SYSTEM_PROMPT
+        "content": sanitize_text(BRAIN_SYSTEM_PROMPT)
     })
     
     for msg in messages:
@@ -22,14 +29,19 @@ def analyze_state(messages: list, force_json: bool = False):
         if isinstance(msg, dict):
             if msg.get("role") == "system":
                 continue
-            formatted_messages.append(msg)
+            # 1. DEĞİŞİKLİK: Sözlük (dict) formatında gelen mesajları temizliyoruz
+            safe_msg = dict(msg)
+            if "content" in safe_msg:
+                safe_msg["content"] = sanitize_text(safe_msg["content"])
+            formatted_messages.append(safe_msg)
             continue
             
         if msg.__class__.__name__ == "SystemMessage":
             continue
 
         if isinstance(msg, str):
-            formatted_messages.append({"role": "user", "content": msg})
+            # 2. DEĞİŞİKLİK: Düz string (str) formatında gelen mesajları temizliyoruz
+            formatted_messages.append({"role": "user", "content": sanitize_text(msg)})
             continue
             
         role = "user"
@@ -38,7 +50,8 @@ def analyze_state(messages: list, force_json: bool = False):
         elif msg.__class__.__name__ == "ToolMessage":
             role = "tool"
             
-        msg_dict = {"role": role, "content": msg.content or ""}
+        # 3. DEĞİŞİKLİK: LangChain nesnelerinden (AIMessage vb.) gelen içerikleri temizliyoruz
+        msg_dict = {"role": role, "content": sanitize_text(msg.content or "")}
         
         if role == "assistant" and getattr(msg, "tool_calls", None):
             msg_dict["tool_calls"] = [
@@ -47,7 +60,8 @@ def analyze_state(messages: list, force_json: bool = False):
                     "type": "function",
                     "function": {
                         "name": tc["name"],
-                        "arguments": json.dumps(tc["args"]) if isinstance(tc["args"], dict) else str(tc["args"])
+                        # 4. DEĞİŞİKLİK: Tool argümanlarındaki (Vision'dan gelen metinler buraya düşer) bozuklukları temizliyoruz
+                        "arguments": sanitize_text(json.dumps(tc["args"]) if isinstance(tc["args"], dict) else str(tc["args"]))
                     }
                 } for tc in msg.tool_calls
             ]
@@ -75,7 +89,8 @@ def analyze_state(messages: list, force_json: bool = False):
             messages=formatted_messages,
             tools=active_tools,
             tool_choice="auto" if active_tools else None,
-            temperature=0.0,  # Deterministik ve hatasız tool çağrısı için 0.0 önerilir
+            frequency_penalty=0.5,
+            temperature=0.1,  # Deterministik ve hatasız tool çağrısı için 0.0 önerilir
         )
 
     return response.choices[0].message

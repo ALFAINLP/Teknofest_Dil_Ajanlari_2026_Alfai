@@ -34,7 +34,8 @@ Başka hiçbir açıklama metni ekleme.
 """
 
 VISION_USER_PROMPT = """
-Videoyu baştan sona saniye saniye dikkatli biçimde analiz et.
+Sen endüstriyel saha güvenliği, iş kazaları ve anomali tespiti (İSG) konusunda uzman bir yapay zekasın.
+Videoyu baştan sona saniye saniye çok dikkatli biçimde analiz et.
 
 Tüm zaman damgalarını MM:SS formatında yaz. Örnek: 00:03, 01:22, 02:45.
 HH:MM:SS formatı kullanma.

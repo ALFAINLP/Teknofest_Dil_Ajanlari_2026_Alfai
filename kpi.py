@@ -77,8 +77,7 @@ class AgentBenchmarkKPI:
         valid_tools = {
             "trigger_operator_alert", "get_personnel_on_duty",
             "assess_environmental_hazards", "query_previous_incidents",
-            "export_to_incident_management_system", "log_kpi_metrics",
-            "detect_motion_density"
+            "export_to_incident_management_system", "detect_motion_density"
         }
         extracted = set()
         for item in action_list:

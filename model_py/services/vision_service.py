@@ -199,8 +199,8 @@ _MIME_MAP = {
 # fps: saniyede kaç kare alınacak (düşük fps → daha az kare → daha hızlı ama daha az bağlam)
 # max_pixels: tek kare için maksimum piksel sayısı (büyük değer → daha net görüntü)
 # Eğer video uzunsa fps=1 ile başla; kısa videolar için fps=2
-VIDEO_FPS = 2           # saniyede 2 kare örnekle
-VIDEO_MAX_PIXELS = 384 * 384  # kare başına maks piksel (Qwen3-VL varsayılanı: 128*28*28)
+VIDEO_FPS = 3           # saniyede 2 kare örnekle
+VIDEO_MAX_PIXELS = 768 * 768  # kare başına maks piksel (Qwen3-VL varsayılanı: 128*28*28)
 
 
 def analyze_video(video_path: str):
