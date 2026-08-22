@@ -4,6 +4,7 @@ import os
 import tempfile
 import subprocess
 import json
+from difflib import SequenceMatcher
 from urllib.error import URLError
 from urllib.request import urlopen
 from pathlib import Path
@@ -418,21 +419,38 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         # parsed_json  → compile_report'un ürettiği özet (summary, actions, vb.)
         graph_output = {**final_state, **parsed_json}
 
-        # 3. React için Yalnızca Zamana Göre Tekilleştirilmiş (Deduplicated by Time) Format
-        safe_events = []
-        seen_times = set() # Sadece zamanları takip ediyoruz
+        # 3. Metin benzerliğine göre gerçek kopya tespiti
+        # Zaman damgasına göre SİLMİYORUZ — model aynı saniyeyi birden fazla
+        # farklı olaya verebilir. Sadece olay metni %85+ benzer olanları çıkarıyoruz.
+        def _text_similarity(a: str, b: str) -> float:
+            return SequenceMatcher(None, a.lower().strip(), b.lower().strip()).ratio()
 
+        def _event_text(evt: dict) -> str:
+            raw = evt.get("event", "")
+            if isinstance(raw, dict):
+                return raw.get("description", str(raw))
+            return str(raw)
+
+        SIMILARITY_THRESHOLD = 0.85
+        safe_events = []
         for evt in graph_output.get("detected_events", []):
-            event_time = evt.get("time", "00:00")
-            if event_time not in seen_times:
-                seen_times.add(event_time)
+            evt_text = _event_text(evt)
+            is_duplicate = any(
+                _text_similarity(evt_text, _event_text(kept)) >= SIMILARITY_THRESHOLD
+                for kept in safe_events
+            )
+            if not is_duplicate:
                 safe_events.append(evt)
 
-        logger.info(f"🧹 [FİLTRELEME] Aynı saniyedeki kopya olaylar silindi. Net olay sayısı: {len(safe_events)}")
-                
         total_raw_events = len(graph_output.get("detected_events", []))
         total_safe_events = len(safe_events)
-        print(f"🧹 [FİLTRELEME] Model toplam {total_raw_events} olay buldu. Aynı saniyedeki {total_raw_events - total_safe_events} kopya silindi. Kalan net olay: {total_safe_events}")
+        removed = total_raw_events - total_safe_events
+        logger.info(
+            f"🧹 [FİLTRELEME] Toplam {total_raw_events} olay | "
+            f"Metin benzerliği ≥%{int(SIMILARITY_THRESHOLD*100)} olan {removed} kopya silindi | "
+            f"Kalan net olay: {total_safe_events}"
+        )
+        print(f"🧹 [FİLTRELEME] Model toplam {total_raw_events} olay buldu. Metin kopyası {removed} silindi. Kalan net olay: {total_safe_events}")
 
         safe_actions = graph_output.get("actions_recommended", [])
         if not safe_actions:

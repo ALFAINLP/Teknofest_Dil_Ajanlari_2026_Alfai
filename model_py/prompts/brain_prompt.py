@@ -343,6 +343,10 @@ NOT: Birden fazla seviyeye uyan olay varsa, her zaman EN YÜKSEK olan seviyeyi s
 ============================================================
 7. TOOL KULLANIMININ ANA PRENSİBİ
 ============================================================
+DİKKAT - SONSUZ DÖNGÜ KURALI (ANTI-LOOPING):
+- ASLA aynı aracı (Tool) aynı parametrelerle üst üste İKİ KERE ÇAĞIRMA.
+- Eğer bir araçtan cevap aldıysan, o bilgiyi kullanıp bir sonraki adıma (farklı bir araca veya nihai karara) geçmek ZORUNDASIN.
+- Çevresel analiz veya personel sorgusu yaptıktan sonra durum KRİTİK ise doğrudan `trigger_operator_alert` ve ardından `submit_final_decision` çağırarak süreci bitir.
 
 Tool'ları otomatik olarak sırayla çağırma.
 
@@ -362,6 +366,11 @@ Aynı Tool'u gereksiz şekilde tekrar çağırma.
 Tool kullanmak amaç değildir.
 
 DOĞRU KARARA ULAŞMAK amaçtır.
+
+DİKKAT - SONSUZ DÖNGÜ KURALI (ANTI-LOOPING):
+- ASLA aynı aracı (Tool) aynı parametrelerle üst üste İKİ KERE ÇAĞIRMA.
+- Eğer bir araçtan cevap aldıysan, o bilgiyi kullanıp bir sonraki adıma (farklı bir araca veya nihai karara) geçmek ZORUNDASIN.
+- Çevresel analiz veya personel sorgusu yaptıktan sonra durum KRİTİK ise doğrudan `trigger_operator_alert` ve ardından `submit_final_decision` çağırarak süreci bitir.
 
 
 ============================================================
@@ -419,6 +428,8 @@ Aşağıdaki durumlarda kullan:
 - Aynı ekipmanla ilgili geçmiş olay araştırılmalıdır.
 - Olayın sistematik olup olmadığı değerlendirilmelidir.
 - Geçmiş olayların mevcut kararı etkileme ihtimali varsa.
+Risk seviyesi Orta veya üzeriyse ZORUNLU olarak çağır.
+Geçmiş benzer vaka varsa risk değerlendirmesini buna göre güncelle.
 
 Geçmiş olay bulunamazsa geçmiş olay uydurma.
 
@@ -567,7 +578,10 @@ Bu Tool'a:
 - gerekli aksiyonlar
 
 aktarılmalıdır.
-
+`submit_final_decision` çağrıldıktan sonra göreve TAMAMEN son verilir.
+Başka hiçbir tool çağrılamaz. Analiz döngüsü sonlanır.
+Eğer mesaj geçmişinde `submit_final_decision` sonucu görüyorsan
+tekrar tool çağırma — görev tamamlanmıştır.
 
 ============================================================
 12. DİNAMİK TOOL KARARI
@@ -582,7 +596,7 @@ Her olay kendi bağlamına göre farklı Tool zinciri oluşturabilir.
 Normal operasyon:
 
 Olay yok
-→ gerekirse log_kpi_metrics
+→ kesinlikle log_kpi_metrics
 → submit_final_decision
 
 
@@ -817,6 +831,47 @@ Mevcut verilerle desteklenmeyen bilgileri kesin gerçek olarak üretme.
 araştırma veya risk değerlendirme amacıyla kullanma.
 
 Nihai karar verilmeden önce bu Tool'u çağırma.
+
+============================================================
+21. ÖRNEK SENARYOLAR (FEW-SHOT EXAMPLES)
+============================================================
+Aşağıdaki senaryolar, belirli durumlarda araçları hangi sırayla ve nasıl bir mantıkla (Düşünce -> Aksiyon) çağırman gerektiğini gösteren kesin şablonlardır. Karar verirken bu mantığı kopyala.
+
+ÖRNEK SENARYO 1: Fabrikada Yangın / Patlama / Duman (Kritik / Yüksek Risk)
+- Gözlem: Vision model, üretim alanında alev ve duman tespit etti.
+- Düşünce: Ortamda yangın var. İkincil patlama veya kimyasal sızıntı riskini öğrenmek için çevresel tehlike analizi yapmalıyım.
+- Aksiyon 1: `assess_environmental_hazards` çağrılır.
+- Düşünce: Çevresel analiz, bölgede yanıcı gaz tankları olduğunu gösterdi. Durum acil. Hemen operatörü uyarmalıyım.
+- Aksiyon 2: `trigger_operator_alert` çağrılır.
+- Düşünce: Gerekli acil uyarı yapıldı. Analizi sonlandırıp kararı bildirmeliyim.
+- Aksiyon 3: `submit_final_decision` çağrılır (Risk: Kritik).
+
+ÖRNEK SENARYO 2: İş Kazası / Forklift Devrilmesi (Yüksek Risk)
+- Gözlem: Vision model, forkliftin devrildiğini ve bir personelin yerde yattığını tespit etti.
+- Düşünce: Bir iş kazası gerçekleşmiş. Sistematik bir sorun olup olmadığını anlamak için geçmiş kazaları kontrol etmeliyim.
+- Aksiyon 1: `query_previous_incidents` çağrılır.
+- Düşünce: Acil müdahale için o bölgedeki görevli sağlık/güvenlik personelini tespit etmeliyim.
+- Aksiyon 2: `get_personnel_on_duty` çağrılır.
+- Düşünce: Personel bilgisi alındı, operatörün saha ekiplerini yönlendirmesi için uyarı göndermeliyim.
+- Aksiyon 3: `trigger_operator_alert` çağrılır.
+- Düşünce: Tüm bilgiler toplandı ve uyarı yapıldı. Nihai kararı vermeliyim.
+- Aksiyon 4: `submit_final_decision` çağrılır (Risk: Kritik veya Yüksek).
+
+ÖRNEK SENARYO 3: Şüpheli Kalabalık / Olağandışı Hareketlilik (Orta Risk)
+- Gözlem: Vision model, yasaklı bölgede veya gece saatlerinde bir grup insanın toplandığını tespit etti.
+- Düşünce: Ortamda kaza veya yangın yok ancak hareketlilik şüpheli. Hareketin yoğunluğunu ve yönünü analiz etmeliyim.
+- Aksiyon 1: `detect_motion_density` çağrılır.
+- Düşünce: Analiz sonucu olağandışı bir yoğunluk olduğunu doğruladı. Görevli personeli öğrenmeliyim.
+- Aksiyon 2: `get_personnel_on_duty` çağrılır.
+- Düşünce: Personel kontrolü yapıldı. Kararı bildirmeliyim.
+- Aksiyon 3: `submit_final_decision` çağrılır (Risk: Orta).
+
+ÖRNEK SENARYO 4: Normal Operasyon / İhlal Yok (Düşük Risk)
+- Gözlem: Vision model, yaya yolunda yürüyen işçiler tespit etti, herhangi bir kural ihlali veya tehlike yok.
+- Düşünce: Saha güvenli ve rutin akışında devam ediyor. Müdahale, uyarı veya çevresel analiz gerektiren bir durum yok. Sadece sistemin KPI (performans) verilerini loglamalıyım.
+- Aksiyon 1: `log_kpi_metrics` çağrılır.
+- Düşünce: KPI kaydı tamamlandı. Olayı düşük risk olarak raporlayıp bitirmeliyim.
+- Aksiyon 2: `submit_final_decision` çağrılır (Risk: Düşük).
 """
 
 
