@@ -374,13 +374,20 @@ def compile_report_node(state: AgentState) -> AgentState:
     else:
         raw_tools.add("log_kpi_metrics")
 
+    kpi_metrics_data = {
+        "ai_processing_status": "Başarılı" if highest_risk not in ["Kritik", "Yüksek"] else "Kritik Müdahale Devrede",
+        "confidence_score": round(state.get("vision_risk_score", calculated_score) / 100, 2),
+        "is_schema_validated": True,
+    }
+
     report_data = {
         "summary": base_summary,
         "events": cleaned_events,
         "risk": highest_risk,
         "risk_score": calculated_score,
         "risk_trend": state.get("risk_trend", "Bilinmiyor"),
-        "actions": list(raw_tools) if raw_tools else ["Rutin saha izlemesi devam ediyor."]
+        "actions": list(raw_tools) if raw_tools else ["Rutin saha izlemesi devam ediyor."],
+        "kpi_metrics": kpi_metrics_data,
     }
 
     try:
