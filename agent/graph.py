@@ -345,14 +345,16 @@ def compile_report_node(state: AgentState) -> AgentState:
             "start_time": item.get("start_time", item.get("time", "00:00")),
             "end_time": item.get("end_time", item.get("time", "00:00")),
             "event_type": item.get("event_type", ""),
-            "phase": item.get("phase", ""),
+            "phase": item.get("phase", "") or None,
             "is_critical_moment": item.get("is_critical_moment", item.get("is_critical", False)),
             "ranked_actions": item.get("ranked_actions", []),
             "center": item.get("center"),
             "bbox": item.get("bbox"),
             "zone": item.get("zone", "Genel Saha"),
             "risk": normalize_risk(item.get("risk", "Düşük")),
-            "confidence": item.get("confidence", 0.85)
+            "confidence": item.get("confidence", 0.85),
+            "evidence": item.get("evidence", []),
+            "uncertainties": item.get("uncertainties", []),
         })
 
     base_summary = state.get("video_summary", "")

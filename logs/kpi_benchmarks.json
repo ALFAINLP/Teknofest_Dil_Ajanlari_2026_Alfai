@@ -2818,5 +2818,55 @@
       "model_confidence_score": 0.95,
       "inference_duration_seconds": 1.42
     }
+  },
+  {
+    "timestamp": "2026-08-22 08:37:16",
+    "metrics": {
+      "processed_segments_count": 10,
+      "highest_risk_detected": "Düşük",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42
+    }
+  },
+  {
+    "timestamp": "2026-08-22 08:40:12",
+    "metrics": {
+      "processed_segments_count": 16,
+      "highest_risk_detected": "Düşük",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42
+    }
+  },
+  {
+    "timestamp": "2026-08-22 08:42:00",
+    "metrics": {
+      "processed_segments_count": 10,
+      "highest_risk_detected": "Kritik",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42
+    }
+  },
+  {
+    "timestamp": "2026-08-22 08:48:34",
+    "metrics": {
+      "processed_segments_count": 10,
+      "highest_risk_detected": "Kritik",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42
+    }
+  },
+  {
+    "timestamp": "2026-08-22 08:56:03",
+    "metrics": {
+      "processed_segments_count": 10,
+      "highest_risk_detected": "Kritik",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42
+    }
   }
 ]

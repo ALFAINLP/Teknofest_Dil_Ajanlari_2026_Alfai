@@ -50,7 +50,7 @@ Her türlü hareketi ve eylemi events listesine MUTLAKA ekle:
 Videoda hareket eden veya değişen HER ŞEY bir olaydır. Boş events döndürme.
 
 Her olay için start_time ve end_time belirt.
-Olaylar zaman içinde gelişiyorsa phase alanına başlangıç/gelişim/sonuç yaz.
+Her olay için phase alanını olay içeriğine göre belirle (sıraya göre değil): "başlangıç" ilk tetiklenme anı, "gelişim" yayılma/kötüleşme süreci, "sonuç" doruk veya bitiş anıdır. Aynı fazda birden fazla olay olabilir.
 Kritik bir an varsa is_critical_moment true yap.
 
 Her olayın temel öznesinin görüntü karesi üzerindeki konumunu belirt.
