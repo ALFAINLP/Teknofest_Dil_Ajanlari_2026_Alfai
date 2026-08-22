@@ -374,10 +374,29 @@ def compile_report_node(state: AgentState) -> AgentState:
     else:
         raw_tools.add("log_kpi_metrics")
 
+    _total_events = len(cleaned_events)
+    _critical_events = sum(1 for e in cleaned_events if e.get("is_critical_moment"))
+    _critical_rate = round(_critical_events / _total_events, 3) if _total_events > 0 else 0.0
+    _avg_confidence = (
+        round(
+            sum(
+                float(str(e.get("confidence", 0)).replace("%", "")) / (100 if "%" in str(e.get("confidence", "")) else 1)
+                for e in cleaned_events if e.get("confidence") is not None
+            ) / _total_events,
+            3,
+        )
+        if _total_events > 0 else round(state.get("vision_risk_score", calculated_score) / 100, 2)
+    )
+
     kpi_metrics_data = {
         "ai_processing_status": "Başarılı" if highest_risk not in ["Kritik", "Yüksek"] else "Kritik Müdahale Devrede",
-        "confidence_score": round(state.get("vision_risk_score", calculated_score) / 100, 2),
+        "confidence_score": _avg_confidence,
         "is_schema_validated": True,
+        "detected_events_count": _total_events,
+        "critical_events_count": _critical_events,
+        "critical_event_capture_rate": _critical_rate,
+        "total_processing_seconds": round(state.get("total_processing_seconds", 0.0), 2),
+        "action_recommendation_count": len(raw_tools) if raw_tools else 0,
     }
 
     report_data = {

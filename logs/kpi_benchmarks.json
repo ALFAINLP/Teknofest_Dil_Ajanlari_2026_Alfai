@@ -3268,5 +3268,80 @@
       "model_confidence_score": 0.95,
       "inference_duration_seconds": 1.42
     }
+  },
+  {
+    "timestamp": "2026-08-22 10:40:52",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 10:41:53",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 10:46:31",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Düşük"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 10:50:34",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Kritik"
+    }
+  },
+  {
+    "timestamp": "2026-08-22 10:56:04",
+    "metrics": {
+      "ai_processing_status": "Başarılı",
+      "is_schema_validated": true,
+      "model_confidence_score": 0.95,
+      "inference_duration_seconds": 1.42,
+      "detected_events_count": 0,
+      "critical_events_count": 0,
+      "critical_event_capture_rate": 0.0,
+      "total_processing_seconds": 0.0,
+      "action_recommendation_count": 0,
+      "highest_risk_detected": "Yüksek"
+    }
   }
 ]

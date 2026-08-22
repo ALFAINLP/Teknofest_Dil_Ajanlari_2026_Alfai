@@ -210,6 +210,8 @@ def _normalize_report(model_output: dict) -> dict:
     if isinstance(actions, str):
         actions = [actions]
 
+    incoming_kpi = model_output.get("kpi_metrics") or {}
+
     return {
         "summary": str(model_output.get("summary") or "Video analizi tamamlandı."),
         "events": events,
@@ -217,7 +219,10 @@ def _normalize_report(model_output: dict) -> dict:
         "risk_score": int(model_output.get("risk_score") or RISK_SCORES.get(risk, 50)),
         "actions": [str(action) for action in actions],
         "kpi_metrics": {
-            "ai_processing_status": "Başarılı",
+            # Graph'tan gelen tüm metrikler önce alınır, eksikler varsayılanla doldurulur
+            **incoming_kpi,
+            # Confidence her zaman web_api'de yeniden hesaplanır (en güncel değer)
+            "ai_processing_status": incoming_kpi.get("ai_processing_status", "Başarılı"),
             "confidence_score": average_confidence,
             "is_schema_validated": True,
         },
@@ -460,13 +465,18 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             "summary": parsed_json.get("summary") or graph_output.get("technical_summary") or "Video analiz edildi, genel durum stabil.",
             "events": safe_events,
             "risk": graph_output.get("risk_assessments", ["Düşük"])[0] if graph_output.get("risk_assessments") else "Düşük",
-            "actions": safe_actions
+            "risk_score": graph_output.get("risk_score") or parsed_json.get("risk_score"),
+            "actions": safe_actions,
+            "kpi_metrics": parsed_json.get("kpi_metrics") or {},
         }
 
         final_response = _normalize_report(model_output)
         final_response["risk_trend"] = graph_output.get("risk_trend", "Stabil")
-        
+
         elapsed_time = time.time() - start_time
+
+        # İşlem süresini hem performance hem kpi_metrics'e yaz
+        final_response["kpi_metrics"]["total_processing_seconds"] = round(elapsed_time, 2)
         final_response["performance"] = {
             "total_processing_seconds": round(elapsed_time, 2),
             "vision_inference_ms": vision_inference_ms,

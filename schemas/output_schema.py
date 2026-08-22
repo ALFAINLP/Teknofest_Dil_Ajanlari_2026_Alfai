@@ -66,8 +66,16 @@ class EventItem(BaseModel):
 
 class KpiMetrics(BaseModel):
     ai_processing_status: str = Field(..., description="Yapay zeka işlem durumu (Örn: 'Başarılı / Kritik Müdahale Devrede')")
-    confidence_score: float = Field(..., description="Modelin ürettiği doğruluk/güven skoru (Örn: 0.96)")
+    confidence_score: float = Field(..., description="Modelin ürettiği ortalama güven skoru (0.0–1.0)")
     is_schema_validated: bool = Field(..., description="Şema doğrulama durumu (True/False)")
+    # ==========================================
+    # Şartname KPI Metrikleri
+    # ==========================================
+    detected_events_count: Optional[int] = Field(default=None, description="Tespit edilen toplam olay sayısı (Olay Tespit Doğruluğu göstergesi)")
+    critical_events_count: Optional[int] = Field(default=None, description="is_critical_moment=True olan olay sayısı")
+    critical_event_capture_rate: Optional[float] = Field(default=None, description="Kritik Olay Yakalama Oranı: kritik_olay / toplam_olay (0.0–1.0)")
+    total_processing_seconds: Optional[float] = Field(default=None, description="Toplam pipeline işlem süresi (saniye)")
+    action_recommendation_count: Optional[int] = Field(default=None, description="Aksiyon Önerisi Doğruluğu göstergesi: sistemin önerdiği aksiyon sayısı")
 
 class FinalReportSchema(BaseModel):
     summary: str = Field(..., description="Videonun genel operasyonel Türkçe özeti")

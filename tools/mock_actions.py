@@ -614,12 +614,18 @@ def log_kpi_metrics(metrics_data: dict) -> bool:
     log_entry = {
         "timestamp": current_time_str,
         "metrics": {
-            "processed_segments_count": int(metrics_data.get("processed_segments_count", 0)),
-            "highest_risk_detected": str(metrics_data.get("highest_risk_detected", "Düşük")),
+            # Temel metrikler
+            "ai_processing_status": str(metrics_data.get("ai_processing_status", "Başarılı")),
             "is_schema_validated": bool(metrics_data.get("is_schema_validated", False)),
-            
             "model_confidence_score": float(metrics_data.get("confidence_score", 0.95)),
-            "inference_duration_seconds": float(metrics_data.get("inference_duration", 1.42))
+            "inference_duration_seconds": float(metrics_data.get("inference_duration", 1.42)),
+            # Şartname KPI Metrikleri
+            "detected_events_count": int(metrics_data.get("detected_events_count", 0)),
+            "critical_events_count": int(metrics_data.get("critical_events_count", 0)),
+            "critical_event_capture_rate": float(metrics_data.get("critical_event_capture_rate", 0.0)),
+            "total_processing_seconds": float(metrics_data.get("total_processing_seconds", 0.0)),
+            "action_recommendation_count": int(metrics_data.get("action_recommendation_count", 0)),
+            "highest_risk_detected": str(metrics_data.get("highest_risk_detected", "Düşük")),
         }
     }
     
