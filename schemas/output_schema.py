@@ -31,6 +31,7 @@ class EventItem(BaseModel):
     # LangGraph Yapılandırma Hatası Çözümü dosyasındaki uyarılara istinaden:
     # Hem düz metin hem de olası sözlük yapılarını desteklemek için Union kullanılmıştır.
     event: Union[str, dict] = Field(..., description="Tespit edilen olayın Türkçe açıklaması veya detay objesi")
+    event_type: Optional[str] = Field(default=None, description="Olayın türü (Örn: 'Yangın başlangıcı', 'Patlama', 'İşçi hareketi')")
     zone: Optional[str] = Field(default=None, description="Olayın gerçekleştiği bölge/alan")
     # ==========================================
     # Zamansal Farkındalık ve Kritik An Analizi (Şartname Gereği)

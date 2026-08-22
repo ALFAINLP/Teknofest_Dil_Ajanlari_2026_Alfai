@@ -77,7 +77,20 @@ def _build_context_block(analysis_context: dict | None, memory: dict | None) -> 
                 time_label = evt.get("time", "?")
                 event_text = evt.get("event", "Açıklama yok")
                 risk_label = evt.get("risk", "")
-                lines.append(f"  - [{time_label}] {event_text}" + (f" (Risk: {risk_label})" if risk_label else ""))
+                event_type = evt.get("event_type", "")
+                phase = evt.get("phase", "")
+                is_critical = evt.get("is_critical_moment", False)
+                meta_parts = []
+                if risk_label:
+                    meta_parts.append(f"Risk: {risk_label}")
+                if event_type:
+                    meta_parts.append(f"Tür: {event_type}")
+                if phase:
+                    meta_parts.append(f"Faz: {phase}")
+                if is_critical:
+                    meta_parts.append("⚠️ KRİTİK AN")
+                meta = f" ({', '.join(meta_parts)})" if meta_parts else ""
+                lines.append(f"  - [{time_label}] {event_text}{meta}")
     if memory:
         event_history = memory.get("event_history", [])
         risk_history = memory.get("risk_history", [])
