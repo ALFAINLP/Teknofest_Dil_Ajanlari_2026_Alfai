@@ -368,8 +368,8 @@ def _create_fallback_response(video_duration: float = 0) -> dict:
                 "bbox": None
             }
         ],
-        "risk": "Düşük",
-        "risk_score": 25,
+        "risk": "Orta",
+        "risk_score": 50,
         "actions": ["log_kpi_metrics"]  # ← KRİTİK: Tool Jaccard için!
     }
 
@@ -436,7 +436,7 @@ def analyze_video(video_path: str) -> dict:
                     ]
                 }
             ],
-            max_tokens=2048,  # YENİ: 2048 token (kesilme riski azaldı)
+            max_tokens=4096,  # YENİ: 2048 token (kesilme riski azaldı)
             temperature=0.1,  # YENİ: Düşük temperature (tutarlı JSON)
             extra_body={"chat_template_kwargs": {"enable_thinking": False}},
             timeout=180  # YENİ: 3 dakika timeout

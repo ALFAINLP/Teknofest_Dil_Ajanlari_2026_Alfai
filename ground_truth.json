@@ -114,7 +114,6 @@
     ],
     "actions": [
       "trigger_operator_alert",
-      "detect_motion_density",
       "query_previous_incidents",
       "export_to_incident_management_system"
     ]
@@ -193,7 +192,6 @@
     "actions": [
       "trigger_operator_alert",
       "get_personnel_on_duty",
-      "query_previous_incidents",
       "export_to_incident_management_system"
     ]
   },
@@ -229,7 +227,6 @@
     "actions": [
       "trigger_operator_alert",
       "get_personnel_on_duty",
-      "assess_environmental_hazards",
       "export_to_incident_management_system"
     ]
   },
@@ -379,7 +376,8 @@
     "actions": [
       "trigger_operator_alert",
       "assess_environmental_hazards",
-      "export_to_incident_management_system"
+      "export_to_incident_management_system",
+      "get_personnel_on_duty"
     ]
   },
   {
@@ -540,7 +538,8 @@
       "trigger_operator_alert",
       "detect_motion_density",
       "query_previous_incidents",
-      "export_to_incident_management_system"
+      "export_to_incident_management_system",
+      "get_personnel_on_duty"
     ]
   },
   {

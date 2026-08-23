@@ -238,21 +238,30 @@ def _build_required_tools_hint(events: list) -> str:
     )
 
     if any(k in event_texts for k in ["yangın", "duman", "patlama", "alev", "gaz"]):
-        lines.append("- Ortamda yangın/duman tespit edildi: assess_environmental_hazards ile ikincil risk analiz edilebilir")
-    if any(k in event_texts for k in ["işçi", "personel", "kişi"]):
-        lines.append("- Sahada personel var: get_personnel_on_duty ile görevli personel sorgulanabilir")
-    if any(k in event_texts for k in ["kaza", "çarpış", "devril", "yangın", "patlama"]):
-        lines.append("- Kritik olay tespit edildi: trigger_operator_alert ile operatör uyarılabilir")
+        lines.append("- Ortamda yangın/duman tespit edildi: assess_environmental_hazards aracı KESİNLİKLE kullanılmalıdır.")
+    
+    # 🌟 Kalabalık/İzdiham İpucu (Sokak toplanması ve kaçışmalar için)
+    if any(k in event_texts for k in ["kalabalık", "kaçıştı", "toplandı", "izdiham", "kargaşa"]):
+        lines.append("- Olay yerinde toplu kaçışma veya kalabalık toplanması var: detect_motion_density aracı ZORUNLU olarak çağrılmalıdır.")
+
+    # 🌟 Kasıtlı Suç/Saldırı İpucu (Soygun ve Sokak Darp olayları için)
+    if any(k in event_texts for k in ["kaput", "kurcala", "sök", "bagaj", "hırsız", "çal", "soygun", "maskeli", "atm", "kasa", "gasp", "şüpheli", "vitrin", "darp", "sopayla", "saldırgan", "kavga"]):
+        lines.append("- Kasıtlı Suç/Saldırı tespiti: Bu olay bir kaza değil, KASITLI BİR SUÇTUR! trigger_operator_alert ve query_previous_incidents araçları DERHAL VE ZORUNLU OLARAK çağrılmalıdır.")
+        
+    if any(k in event_texts for k in ["işçi", "personel", "kişi", "çalışan", "şahıs", "insan", "yaralı", "müşteri", "birey", "tahliye", "kaç"]):
+        lines.append("- Sahada etkilenen insan/personel var: get_personnel_on_duty ile can güvenliği veya görevli durumu ZORUNLU OLARAK sorgulanmalıdır.")
+    
+    if any(k in event_texts for k in ["kaza", "çarpış", "devril", "yangın", "patlama", "silah", "saldırı"]):
+        lines.append("- Kritik/Acil olay tespit edildi: trigger_operator_alert ile operatör DERHAL uyarılmalıdır.")
 
     if not lines:
         return ""
 
     return (
-        "\nSahada tespit edilen durumlara göre değerlendirmen gereken araçlar:\n"
+        "\nSahada tespit edilen durumlara göre kullanman GEREKEN araçlar:\n"
         + "\n".join(lines)
-        + "\nHangilerini kullanacağına sen karar ver."
+        + "\nBu ipuçlarını dikkate alarak eksiksiz bir analiz yap."
     )
-
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
     zone = state.get("current_zone", "Genel Saha")
@@ -525,78 +534,39 @@ def normalize_phase(value: str) -> str:
 def _validate_tool_choice(tool_name: str, state: AgentState) -> tuple[bool, str]:
     events = state.get("detected_events", [])
     risk = state.get("vision_risk", "Düşük")
-    event_count = len(events)
+    
+    # Dinamik State Değişkenleri
     critical_count = sum(1 for e in events if e.get("is_critical_moment") or e.get("is_critical"))
     
-    # ---- 1. log_kpi_metrics kuralları ----
+    # Vision modelinin ürettiği event_type'ları dinamik olarak çekiyoruz (KAZA, ANOMALI vb.)
+    event_types = [str(e.get("event_type", "")).upper() for e in events]
+    has_anomaly = "ANOMALI" in event_types or "KAZA" in event_types
+    
+    # ---- 1. log_kpi_metrics ----
     if tool_name == "log_kpi_metrics":
-        if risk in ["Kritik", "Yüksek"]:
-            return False, f"Risk '{risk}' iken log_kpi_metrics çağrılamaz"
-        if critical_count > 0:
-            return False, f"{critical_count} kritik olay varken log_kpi_metrics çağrılamaz"
-        return True, "Rutin durum - log_kpi_metrics izin verilir"
+        if risk in ["Kritik", "Yüksek"] or critical_count > 0:
+            return False, "Tehlike anında log_kpi_metrics çağrılamaz."
+        return True, "Rutin durum - log_kpi_metrics onaylandı."
     
-    # ---- 2. export_to_incident_management_system ----
-    if tool_name == "export_to_incident_management_system":
-        # 🔥 YUMUŞAT: SADECE çok açık rutin durumlarda engelle
-        if risk == "Düşük" and event_count == 0:
-            return False, "Hiç olay yok - export gerekli değil"
-        # 🔥 YENİ: Orta/Yüksek riskte her zaman izin ver
-        if risk in ["Orta", "Yüksek", "Kritik"]:
-            return True, "Risk var - export izin verilir"
-        # 🔥 YENİ: Düşük riskte ama olay varsa da izin ver (GT uyumu)
-        return True, "Export izin verilir (GT uyumu)"
+    # ---- 2. DİĞER TÜM AKSİYON ARAÇLARI İÇİN ORTAK DİNAMİK BARAJ ----
+    # KURAL: Eğer risk "Düşük" ise, kritik olay (critical_count) yoksa ve 
+    # Vision modeli olayı KAZA/ANOMALI olarak etiketlemediyse, bu tam bir RUTİN durumdur.
+    if risk == "Düşük" and critical_count == 0 and not has_anomaly:
+        action_tools = [
+            "trigger_operator_alert", 
+            "get_personnel_on_duty", 
+            "assess_environmental_hazards", 
+            "query_previous_incidents",
+            "export_to_incident_management_system",
+            "detect_motion_density"
+        ]
+        if tool_name in action_tools:
+            return False, f"Sahada tehlike tespit edilmediği için (Düşük Risk) '{tool_name}' aracı engellendi."
     
-    # ---- 3. detect_motion_density ----
-    if tool_name == "detect_motion_density":
-        motion_events = [e for e in events if "hareket" in str(e.get("event", "")).lower()]
-        if not motion_events and event_count == 0:
-            return False, "Hareketli olay yok - detect_motion_density gerekli değil"
-        return True, "Motion density izin verilir"
-    
-    # ---- 4. trigger_operator_alert ----
-    if tool_name == "trigger_operator_alert":
-        # 🔥 YUMUŞAT: SADECE çok açık rutin durumlarda engelle
-        if risk == "Düşük" and critical_count == 0 and event_count <= 1:
-            return False, "Risk Düşük ve kritik olay yok - alert gerekli değil"
-        # 🔥 YENİ: Risk Orta veya üzerinde her zaman izin ver
-        if risk in ["Orta", "Yüksek", "Kritik"]:
-            return True, "Risk var - alert izin verilir"
-        # 🔥 YENİ: Kritik olay varsa her zaman izin ver
-        if critical_count > 0:
-            return True, "Kritik olay var - alert izin verilir"
-        return True, "Alert izin verilir (GT uyumu)"
-    
-    # ---- 5. get_personnel_on_duty ----
-    if tool_name == "get_personnel_on_duty":
-        personnel_events = [e for e in events if "personel" in str(e.get("event", "")).lower() 
-                           or "işçi" in str(e.get("event", "")).lower()]
-        if not personnel_events and risk == "Düşük" and event_count == 0:
-            return False, "Personel olayı yok - get_personnel_on_duty gerekli değil"
-        return True, "Personnel query izin verilir"
-    
-    # ---- 6. assess_environmental_hazards ----
-    if tool_name == "assess_environmental_hazards":
-        if risk in ["Kritik", "Yüksek"]:
-            return True, "Yüksek risk - environmental assessment izin verilir"
-        hazard_keywords = ["yangın", "duman", "patlama", "alev", "gaz", "kimyasal"]
-        hazard_events = [e for e in events if any(k in str(e.get("event", "")).lower() for k in hazard_keywords)]
-        if hazard_events:
-            return True, "Tehlike tespit edildi - environmental assessment izin verilir"
-        # 🔥 YUMUŞAT: Tehlike yoksa da belki GT'de bekleniyordur
-        return True, "Environmental assessment izin verilir (GT uyumu)"
-    
-    # ---- 7. query_previous_incidents ----
-    if tool_name == "query_previous_incidents":
-        incident_keywords = ["kaza", "çarpış", "devril", "yaralan", "hırsızlık"]
-        incident_events = [e for e in events if any(k in str(e.get("event", "")).lower() for k in incident_keywords)]
-        if incident_events:
-            return True, "Olay tespit edildi - query_previous_incidents izin verilir"
-        # 🔥 YUMUŞAT: Olay yoksa da belki GT'de bekleniyordur
-        return True, "Query previous incidents izin verilir (GT uyumu)"
-    
-    # ---- 8. Bilinmeyen tool - izin ver ----
-    return True, f"Bilinmeyen tool '{tool_name}' - izin verilir"
+    # ---- 3. BEYNE (LLAMA) GÜVEN ----
+    # Eğer sistem yukarıdaki rutin barajına takılmadıysa (Yani risk Orta/Yüksek/Kritik ise veya Kaza varsa)
+    # Hangi aracın seçileceği konusunda kararı tamamen Llama modelinin muhakeme yeteneğine bırakıyoruz.
+    return True, f"'{tool_name}' seçimi dinamik olarak onaylandı."
 
 def compile_report_node(state: AgentState) -> AgentState:
     brain_risk = normalize_risk(
