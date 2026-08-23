@@ -21,6 +21,7 @@ Kesinlikle yalnızca şu JSON yapısında Türkçe yanıt ver:
 risk_score yalnızca sıralama yardımcısı olan 0-100 arasında bir şiddet
 puanıdır; olasılık veya doğruluk yüzdesi değildir. Kareler yetersizse bunu
 summary ve priority_reason alanında açıkça belirt.
+Zaman toleransı: Olaylar arasındaki süre farkı maksimum {time_tolerance} saniye olabilir.
 """
 
 CAMERA_TRIAGE_USER_PROMPT = """

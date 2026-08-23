@@ -232,6 +232,13 @@ class MemoryManager:
         return summary
 
     @staticmethod
+    def compress_memory_if_needed(state):
+        """Bağlam uzunsa özetle"""
+        if len(state.get("messages", [])) > 10:
+            return summarize_old_messages(state)
+        return state
+
+    @staticmethod
     def save_memory(
         event_history: List[Dict[str, Any]],
         risk_history: List[str],

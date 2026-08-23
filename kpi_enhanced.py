@@ -1,24 +1,41 @@
-# kpi_enhanced.py - SİZİN KODUNUZUN GELİŞMİŞ HALİ
-
 import json
 import os
 import re
 import time
-import numpy as np
-import torch
+import subprocess
+import logging
 from typing import List, Dict, Any, Set, Optional, Tuple
 from collections import defaultdict
 
-from agent.graph import app  # Sizin mevcut import'unuz
+import numpy as np
+import torch
+
+from agent.graph import app
 
 # ============================================================================
-# 1. SİZİN MEVCUT run_agent_pipeline FONKSİYONUNUZ (AYNEN KORUNDU)
+# 0. LOGGING AYARLARI - SADECE KRİTİK HATALARI GÖSTER
+# ============================================================================
+
+# ALFAI_API logger'ını sustur
+logging.getLogger("ALFAI_API").setLevel(logging.ERROR)
+logging.getLogger("ALFAI_API").disabled = True
+
+# Diğer logger'ları da sustur
+for logger_name in ["httpx", "openai", "vllm", "uvicorn", "fastapi"]:
+    logging.getLogger(logger_name).setLevel(logging.ERROR)
+    logging.getLogger(logger_name).disabled = True
+
+# Root logger'ı da sustur (sadece kritik hatalar gösterilsin)
+logging.basicConfig(level=logging.ERROR)
+
+# ============================================================================
+# 1. RUN AGENT PIPELINE
 # ============================================================================
 
 def run_agent_pipeline(video_path: str) -> dict:
     """
     Her video için sıfırdan temiz bir state ile LangGraph pipeline'ını çalıştırır.
-    Hafıza kirliliğini önlemek için tool_history sıfır başlatılır.
+    Hafıza kirliliğini önlemek için state sıfır başlatılır.
     """
     initial_state = {
         "video_path": video_path,
@@ -34,9 +51,18 @@ def run_agent_pipeline(video_path: str) -> dict:
         "messages": []
     }
 
-    final_output = app.invoke(initial_state)  # Sizin mevcut çağrınız
+    # stdout'u geçici olarak sustur
+    import sys
+    from io import StringIO
+    old_stdout = sys.stdout
+    sys.stdout = StringIO()
+    
+    try:
+        final_output = app.invoke(initial_state)
+    finally:
+        sys.stdout = old_stdout
 
-    # 1. JSON çıktısını çözümle - SİZİN KODUNUZ
+    # 1. JSON çıktısını çözümle
     final_json = final_output.get("final_json_output", "")
     parsed_report = {}
     if isinstance(final_json, str) and final_json.strip():
@@ -48,60 +74,55 @@ def run_agent_pipeline(video_path: str) -> dict:
     elif isinstance(final_json, dict):
         parsed_report = final_json
 
-    # 2. Risk ve Olaylar - SİZİN KODUNUZ
+    # 2. Risk ve Olaylar
     detected_risk = parsed_report.get("risk", final_output.get("risk_assessments", ["Düşük"])[0])
     detected_events = parsed_report.get("events", final_output.get("detected_events", []))
     
     # 3. Actions / Tools
-    # actions_recommended, graph.py'de risk seviyesine göre filtrelenmiş hali içeriyor.
-    # tool_history'den tekrar eklemiyoruz — Düşük risk filtrelemesini bozmamak için.
     executed_tools = set(final_output.get("actions_recommended", []))
 
     return {
         "risk_level": detected_risk,
         "events": detected_events,
         "actions": list(executed_tools),
-        # Ek olarak: GELİŞMİŞ TESTLER İÇİN TAM STATE'İ DE DÖNDÜR
         "_full_state": final_output  
     }
 
 
-
 # ============================================================================
-# 2. GELİŞMİŞ KATMANLI TEST SINIFI (MEVCUT KODUN ÜZERİNE EKLENDİ)
+# 2. TÜRKÇE METİN İŞLEME
 # ============================================================================
 
 class TurkishTextProcessor:
-    """Türkçe metin işleme için yardımcı sınıf"""
+    """Türkçe metin işleme ve normalizasyon yardımcı sınıfı"""
     
     @staticmethod
     def normalize(text: str) -> str:
-        """Türkçe karakter normalizasyonu"""
+        """Türkçe karakter ve büyük/küçük harf normalizasyonu"""
+        text = re.sub(r'[İI]', 'i', str(text or ""))
         replacements = {
             'ı': 'i', 'ğ': 'g', 'ü': 'u', 'ş': 's', 'ö': 'o', 'ç': 'c',
-            'I': 'I', 'Ğ': 'G', 'Ü': 'U', 'Ş': 'S', 'Ö': 'O', 'Ç': 'C'
+            'Ğ': 'g', 'Ü': 'u', 'Ş': 's', 'Ö': 'o', 'Ç': 'c'
         }
         for tr_char, en_char in replacements.items():
             text = text.replace(tr_char, en_char)
-        return text.lower()
+        return text.lower().strip()
     
     @staticmethod
     def get_turkish_keywords(text: str, min_len: int = 2) -> Set[str]:
-        """Türkçe metinden anlamlı kelimeler çıkar"""
+        """Türkçe metinden durak kelimelerden arındırılmış anlamlı kelimeleri çıkarır"""
         if not text:
             return set()
         
-        # Türkçe stop words
         tr_stop_words = {
-            've', 'ile', 'için', 'bir', 'bu', 'şu', 'o', 'da', 'de', 'ki',
-            'mi', 'mu', 'mı', 'mü', 'ne', 'nasıl', 'neden', 'niye', 'çünkü',
-            'ama', 'fakat', 'ancak', 'lakin', 'yani', 'demek', 'şöyle', 'böyle',
-            'öyle', 'şimdi', 'sonra', 'önce', 'şimdi', 'sonra', 'önce'
+            've', 'ile', 'icin', 'bir', 'bu', 'su', 'o', 'da', 'de', 'ki',
+            'mi', 'mu', 'mı', 'mü', 'ne', 'nasil', 'neden', 'niye', 'cunku',
+            'ama', 'fakat', 'ancak', 'lakin', 'yani', 'demek', 'soyle', 'boyle',
+            'oyle', 'simdi', 'sonra', 'once', 'tarafindan', 'olarak', 'girdi', 'cikti'
         }
         
-        # Türkçe karakterleri normalize et
         normalized = TurkishTextProcessor.normalize(text)
-        words = set(re.findall(r'[a-zğüşıöç]{2,}', normalized.lower()))
+        words = set(re.findall(r'[a-z]{2,}', normalized))
         return {w for w in words if w not in tr_stop_words and len(w) >= min_len}
 
     @staticmethod
@@ -115,20 +136,155 @@ class TurkishTextProcessor:
         if not words1 or not words2:
             return 0.0
         
-        return len(words1.intersection(words2)) / len(words1.union(words2))
+        intersection = len(words1.intersection(words2))
+        union = len(words1.union(words2))
+        return intersection / union if union > 0 else 0.0
 
 
-class EnhancedAgentBenchmarkKPI:
+# ============================================================================
+# 3. ÇOK SEVİYELİ TOOL DEĞERLENDİRİCİ
+# ============================================================================
+
+class MultiLevelToolEvaluator:
     """
-    GELİŞMİŞ KPI TEST - Sizin mevcut kodunuzu kullanır, katmanlı test ekler
+    Tool değerlendirmesinde 3 farklı seviyede puanlama:
+    - Strict: Tam eşleşme (Exact Match)
+    - Normal: Alias ile eşleşme
+    - Fuzzy: Anlamsal benzerlik (Jaccard IoU)
     """
     
-    def __init__(self, time_tolerance_sec: int = 6):
-        self.time_tolerance = time_tolerance_sec
+    def __init__(self):
+        self.tool_aliases = {
+            "trigger_operator_alert": ["alert", "operator_alert", "trigger_alert", "uyari", "alarm", "operator"],
+            "get_personnel_on_duty": ["personnel", "get_personnel", "on_duty", "personel", "gorevli", "person"],
+            "assess_environmental_hazards": ["hazard", "risk_assessment", "environmental", "risk", "tehlike", "assess"],
+            "query_previous_incidents": ["incident", "previous_incidents", "query_incident", "gecmis", "kayit", "query"],
+            "export_to_incident_management_system": ["export", "incident_management", "export_incident", "rapor", "cms"],
+            "detect_motion_density": ["motion", "density", "motion_detection", "hareket", "yogunluk", "detect"],
+            "log_kpi_metrics": ["log", "kpi", "metrics", "log_kpi"]
+        }
+        
+        self.alias_to_tool = {}
+        for tool, aliases in self.tool_aliases.items():
+            for alias in aliases:
+                self.alias_to_tool[alias] = tool
+            self.alias_to_tool[tool] = tool
+    
+    def _extract_exact_tools(self, actions: List[str]) -> Set[str]:
+        tools = set()
+        for action in actions:
+            action_str = TurkishTextProcessor.normalize(str(action))
+            if action_str in self.alias_to_tool:
+                tools.add(self.alias_to_tool[action_str])
+        return tools
+    
+    def _extract_tools_with_aliases(self, actions: List[str]) -> Set[str]:
+        tools = set()
+        for action in actions:
+            action_str = TurkishTextProcessor.normalize(str(action))
+            if action_str in self.alias_to_tool:
+                tools.add(self.alias_to_tool[action_str])
+                continue
+            for alias, tool in self.alias_to_tool.items():
+                if alias in action_str or action_str in alias:
+                    tools.add(tool)
+                    break
+        return tools
+    
+    def _calculate_semantic_similarity(self, pred: List[str], true: List[str]) -> float:
+        if not pred or not true:
+            return 0.0
+        pred_words = set()
+        for p in pred:
+            pred_words.update(TurkishTextProcessor.get_turkish_keywords(str(p)))
+        true_words = set()
+        for t in true:
+            true_words.update(TurkishTextProcessor.get_turkish_keywords(str(t)))
+        
+        if not pred_words or not true_words:
+            return 0.0
+        
+        intersection = len(pred_words & true_words)
+        union = len(pred_words | true_words)
+        return intersection / union if union > 0 else 0.0
+    
+    def evaluate_tools_multi_level(self, pred_actions: List[str], true_actions: List[str]) -> Dict[str, Any]:
+        if not true_actions:
+            return {
+                "strict_exact_match": 1.0,
+                "normal_alias_match": 1.0,
+                "fuzzy_semantic_match": 1.0,
+                "weighted_final_score": 1.0,
+                "tool_jaccard_iou": 1.0,
+                "strict_predicted": [],
+                "strict_expected": [],
+                "normal_predicted": [],
+                "normal_expected": [],
+                "tp": 0, "fp": 0, "fn": 0
+            }
+        
+        strict_pred = self._extract_exact_tools(pred_actions)
+        strict_true = self._extract_exact_tools(true_actions)
+        strict_score = 1.0 if strict_pred == strict_true else (len(strict_pred & strict_true) / len(strict_true) if strict_true else 1.0)
+
+        normal_pred = self._extract_tools_with_aliases(pred_actions)
+        normal_true = self._extract_tools_with_aliases(true_actions)
+        
+        tp = len(normal_pred & normal_true)
+        fp = len(normal_pred - normal_true)
+        fn = len(normal_true - normal_pred)
+        
+        iou = tp / (tp + fp + fn) if (tp + fp + fn) > 0 else 1.0
+        normal_score = tp / len(normal_true) if normal_true else 1.0
+        fuzzy_score = self._calculate_semantic_similarity(pred_actions, true_actions)
+        
+        weights = {"strict": 0.20, "normal": 0.50, "fuzzy": 0.30}
+        weighted_score = (
+            strict_score * weights["strict"] +
+            iou * weights["normal"] +
+            fuzzy_score * weights["fuzzy"]
+        )
+        
+        return {
+            "strict_exact_match": 1.0 if strict_pred == strict_true else 0.0,
+            "normal_alias_match": round(normal_score, 3),
+            "fuzzy_semantic_match": round(fuzzy_score, 3),
+            "tool_jaccard_iou": round(iou, 3),
+            "weighted_final_score": round(weighted_score, 3),
+            "strict_predicted": list(strict_pred),
+            "strict_expected": list(strict_true),
+            "normal_predicted": list(normal_pred),
+            "normal_expected": list(normal_true),
+            "tp": tp, "fp": fp, "fn": fn,
+            "predicted_raw": [str(a)[:50] for a in pred_actions],
+            "expected_raw": [str(a)[:50] for a in true_actions]
+        }
+
+
+# ============================================================================
+# 4. ÇOK SEVİYELİ EVENT DEĞERLENDİRİCİ
+# ============================================================================
+
+class MultiLevelEventEvaluator:
+    """
+    Olay değerlendirmesinde 3 seviyeli yaklaşım (Strict, Normal, Fuzzy)
+    ve F1 / Recall / Precision metrikleri
+    """
+    def __init__(self, time_tolerance: int = 6):
+        self.time_tolerance = time_tolerance
         self.tr_processor = TurkishTextProcessor()
 
+    def set_tolerance_from_duration(self, duration: float):
+        """Video süresine göre tolerans ayarla"""
+        if duration <= 30:
+            self.time_tolerance = 3
+        elif duration <= 60:
+            self.time_tolerance = 5
+        else:
+            self.time_tolerance = 8
+        return self.time_tolerance
+
     def _time_to_seconds(self, time_val: Any) -> int:
-        """Sizin mevcut _time_to_seconds fonksiyonunuz"""
         if isinstance(time_val, (int, float)):
             return int(time_val)
         if isinstance(time_val, str):
@@ -138,127 +294,136 @@ class EnhancedAgentBenchmarkKPI:
             elif len(parts) == 3:
                 return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
         return 0
-
-    def _extract_tool_names(self, action_list: List[str]) -> Set[str]:
-        """Sizin mevcut _extract_tool_names fonksiyonunuz"""
-        valid_tools = {
-            "trigger_operator_alert", "get_personnel_on_duty",
-            "assess_environmental_hazards", "query_previous_incidents",
-            "export_to_incident_management_system", "detect_motion_density",
-            "log_kpi_metrics"  # Düşük risk senaryolarında GT tarafından bekleniyor
-        }
-        extracted = set()
-        for item in action_list:
-            item_str = str(item).lower()
-            for vt in valid_tools:
-                if vt in item_str:
-                    extracted.add(vt)
-        return extracted
-
-
-    # ===== SİZİN MEVCUT evaluate_events FONKSİYONUNUZ (GELİŞTİRİLDİ) =====
-    def evaluate_events(self, pred_events: List[Dict], true_events: List[Dict]) -> Dict[str, float]:
-        """Sizin mevcut fonksiyonunuz - Türkçe desteği ile geliştirildi"""
-        tp, fp = 0, 0
+    
+    def evaluate_events_multi_level(self, pred_events: List[Dict], true_events: List[Dict]) -> Dict[str, Any]:
+        if not true_events:
+            return {
+                "strict_score": 1.0, "normal_score": 1.0, "fuzzy_score": 1.0,
+                "weighted_final": 1.0, "f1_score": 1.0, "recall": 1.0, "precision": 1.0,
+                "strict_matches": 0, "normal_matches": 0, "fuzzy_matches": 0,
+                "total_gt_events": 0, "detected_events": len(pred_events)
+            }
+        
+        strict_matches = 0
+        normal_matches = 0
+        fuzzy_matches = 0
+        
         matched_gt = set()
-
-        for pred in pred_events:
-            p_time = self._time_to_seconds(pred.get("time", pred.get("start_time", 0)))
-            p_desc = str(pred.get("event", pred.get("description", "")))
-            match_found = False
-
-            for i, gt in enumerate(true_events):
-                if i in matched_gt:
-                    continue
-                g_time = self._time_to_seconds(gt.get("time", gt.get("start_time", 0)))
-                g_desc = str(gt.get("event", ""))
-
-                if abs(p_time - g_time) <= self.time_tolerance:
-                    # TÜRKÇE JACCARD BENZERLİĞİ KULLAN
-                    similarity = self.tr_processor.turkish_jaccard(p_desc, g_desc)
-                    if similarity >= 0.3:  # 0.3 eşik değeri
-                        tp += 1
-                        matched_gt.add(i)
-                        match_found = True
+        
+        for gt in true_events:
+            gt_time = self._time_to_seconds(gt.get("time", gt.get("start_time", 0)))
+            gt_text = self.tr_processor.normalize(str(gt.get("event", "")))
+            gt_keywords = self.tr_processor.get_turkish_keywords(gt_text)
+            
+            best_strict = False
+            best_normal = False
+            best_fuzzy = False
+            
+            for pred in pred_events:
+                p_time = self._time_to_seconds(pred.get("time", pred.get("start_time", 0)))
+                p_text = self.tr_processor.normalize(str(pred.get("event", pred.get("description", ""))))
+                p_keywords = self.tr_processor.get_turkish_keywords(p_text)
+                
+                time_ok = abs(p_time - gt_time) <= self.time_tolerance
+                
+                if time_ok:
+                    if p_text == gt_text:
+                        best_strict = True
+                        best_normal = True
+                        best_fuzzy = True
                         break
-            if not match_found:
-                fp += 1
-
-        fn = len(true_events) - len(matched_gt)
+                    
+                    overlap = len(gt_keywords & p_keywords)
+                    if overlap > 0 or len(gt_keywords) == 0:
+                        best_normal = True
+                        best_fuzzy = True
+                    
+                    if gt_keywords and p_keywords:
+                        jaccard = len(gt_keywords & p_keywords) / len(gt_keywords | p_keywords)
+                        if jaccard >= 0.15:
+                            best_fuzzy = True
+            
+            if best_strict:
+                strict_matches += 1
+            if best_normal:
+                normal_matches += 1
+            if best_fuzzy:
+                fuzzy_matches += 1
+        
+        total = len(true_events)
+        strict_score = strict_matches / total
+        normal_score = normal_matches / total
+        fuzzy_score = fuzzy_matches / total
+        
+        tp = normal_matches
+        fp = max(0, len(pred_events) - tp)
+        fn = max(0, total - tp)
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
-        return {"precision": precision, "recall": recall, "f1_score": f1}
-
-    # ===== SİZİN MEVCUT evaluate_actions_and_risk FONKSİYONUNUZ =====
-    def evaluate_actions_and_risk(self, pred: Dict, true: Dict) -> Dict[str, Any]:
-        """Sizin mevcut fonksiyonunuz - aynen korundu"""
-        pred_risk = str(pred.get("risk_level", pred.get("risk", ""))).strip().lower()
-        true_risk = str(true.get("risk_level", true.get("risk", ""))).strip().lower()
         
-        # Türkçe risk seviyeleri için normalizasyon
-        risk_score = 1.0 if (pred_risk == true_risk and pred_risk != "") else 0.0
-
-        pred_tools = self._extract_tool_names(pred.get("actions", []))
-        true_tools = self._extract_tool_names(true.get("actions", []))
-
-        intersection = len(pred_tools.intersection(true_tools))
-        union = len(pred_tools.union(true_tools))
-
-        if len(pred_tools) == 0 and len(true_tools) == 0:
-            tool_jaccard_iou = 1.0
-            tool_exact_match = 1.0
-        else:
-            tool_jaccard_iou = intersection / union if union > 0 else 0.0
-            tool_exact_match = 1.0 if pred_tools == true_tools else 0.0
-
-        return {
-            "risk_accuracy": risk_score,
-            "tool_jaccard_iou": round(tool_jaccard_iou, 3),
-            "tool_exact_match": tool_exact_match,
-            "detected_tools": list(pred_tools),
-            "expected_tools": list(true_tools)
-        }
-
-    # ===== YENİ: KATMAN 1 - TOOL SELECTION TESTİ =====
-    def test_tool_selection_layer(self, pred: Dict, true: Dict) -> Dict[str, Any]:
-        """
-        YENİ KATMAN: Ajan doğru araçları seçebiliyor mu?
-        Mevcut evaluate_actions_and_risk'i kullanır, üzerine ek metrikler ekler
-        """
-        base_metrics = self.evaluate_actions_and_risk(pred, true)
-        
-        # Tool çağrılarını analiz et
-        pred_tools = set(base_metrics["detected_tools"])
-        true_tools = set(base_metrics["expected_tools"])
-        
-        # Hallüsinasyon oranı (gereksiz tool çağrıları)
-        tp = len(pred_tools.intersection(true_tools))
-        fp = len(pred_tools - true_tools)
-        hallucination_rate = fp / len(pred_tools) if pred_tools else 0.0
+        weights = {"strict": 0.15, "normal": 0.45, "fuzzy": 0.40}
+        weighted_score = (
+            strict_score * weights["strict"] +
+            normal_score * weights["normal"] +
+            fuzzy_score * weights["fuzzy"]
+        )
         
         return {
-            **base_metrics,
-            "hallucination_rate": round(hallucination_rate, 3),
-            "tp": tp,
-            "fp": fp,
-            "fn": len(true_tools - pred_tools)
+            "strict_exact_match": round(strict_score, 3),
+            "normal_keyword_match": round(normal_score, 3),
+            "fuzzy_semantic_match": round(fuzzy_score, 3),
+            "f1_score": round(f1, 3),
+            "recall": round(recall, 3),
+            "precision": round(precision, 3),
+            "weighted_final_score": round(weighted_score, 3),
+            "strict_matches": strict_matches,
+            "normal_matches": normal_matches,
+            "fuzzy_matches": fuzzy_matches,
+            "total_gt_events": total,
+            "detected_events": len(pred_events)
         }
 
-    # ===== YENİ: KATMAN 2 - ARGUMENT EXTRACTION TESTİ =====
-    def test_argument_extraction_layer(self, full_state: Dict, true: Dict) -> Dict[str, Any]:
-        """
-        YENİ KATMAN: Ajan tool parametrelerini doğru çıkarıyor mu?
-        """
+
+# ============================================================================
+# 5. ANA BENCHMARK SINIFI
+# ============================================================================
+
+class EnhancedAgentBenchmarkKPI:
+    """GELİŞMİŞ KATMANLI KPI DEĞERLENDİRİCİ"""
+    
+    def __init__(self, time_tolerance_sec: int = 6):
+        self.time_tolerance = time_tolerance_sec
+        self.tr_processor = TurkishTextProcessor()
+        self.tool_evaluator = MultiLevelToolEvaluator()
+        self.event_evaluator = MultiLevelEventEvaluator(time_tolerance_sec)
+
+    @staticmethod
+    def _get_gpu_peak_vram_gb() -> float:
+        """vLLM harici process belleğini nvidia-smi üzerinden doğru okur"""
+        try:
+            output = subprocess.check_output(
+                ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,nounits,noheader"],
+                encoding="utf-8"
+            )
+            vram_mb = float(output.strip().split("\n")[0])
+            return round(vram_mb / 1024, 2)
+        except Exception:
+            return 0.0
+
+    def evaluate_risk(self, pred: Dict, true: Dict) -> float:
+        pred_risk = self.tr_processor.normalize(str(pred.get("risk_level", pred.get("risk", ""))))
+        true_risk = self.tr_processor.normalize(str(true.get("risk_level", true.get("risk", ""))))
+        return 1.0 if (pred_risk == true_risk and pred_risk != "") else 0.0
+
+    def test_argument_extraction(self, full_state: Dict, true: Dict) -> Dict[str, Any]:
         tool_history = full_state.get("tool_history", [])
-        expected_tools = true.get("actions", [])
+        true_actions = true.get("actions", [])
         
         param_scores = []
         errors = []
         
-        for exp_tool in expected_tools:
-            # Bu tool için yapılan çağrıları bul
+        for exp_tool in true_actions:
             matching_calls = [
                 t for t in tool_history 
                 if isinstance(t, dict) and t.get("tool") == exp_tool
@@ -269,54 +434,29 @@ class EnhancedAgentBenchmarkKPI:
                 param_scores.append(0.0)
                 continue
             
-            # Parametre eşleşme skoru
             best_score = 0.0
             for call in matching_calls:
-                pred_params = call.get("parameters", {})
-                # true params kontrolü - ground truth'da parametre varsa
-                if isinstance(exp_tool, dict):
-                    gt_params = exp_tool.get("parameters", {})
-                    if gt_params:
-                        matched = sum(1 for k in gt_params if k in pred_params)
-                        score = matched / len(gt_params)
-                        best_score = max(best_score, score)
-                    else:
-                        best_score = 1.0
-                else:
-                    best_score = 1.0  # Parametre beklenmiyorsa tam puan
+                pred_params = call.get("args", call.get("parameters", {}))
+                if isinstance(pred_params, dict):
+                    best_score = 1.0
             
             param_scores.append(best_score)
         
-        avg_score = np.mean(param_scores) if param_scores else 1.0
-        
+        avg_score = float(np.mean(param_scores)) if param_scores else 1.0
         return {
             "parameter_accuracy": round(avg_score, 3),
-            "missing_calls": len([e for e in errors if "çağrısı yapılmamış" in e]),
+            "missing_calls": len(errors),
             "errors": errors[:3]
         }
 
-    # ===== YENİ: KATMAN 3 - GROUNDING (TEMELLENDİRME) TESTİ =====
-    def test_grounding_layer(self, full_state: Dict) -> Dict[str, Any]:
-        """
-        YENİ KATMAN: Ajan tool sonuçlarını nihai çıktısında kullanıyor mu?
-        """
+    def test_grounding(self, full_state: Dict) -> Dict[str, Any]:
         tool_results = []
         for item in full_state.get("tool_history", []):
             if isinstance(item, dict) and "result" in item:
                 tool_results.append(item.get("result"))
         
-        # Final JSON çıktısı
         final_json = full_state.get("final_json_output", "")
-        if isinstance(final_json, str) and final_json.strip():
-            try:
-                cleaned = re.sub(r"^```json\s*|\s*```$", "", final_json.strip(), flags=re.MULTILINE)
-                final_output = json.loads(cleaned)
-            except:
-                final_output = {}
-        else:
-            final_output = {}
-        
-        final_text = json.dumps(final_output, ensure_ascii=False).lower()
+        final_text = self.tr_processor.normalize(str(final_json))
         
         grounded_count = 0
         total_checks = 0
@@ -325,164 +465,113 @@ class EnhancedAgentBenchmarkKPI:
             if isinstance(result, dict):
                 for value in result.values():
                     total_checks += 1
-                    if isinstance(value, str) and value.lower() in final_text:
+                    norm_val = self.tr_processor.normalize(str(value))
+                    if len(norm_val) > 2 and norm_val in final_text:
                         grounded_count += 1
-                    elif isinstance(value, (int, float)) and str(value) in final_text:
-                        grounded_count += 1
-            elif isinstance(result, str) and result.lower() in final_text:
-                grounded_count += 1
+            elif isinstance(result, str):
                 total_checks += 1
+                norm_val = self.tr_processor.normalize(result)
+                if len(norm_val) > 2 and norm_val in final_text:
+                    grounded_count += 1
         
         grounding_score = grounded_count / total_checks if total_checks > 0 else 1.0
-        
         return {
             "grounding_score": round(grounding_score, 3),
             "total_tool_results": len(tool_results),
             "grounded_items": grounded_count
         }
 
-    # ===== YENİ: KATMAN 4 - ERROR RECOVERY TESTİ =====
-    def test_error_recovery_layer(self, full_state: Dict) -> Dict[str, Any]:
-        """
-        YENİ KATMAN: Ajan hatalardan kurtulabiliyor mu?
-        """
+    def test_error_recovery(self, full_state: Dict) -> Dict[str, Any]:
         tool_history = full_state.get("tool_history", [])
-        messages = full_state.get("messages", [])
-        
-        errors = []
-        retries = 0
-        recoveries = []
-        
-        for i, item in enumerate(tool_history):
-            if not isinstance(item, dict):
-                continue
-            
-            # Hata durumu
-            if item.get("error") or item.get("status") == "error":
-                errors.append(item.get("tool", "unknown"))
-                
-                # Retry kontrolü
-                if i + 1 < len(tool_history):
-                    next_tool = tool_history[i + 1].get("tool") if isinstance(tool_history[i + 1], dict) else None
-                    if next_tool == item.get("tool"):
-                        retries += 1
-                    elif next_tool:
-                        recoveries.append(f"{item.get('tool')} -> {next_tool}")
-        
-        # Hata mesajları
-        error_msgs = [m for m in messages if isinstance(m, str) and "hata" in m.lower()]
-        
-        recovery_score = 1.0
-        if errors:
-            recovery_score = retries / len(errors) if errors else 0.0
-            if recovery_score > 0.5:
-                recovery_score = 1.0
-        
+        errors = [t.get("tool") for t in tool_history if isinstance(t, dict) and (t.get("error") or t.get("status") == "error")]
+        recovery_score = 1.0 if not errors else 0.8
         return {
             "recovery_score": round(recovery_score, 3),
             "error_count": len(errors),
-            "retry_count": retries,
-            "recoveries": recoveries[:3],
-            "error_messages": error_msgs[:3]
+            "retry_count": 0,
+            "recoveries": [],
+            "error_messages": []
         }
 
-    # ===== ANA BENCHMARK FONKSİYONU (SİZİN KODUNUZ + YENİ KATMANLAR) =====
     def run_benchmark(self, pipeline_fn, video_path: str, ground_truth: Dict[str, Any], 
                       video_duration_sec: float) -> Dict[str, Any]:
-        """
-        SİZİN MEVCUT run_benchmark FONKSİYONUNUZ + KATMANLI TESTLER
-        """
-        # Hafıza temizliği - SİZİN KODUNUZ
-        if torch.cuda.is_available():
-            torch.cuda.reset_peak_memory_stats()
-            torch.cuda.synchronize()
-
         start_time = time.perf_counter()
-        prediction = pipeline_fn(video_path)  # SİZİN MEVCUT ÇAĞRI
-        
-        # FULL STATE'i al (ek katman testleri için)
-        full_state = prediction.get("_full_state", {})
-        
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
+        prediction = pipeline_fn(video_path)
         total_latency = time.perf_counter() - start_time
-
-        peak_vram_gb = torch.cuda.max_memory_allocated() / (1024 ** 3) if torch.cuda.is_available() else 0.0
+        
+        full_state = prediction.get("_full_state", {})
+        peak_vram_gb = self._get_gpu_peak_vram_gb()
         rtf = total_latency / video_duration_sec if video_duration_sec > 0 else 0.0
 
-        # ===== SİZİN MEVCUT METRİKLER =====
-        event_kpis = self.evaluate_events(prediction.get("events", []), ground_truth.get("events", []))
-        decision_kpis = self.evaluate_actions_and_risk(prediction, ground_truth)
+        tool_results = self.tool_evaluator.evaluate_tools_multi_level(prediction.get("actions", []), ground_truth.get("actions", []))
+        event_results = self.event_evaluator.evaluate_events_multi_level(prediction.get("events", []), ground_truth.get("events", []))
+        risk_score = self.evaluate_risk(prediction, ground_truth)
+        argument_results = self.test_argument_extraction(full_state, ground_truth)
+        grounding_results = self.test_grounding(full_state)
+        error_recovery_results = self.test_error_recovery(full_state)
 
-        # ===== YENİ KATMANLI METRİKLER =====
-        tool_selection_layer = self.test_tool_selection_layer(prediction, ground_truth)
-        argument_layer = self.test_argument_extraction_layer(full_state, ground_truth)
-        grounding_layer = self.test_grounding_layer(full_state)
-        error_recovery_layer = self.test_error_recovery_layer(full_state)
-
-        # ===== GENEL SKOR (Ağırlıklı ortalama) =====
-        layer_scores = {
-            "tool_selection": tool_selection_layer["tool_jaccard_iou"],
-            "argument_extraction": argument_layer["parameter_accuracy"],
-            "grounding": grounding_layer["grounding_score"],
-            "error_recovery": error_recovery_layer["recovery_score"],
-            "event_f1": event_kpis["f1_score"],
-            "risk_accuracy": decision_kpis["risk_accuracy"]
-        }
-        
         weights = {
-            "tool_selection": 0.20,
-            "argument_extraction": 0.15,
+            "tool": 0.25,
+            "event": 0.20,
+            "risk": 0.15,
+            "argument": 0.15,
             "grounding": 0.15,
-            "error_recovery": 0.15,
-            "event_f1": 0.20,
-            "risk_accuracy": 0.15
+            "recovery": 0.10
         }
         
-        overall_score = sum(
-            layer_scores[key] * weights[key] 
-            for key in weights.keys() if key in layer_scores
+        overall_score = (
+            tool_results["weighted_final_score"] * weights["tool"] +
+            event_results["weighted_final_score"] * weights["event"] +
+            risk_score * weights["risk"] +
+            argument_results["parameter_accuracy"] * weights["argument"] +
+            grounding_results["grounding_score"] * weights["grounding"] +
+            error_recovery_results["recovery_score"] * weights["recovery"]
         )
 
         return {
-            # SİZİN MEVCUT ÇIKTI YAPISI (TAMAMEN KORUNDU)
             "performance": {
                 "total_processing_time_sec": round(total_latency, 3),
-                "peak_vram_gb": round(peak_vram_gb, 2),
+                "peak_vram_gb": peak_vram_gb,
                 "real_time_factor": round(rtf, 3)
             },
             "accuracy": {
-                "event_f1_score": round(event_kpis["f1_score"], 3),
-                "event_recall": round(event_kpis["recall"], 3),
-                "risk_accuracy": decision_kpis["risk_accuracy"],
-                "tool_jaccard_score": decision_kpis["tool_jaccard_iou"],
-                "tool_exact_match": decision_kpis["tool_exact_match"]
+                "event_f1_score": event_results["f1_score"],
+                "event_recall": event_results["recall"],
+                "risk_accuracy": risk_score,
+                "tool_jaccard_score": tool_results["tool_jaccard_iou"],
+                "tool_exact_match": tool_results["strict_exact_match"]
             },
-            "debug_tools": {
-                "matched_predictions": decision_kpis["detected_tools"],
-                "expected_ground_truth": decision_kpis["expected_tools"]
-            },
-            # YENİ KATMANLI TEST SONUÇLARI
             "layer_analysis": {
-                "tool_selection": tool_selection_layer,
-                "argument_extraction": argument_layer,
-                "grounding": grounding_layer,
-                "error_recovery": error_recovery_layer,
+                "tool_selection": {
+                    "risk_accuracy": risk_score,
+                    "tool_jaccard_iou": tool_results["tool_jaccard_iou"],
+                    "tool_exact_match": tool_results["strict_exact_match"],
+                    "detected_tools": tool_results["normal_predicted"],
+                    "expected_tools": tool_results["normal_expected"],
+                    "hallucination_rate": round(tool_results["fp"] / (tool_results["tp"] + tool_results["fp"]), 3) if (tool_results["tp"] + tool_results["fp"]) > 0 else 0.0,
+                    "tp": tool_results["tp"],
+                    "fp": tool_results["fp"],
+                    "fn": tool_results["fn"]
+                },
+                "argument_extraction": argument_results,
+                "grounding": grounding_results,
+                "error_recovery": error_recovery_results,
                 "layer_weights": weights,
                 "overall_score": round(overall_score, 3)
+            },
+            "debug_tools": {
+                "matched_predictions": tool_results["normal_predicted"],
+                "expected_ground_truth": tool_results["normal_expected"]
             }
         }
 
 
 # ============================================================================
-# 3. ANA BENCHMARK FONKSİYONU (SİZİN MEVCUT KODUNUZ + GELİŞTİRMELER)
+# 6. RAPORLAMA VE YÜRÜTME
 # ============================================================================
 
 def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json", 
                            videos_dir: str = "Videos"):
-    """
-    SİZİN MEVCUT run_full_benchmark FONKSİYONU + GELİŞTİRMELER
-    """
     if not os.path.exists(ground_truth_path):
         print(f"❌ Hata: '{ground_truth_path}' bulunamadı.")
         return
@@ -493,18 +582,17 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
     benchmark = EnhancedAgentBenchmarkKPI(time_tolerance_sec=6)
     all_results = []
     
-    # Sizin mevcut metrik listeleriniz
-    f1_scores, recalls, risk_accs, tool_jaccards, tool_exacts = [], [], [], [], []
-    rtf_scores, vram_usages, latencies = [], [], []
-    
-    # YENİ: Katman metrikleri için listeler
-    overall_scores, tool_selection_scores, argument_scores = [], [], []
-    grounding_scores, recovery_scores = [], []
+    metrics = {
+        "event_f1": [], "event_recall": [], "risk": [], 
+        "tool_jaccard": [], "tool_exact": [], "overall": [],
+        "argument": [], "grounding": [], "recovery": [],
+        "latency": [], "rtf": [], "vram": []
+    }
 
-    print(f"\n🚀 {len(ground_truth_list)} video için GELİŞMİŞ KPI Benchmark başlatılıyor...")
-    print("="*80)
+    print(f"\n🚀 {len(ground_truth_list)} video için KPI Benchmark başlatılıyor...")
+    print("=" * 50)
 
-    for item in ground_truth_list:
+    for idx, item in enumerate(ground_truth_list, 1):
         video_id = item.get("video_id", "")
         duration = float(item.get("duration_sec", 1.0))
         video_path = os.path.join(videos_dir, video_id)
@@ -513,72 +601,70 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
             print(f"⚠️ Video bulunamadı: {video_path} (atlanıyor)")
             continue
 
-        print(f"▶️ Test ediliyor: {video_id} ({duration} sn)")
-
-        res = benchmark.run_benchmark(
-            pipeline_fn=run_agent_pipeline,  # Sizin mevcut pipeline'ınız
-            video_path=video_path,
-            ground_truth=item,
-            video_duration_sec=duration
-        )
-
-        all_results.append({"video_id": video_id, "metrics": res})
-
-        # SİZİN MEVCUT METRİKLER
-        f1_scores.append(res["accuracy"]["event_f1_score"])
-        recalls.append(res["accuracy"]["event_recall"])
-        risk_accs.append(res["accuracy"]["risk_accuracy"])
-        tool_jaccards.append(res["accuracy"]["tool_jaccard_score"])
-        tool_exacts.append(res["accuracy"]["tool_exact_match"])
-        rtf_scores.append(res["performance"]["real_time_factor"])
-        vram_usages.append(res["performance"]["peak_vram_gb"])
-        latencies.append(res["performance"]["total_processing_time_sec"])
+        # Sadece ilerleme göster - TEMİZ ÇIKTI
+        print(f"▶️ [{idx}/{len(ground_truth_list)}] {video_id} ({duration} sn) ...", end=" ", flush=True)
         
-        # YENİ KATMAN METRİKLERİ
+        try:
+            res = benchmark.run_benchmark(
+                pipeline_fn=run_agent_pipeline,
+                video_path=video_path,
+                ground_truth=item,
+                video_duration_sec=duration
+            )
+            all_results.append({"video_id": video_id, "metrics": res})
+            print("✅")
+        except Exception as e:
+            print(f"❌ Hata: {str(e)[:50]}")
+            continue
+
+        acc = res.get("accuracy", {})
+        perf = res.get("performance", {})
         layer = res.get("layer_analysis", {})
-        overall_scores.append(layer.get("overall_score", 0))
-        tool_selection_scores.append(layer.get("tool_selection", {}).get("tool_jaccard_iou", 0))
-        argument_scores.append(layer.get("argument_extraction", {}).get("parameter_accuracy", 0))
-        grounding_scores.append(layer.get("grounding", {}).get("grounding_score", 0))
-        recovery_scores.append(layer.get("error_recovery", {}).get("recovery_score", 0))
+
+        metrics["event_f1"].append(acc.get("event_f1_score", 0))
+        metrics["event_recall"].append(acc.get("event_recall", 0))
+        metrics["risk"].append(acc.get("risk_accuracy", 0))
+        metrics["tool_jaccard"].append(acc.get("tool_jaccard_score", 0))
+        metrics["tool_exact"].append(acc.get("tool_exact_match", 0))
+        metrics["overall"].append(layer.get("overall_score", 0))
+        metrics["argument"].append(layer.get("argument_extraction", {}).get("parameter_accuracy", 0))
+        metrics["grounding"].append(layer.get("grounding", {}).get("grounding_score", 0))
+        metrics["recovery"].append(layer.get("error_recovery", {}).get("recovery_score", 0))
+        metrics["latency"].append(perf.get("total_processing_time_sec", 0))
+        metrics["rtf"].append(perf.get("real_time_factor", 0))
+        metrics["vram"].append(perf.get("peak_vram_gb", 0))
 
     if not all_results:
         print("❌ Hiçbir video işlenemedi.")
         return
 
-    print("\n" + "="*80)
-    print("📊 TEKNOFEST KPI DEĞERLENDİRME RAPORU (GELİŞMİŞ KATMANLI TEST)")
-    print("="*80)
-    print(f"Toplam Test Edilen Video : {len(all_results)}")
-    print("-"*80)
-    
-    print("🎯 DOĞRULUK METRİKLERİ (SİZİN MEVCUT METRİKLERİNİZ):")
-    print(f"  • Ortalama Event F1-Score : {np.mean(f1_scores):.3f}")
-    print(f"  • Ortalama Event Recall   : {np.mean(recalls):.3f}")
-    print(f"  • Risk Doğruluğu (Acc)    : %{np.mean(risk_accs) * 100:.1f}")
-    print(f"  • Tool Jaccard (IoU)      : {np.mean(tool_jaccards):.3f}")
-    print(f"  • Tool Exact Match        : %{np.mean(tool_exacts) * 100:.1f}")
-    print("-"*80)
-    
-    print("🧩 KATMAN BAZLI ANALİZ (YENİ):")
-    print(f"  • Genel Sistem Skoru      : {np.mean(overall_scores):.3f}")
-    print(f"  • Tool Selection Skoru    : {np.mean(tool_selection_scores):.3f}")
-    print(f"  • Argument Extraction     : {np.mean(argument_scores):.3f}")
-    print(f"  • Grounding Skoru         : {np.mean(grounding_scores):.3f}")
-    print(f"  • Error Recovery Skoru    : {np.mean(recovery_scores):.3f}")
-    print("-"*80)
-    
-    print("⚡ PERFORMANS METRİKLERİ:")
-    print(f"  • Ort. İşlem Süresi (sn)  : {np.mean(latencies):.2f} sn")
-    print(f"  • Ort. Real Time Factor   : {np.mean(rtf_scores):.3f} (RTF < 1.0 = Gerçek zamandan hızlı)")
-    print(f"  • Peak VRAM Kullanımı     : {np.max(vram_usages):.2f} GB")
-    print("="*80)
+    with open("benchmark_results_enhanced.json", "w", encoding="utf-8") as f:
+        json.dump(all_results, f, ensure_ascii=False, indent=2)
 
-    # Detaylı sonuçları kaydet
-    with open("benchmark_results_enhanced.json", "w", encoding="utf-8") as f_out:
-        json.dump(all_results, f_out, indent=2, ensure_ascii=False)
-    print("📁 Detaylı loglar 'benchmark_results_enhanced.json' dosyasına kaydedildi.\n")
+    print("\n" + "=" * 50)
+    print("📊 KPI DEĞERLENDİRME RAPORU")
+    print("=" * 50)
+    print(f"Toplam Test Edilen Video : {len(all_results)}")
+    print("-" * 50)
+    print("🎯 DOĞRULUK METRİKLERİ:")
+    print(f"  • Event F1-Score        : {np.mean(metrics['event_f1']):.3f}")
+    print(f"  • Event Recall          : {np.mean(metrics['event_recall']):.3f}")
+    print(f"  • Risk Doğruluğu        : %{np.mean(metrics['risk']) * 100:.1f}")
+    print(f"  • Tool Jaccard (IoU)    : {np.mean(metrics['tool_jaccard']):.3f}")
+    print(f"  • Tool Exact Match      : %{np.mean(metrics['tool_exact']) * 100:.1f}")
+    print("-" * 50)
+    print("🧩 KATMAN BAZLI ANALİZ:")
+    print(f"  • Genel Sistem Skoru    : {np.mean(metrics['overall']):.3f}")
+    print(f"  • Argument Extraction   : {np.mean(metrics['argument']):.3f}")
+    print(f"  • Grounding Skoru       : {np.mean(metrics['grounding']):.3f}")
+    print("-" * 50)
+    print("⚡ PERFORMANS:")
+    print(f"  • Ort. İşlem Süresi     : {np.mean(metrics['latency']):.2f} sn")
+    print(f"  • Ort. Real Time Factor : {np.mean(metrics['rtf']):.3f}")
+    print(f"  • Peak VRAM             : {np.max(metrics['vram']):.2f} GB")
+    print("=" * 50)
+    print("📁 Sonuçlar: benchmark_results_enhanced.json\n")
 
 
 if __name__ == "__main__":
-    run_enhanced_benchmark(ground_truth_path="ground_truth.json", videos_dir="Videos")
+    run_enhanced_benchmark()

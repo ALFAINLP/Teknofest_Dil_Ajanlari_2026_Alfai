@@ -11,6 +11,12 @@ from schemas.output_schema import FinalReportSchema
 from tools.helpers import _format_timestamp, _call_vllm_api
 from model_py.services.vision_service import analyze_video
 _world_state_cache = {}
+
+def validate_tool_output(tool_name, output):
+    """Çıktının beklenen formatta olduğunu doğrula"""
+    expected_schema = get_tool_schema(tool_name)
+    return validate_schema(output, expected_schema)
+    
 def _get_world_state(video_path: str):
     if video_path not in _world_state_cache:
         _world_state_cache[video_path] = analyze_video(video_path)

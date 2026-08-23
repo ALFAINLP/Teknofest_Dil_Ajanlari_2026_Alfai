@@ -32,16 +32,21 @@ def _call_vllm_api(system_prompt: str, user_prompt: str, model_name: str, max_to
     else:
         vllm_url = f"{base_url}/v1/chat/completions"
     
-    # Çoklu modallı (Video + Metin) veya Salt Metin durumuna göre payload yapısı
+   # Çoklu modallı (Video + Metin) veya Salt Metin durumuna göre payload yapısı
     # 🟢 DÜZELTME: vLLM'in beklediği katı role/content yapısına ve OpenAI standardına uyum
     user_content = []
     if video_path:
-        # Qwen-VL vLLM dökümantasyonuna uygun standart format
-        abs_path = str(pathlib.Path(video_path).absolute())
+        # 🟢 DÜZELTME: Docker'ın beklediği sanal yola çevir
+        # video_path tam bir yol olsa bile sadece dosya adını alıyoruz (örn: video.mp4)
+        file_name = pathlib.Path(video_path).name 
+        
+        # Docker'a verdiğimiz izin klasörüne ekliyoruz (/tmp)
+        docker_path = f"/tmp/{file_name}"
         
         user_content.append({
             "type": "video_url",
-            "video_url": {"url": f"file://{abs_path}"}
+            # pathlib.Path.as_uri() otomatik olarak file:///tmp/... formatına çevirir
+            "video_url": {"url": pathlib.Path(docker_path).as_uri()} 
         })
         
     user_content.append({"type": "text", "text": user_prompt})

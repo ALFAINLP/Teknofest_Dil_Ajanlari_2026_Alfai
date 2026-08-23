@@ -1,0 +1,1146 @@
+[
+  {
+    "video_id": "test_video_001.mp4",
+    "duration_sec": 26,
+    "summary": "Damperli kamyonun boşaltma yaptığı alana yaklaşan işçiye, geri manevra yapan ikinci bir hafriyat kamyonu çarpmış ve işçi hareketsiz kalarak ağır iş kazası gerçekleşmiştir.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 4,
+        "end_time": 8,
+        "event": "İşçi damperli kamyonun arkasındaki kör noktaya girdi",
+        "is_critical": false
+      },
+      {
+        "time": "00:12",
+        "start_time": 12,
+        "end_time": 17,
+        "event": "İkinci hafriyat kamyonu alana geri manevra yaparak yanaştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:19",
+        "start_time": 18,
+        "end_time": 22,
+        "event": "Kamyon işçiye çarptı ve işçi yerde hareketsiz kaldı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_002.mp4",
+    "duration_sec": 65,
+    "summary": "Forklift operatörü ilerlerken bir yere çarpmış ve asansörde duran kişi yere düşmüştür. Sonrasında operatördeki kişi yardıma inmiş, ancak makinenin çalışır durumda olması sebebiyle makine düşen kişinin üzerinen geçiyor.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:07",
+        "start_time": 7,
+        "end_time": 12,
+        "event": "Forklift sürücüsü araçtan indi ve ön kaldırma mekanizmasının önüne geçti",
+        "is_critical": false
+      },
+      {
+        "time": "00:21",
+        "start_time": 20,
+        "end_time": 27,
+        "event": "Kaldırma mekanizması operatörün üzerine düştü ve operatör ezilerek yere yığıldı",
+        "is_critical": true
+      },
+      {
+        "time": "00:41",
+        "start_time": 40,
+        "end_time": 50,
+        "event": "Çevredeki personel durumu fark ederek olay yerine koştu",
+        "is_critical": false
+      },
+      {
+        "time": "00:58",
+        "start_time": 57,
+        "end_time": 65,
+        "event": "Personel yaralı operatöre ilk müdahaleyi yapmaya başladı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_003.mp4",
+    "duration_sec": 116,
+    "summary": "Sokağa gelen şüpheli beyaz bir araçtan inen iki şahıs, sokakta park halinde duran aracın kaputunu zorla açarak akü/motor parçası hırsızlığı gerçekleştirmiş ve araçlarına binerek olay yerinden kaçmıştır.",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:15",
+        "start_time": 10,
+        "end_time": 23,
+        "event": "Şüpheli araç sokağa girdi ve park halindeki aracın arkasına yanaştı",
+        "is_critical": false
+      },
+      {
+        "time": "00:30",
+        "start_time": 24,
+        "end_time": 42,
+        "event": "Araçtan inen şahıslar park halindeki aracın tekerlek ve kaput kısmını kurcaladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:45",
+        "start_time": 43,
+        "end_time": 70,
+        "event": "Şüpheliler park halindeki aracın motor kaputunu açarak parça hırsızlığı yaptı",
+        "is_critical": true
+      },
+      {
+        "time": "01:15",
+        "start_time": 71,
+        "end_time": 88,
+        "event": "Çalınan malzeme araca yüklendi ve şüpheliler olay yerinden araçla uzaklaştı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "detect_motion_density",
+      "query_previous_incidents",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_004.mp4",
+    "duration_sec": 7,
+    "summary": "Verdiğiniz doğrultuda güncellenen özet: Mekana silahla giren yeni bir kişi panik ve korkuya yol açmış, insanların kaçışması ve arbede sırasında sandalyeler düşmüş, şahıs kısa süre sonra silahla ateş etmeye başlamıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:01",
+        "start_time": 0,
+        "end_time": 2,
+        "event": "Mekan içerisindeki şahıslar arasında fiziki temas ve kavga başladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:03",
+        "start_time": 2,
+        "end_time": 5,
+        "event": "Şahıslardan biri sandalyeyi alarak diğer kişilere fırlattı",
+        "is_critical": true
+      },
+      {
+        "time": "00:05",
+        "start_time": 4,
+        "end_time": 7,
+        "event": "Çevredeki kişiler panikle kaçışarak masaların arkasına saklandı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_005.mp4",
+    "duration_sec": 47,
+    "summary": "Atölyede çalışan işçinin eli ve gövdesi dönen rulo/silindir makinesine kaptırılmış, durumu fark eden çevredekiler acil durdurma yaparak sıkışan işçiyi makineden kurtarmıştır.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:08",
+        "start_time": 6,
+        "end_time": 11,
+        "event": "İşçi çalışan sarım makinesine yaklaşarak elle müdahale etti",
+        "is_critical": false
+      },
+      {
+        "time": "00:12",
+        "start_time": 11,
+        "end_time": 16,
+        "event": "İşçi kolunu ve gövdesini dönen silindire kaptırarak makineye sıkıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:18",
+        "start_time": 16,
+        "end_time": 25,
+        "event": "Diğer çalışanlar panikle yardıma koştu ve makineyi acil durdurdu",
+        "is_critical": false
+      },
+      {
+        "time": "00:30",
+        "start_time": 26,
+        "end_time": 46,
+        "event": "Çalışanlar sıkışan işçiyi silindirlerin arasından çıkardı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "query_previous_incidents",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_006.mp4",
+    "duration_sec": 17,
+    "summary": "Köprü/şantiye inşaat sahasında çelik palplanş ve ray profilinin vinçle çekilmesi esnasında gerilen metal parça hatta duran işçinin üzerine düşmüş ve ağır iş kazası gerçekleşmiştir.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:02",
+        "start_time": 0,
+        "end_time": 5,
+        "event": "İşçi çelik palplanş ve rayların bulunduğu hat üzerinde yürümeye başladı",
+        "is_critical": false
+      },
+      {
+        "time": "00:08",
+        "start_time": 6,
+        "end_time": 12,
+        "event": "Gerilim altındaki çelik profil kırılarak aniden fırladı ve işçiye çarptı",
+        "is_critical": true
+      },
+      {
+        "time": "00:14",
+        "start_time": 13,
+        "end_time": 17,
+        "event": "Operatör acil durum ikazında bulunarak iş makinesinden indi ve yardıma koştu",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "assess_environmental_hazards",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_007.mp4",
+    "duration_sec": 13,
+    "summary": "Tır dorsesi üzerinde çelik rulo saç yüklemesi yapılırken forkliftin yükü kontrolsüz şekilde dorseye bırakması sonucu tonlarca ağırlıktaki rulo devrilmiş, dorse üzerindeki işçi ani refleksle ezilmekten son anda kurtularak yere kapaklanmıştır.",
+    "risk": "Yüksek",
+    "risk_score": 80,
+    "events": [
+      {
+        "time": "00:02",
+        "start_time": 0,
+        "end_time": 6,
+        "event": "İşçi askıdaki ağır yükün hemen yanında dorsede ayakta bekledi",
+        "is_critical": false
+      },
+      {
+        "time": "00:08",
+        "start_time": 7,
+        "end_time": 10,
+        "event": "Çelik rulo dorseye kontrolsüz devrildi ve işçi kaçarak yere düştü",
+        "is_critical": true
+      },
+      {
+        "time": "00:11",
+        "start_time": 10,
+        "end_time": 13,
+        "event": "Ağır yük devrilmeye devam etti ve işçi sürünerek alandan uzaklaştı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_008.mp4",
+    "duration_sec": 35,
+    "summary": "Endüstriyel metal işleme ve döküm tesisindeki pres/ekstrüzyon hattında hidrolik sızıntı sonucu şiddetli alev parlaması başlamış, çalışanlar tahliye edilmeye çalışırken hat boyunca büyük bir infilak/patlama gerçekleşerek tesis ağır hasar almıştır.",
+    "risk": "Kritik",
+    "risk_score": 100,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 3,
+        "end_time": 7,
+        "event": "Makine gövdesinde kıvılcım ve ilk alev parlaması meydana geldi",
+        "is_critical": true
+      },
+      {
+        "time": "00:09",
+        "start_time": 7,
+        "end_time": 17,
+        "event": "Alevler makineyi sardı ve çalışanlar acil tahliye olmaya başladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:22",
+        "start_time": 21,
+        "end_time": 35,
+        "event": "Tesis içerisinde zincirleme patlama ve büyük yangın meydana geldi",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_009.mp4",
+    "duration_sec": 108,
+    "summary": "Akaryakıt istasyonunda araca yakıt doldurulken birden aracın yakıt deposunda büyük bir patlama ve yangın meydana gelmiş, istasyondaki vatandaşlar kaçışırken yaralı bir kişi alevlerin arasından sürüklenerek tahliye edilmiştir.",
+    "risk": "Kritik",
+    "risk_score": 100,
+    "events": [
+      {
+        "time": "00:08",
+        "start_time": 6,
+        "end_time": 11,
+        "event": "Araç kontrolsüz şekilde akaryakıt pompasına çarptı",
+        "is_critical": true
+      },
+      {
+        "time": "00:18",
+        "start_time": 16,
+        "end_time": 25,
+        "event": "Hasar gören yakıt pompasında şiddetli patlama ve yangın başladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:28",
+        "start_time": 25,
+        "end_time": 45,
+        "event": "Personel ve vatandaşlar yaralı kişiyi alevlerin önünden tahliye etti",
+        "is_critical": true
+      },
+      {
+        "time": "00:50",
+        "start_time": 46,
+        "end_time": 105,
+        "event": "Yoğun siyah duman ve alevler istasyonu sardı, alan tamamen boşaltıldı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_010.mp4",
+    "duration_sec": 26,
+    "summary": "Elektronik tamir atölyesinde oturan şahsın elindeki batarya/elektronik cihaz aniden alev alarak patlamış, şahıs panikle cihazı yere fırlatmış ve odada yoğun duman oluşmuştur.",
+    "risk": "Yüksek",
+    "risk_score": 80,
+    "events": [
+      {
+        "time": "00:05",
+        "start_time": 4,
+        "end_time": 9,
+        "event": "Şahsın elindeki batarya aniden alev aldı ve patladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:09",
+        "start_time": 8,
+        "end_time": 15,
+        "event": "Şahıs panikle yanan cihazı yere fırlattı ve odaya yoğun duman yayıldı",
+        "is_critical": true
+      },
+      {
+        "time": "00:18",
+        "start_time": 16,
+        "end_time": 25,
+        "event": "Odaya gelen diğer çalışanla birlikte yanan batarya kontrol edildi",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_011.mp4",
+    "duration_sec": 60,
+    "summary": "Gece saatlerinde dükkanın cam giriş kapısını minibüs/kamyonet ile geri manevra yaparak kıran maskeli hırsızlar, içerideki ATM/para kasasını zorla söküp araca yükleyerek olay yerinden kaçmıştır.",
+    "risk": "Yüksek",
+    "risk_score": 85,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 3,
+        "end_time": 9,
+        "event": "Araç dükkanın cam kapısına geri manevrayla çarparak kapıyı kırdı",
+        "is_critical": true
+      },
+      {
+        "time": "00:10",
+        "start_time": 9,
+        "end_time": 32,
+        "event": "Maskeli şahıslar içeri girerek ATM makinesini yerinden sökmeye çalıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:34",
+        "start_time": 33,
+        "end_time": 38,
+        "event": "Araç dükkan önüne tekrar geri yanaşarak yükleme pozisyonu aldı",
+        "is_critical": false
+      },
+      {
+        "time": "00:43",
+        "start_time": 39,
+        "end_time": 54,
+        "event": "Şüpheliler ATM cihazını aracın bagajına yükleyerek olay yerinden kaçtı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "query_previous_incidents",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_012.mp4",
+    "duration_sec": 113,
+    "summary": "Gece saatlerinde bir SUV/aracın marketin cam vitrinine çarparak içeri girmesi sonucu dükkan tahrip edilmiş, ardından maskeli ve kapüşonlu iki şahıs içeri girerek kasa hırsızlığı yapıp olay yerinden uzaklaşmıştır.",
+    "risk": "Yüksek",
+    "risk_score": 85,
+    "events": [
+      {
+        "time": "00:09",
+        "start_time": 7,
+        "end_time": 16,
+        "event": "Araç market vitrinine çarparak içeri girdi ve rafları yıktı",
+        "is_critical": true
+      },
+      {
+        "time": "00:24",
+        "start_time": 22,
+        "end_time": 45,
+        "event": "Şüpheli şahıs içeri girerek kasa ve tezgah arkasını kurcaladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:48",
+        "start_time": 46,
+        "end_time": 75,
+        "event": "Şüpheli dükkandaki malzemeleri dışarıya doğru taşımaya başladı",
+        "is_critical": true
+      },
+      {
+        "time": "01:05",
+        "start_time": 100,
+        "end_time": 113,
+        "event": "İki şüpheli malzemeleri araca yükleyerek olay yerinden kaçtı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "query_previous_incidents",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_013.mp4",
+    "duration_sec": 26,
+    "summary": "Yolda ahşap/panel yükü taşıyan forkliftin motoru görmesi sonucunda ani fren yaparak dengesini kaybediyor ön aksı üzerine yatması sonucu yük yere devriliyor, bu esnada forkliftin önünden geçen motosikletli sürücü yükün altında kalmaktan son anda kurtulmuştur.",
+    "risk": "Yüksek",
+    "risk_score": 80,
+    "events": [
+      {
+        "time": "00:01",
+        "start_time": 0,
+        "end_time": 4,
+        "event": "Forklift yolda yüksek yükle ilerlerken motosikletli araç önünden geçti",
+        "is_critical": false
+      },
+      {
+        "time": "00:03",
+        "start_time": 2,
+        "end_time": 7,
+        "event": "Forklift ani frenle öne yattı ve yük yola devrildi",
+        "is_critical": true
+      },
+      {
+        "time": "00:08",
+        "start_time": 7,
+        "end_time": 26,
+        "event": "Devrilen malzeme yola saçıldı ve operatör kaza alanını kontrol etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_014.mp4",
+    "duration_sec": 75,
+    "summary": "Sokakta yürüyen şahsa arkadan yaklaşan saldırganların sopalarla saldırması sonucu kargaşa çıkmış, çevredeki dükkan sahipleri kapılarını kapatarak korunmaya çalışırken olay yerine kalabalık toplanmıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:08",
+        "start_time": 5,
+        "end_time": 12,
+        "event": "Sokakta yürüyen şahıs arkadan koşan şüpheliler tarafından takip edildi",
+        "is_critical": false
+      },
+      {
+        "time": "00:13",
+        "start_time": 12,
+        "end_time": 25,
+        "event": "Saldırganlar şahsa sopalarla saldırarak darp etti",
+        "is_critical": true
+      },
+      {
+        "time": "00:26",
+        "start_time": 25,
+        "end_time": 45,
+        "event": "Saldırganlar tehdit savurarak sokakta bekledi, çevredekiler kaçıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:55",
+        "start_time": 46,
+        "end_time": 75,
+        "event": "Saldırganlar ayrıldı ve çevre sakinleri olay yerinde toplandı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "detect_motion_density",
+      "query_previous_incidents",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_015.mp4",
+    "duration_sec": 111,
+    "summary": "Diyaliz / hastane tedavi odasında bir şahsın diğer bir hastanın üzerine yanıcı madde dökerek ateşe vermesi sonucu şiddetli patlama ve yangın çıkmış, oda saniyeler içinde alev ve yoğun dumanla kaplanmıştır.",
+    "risk": "Kritik",
+    "risk_score": 100,
+    "events": [
+      {
+        "time": "00:38",
+        "start_time": 35,
+        "end_time": 44,
+        "event": "Şahıs yatan hastanın üzerine yanıcı sıvı döktü",
+        "is_critical": true
+      },
+      {
+        "time": "00:46",
+        "start_time": 45,
+        "end_time": 50,
+        "event": "Şahıs sıvıyı ateşe verdi ve odada şiddetli alev parlaması gerçekleşti",
+        "is_critical": true
+      },
+      {
+        "time": "00:51",
+        "start_time": 50,
+        "end_time": 110,
+        "event": "Alevler ve duman tüm tedavi odasını kapladı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_016.mp4",
+    "duration_sec": 38,
+    "summary": "Gece saatlerinde park halindeki aracın yanına elinde bidonla gelen bir şahıs, ön kaputa ve ön cama yanıcı madde dökerek aracı ateşe vermiş ve alevlerin hızla büyümesiyle olay yerinden kaçmıştır.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:02",
+        "start_time": 1,
+        "end_time": 6,
+        "event": "Şahıs park halindeki aracın kaputuna yanıcı sıvı döktü",
+        "is_critical": true
+      },
+      {
+        "time": "00:19",
+        "start_time": 18,
+        "end_time": 25,
+        "event": "Dökülen sıvı ateşe verildi ve araç alev alarak parladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:26",
+        "start_time": 25,
+        "end_time": 38,
+        "event": "Alevler aracı sardı ve yoğun duman çevreye yayıldı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_017.mp4",
+    "duration_sec": 134,
+    "summary": "Gece saatlerinde ticari işletmenin resepsiyon / giriş alanına giren kapüşonlu şüpheli, tezgah ve zemin üzerine yanıcı madde dökerek mekanı kasıtlı olarak ateşe vermiş ve büyük bir kundaklama yangını başlatarak kaçmıştır.",
+    "risk": "Kritik",
+    "risk_score": 100,
+    "events": [
+      {
+        "time": "00:03",
+        "start_time": 2,
+        "end_time": 10,
+        "event": "Şahıs resepsiyon alanına girerek tezgaha yanıcı sıvı döktü",
+        "is_critical": true
+      },
+      {
+        "time": "00:29",
+        "start_time": 28,
+        "end_time": 48,
+        "event": "Şahıs dökülen sıvıyı ateşe verdi ve alanda yangın başladı",
+        "is_critical": true
+      },
+      {
+        "time": "01:33",
+        "start_time": 92,
+        "end_time": 134,
+        "event": "Tezgahta büyük parlama gerçekleşti ve yangın tüm mekana yayıldı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_018.avi",
+    "duration_sec": 17,
+    "summary": "Tren/metro istasyonu çıkışında yayalar ve yolcular rutin şekilde yürümekte, ön planda bir kişi dans pratiği/hareketi yapmakta olup sahada herhangi bir güvenlik tehdidi veya kaza durumu gözlenmemektedir.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:01",
+        "start_time": 0,
+        "end_time": 8,
+        "event": "Yayalar istasyon turnikelerinden çıkarak alanda rutin şekilde yürüdü",
+        "is_critical": false
+      },
+      {
+        "time": "00:08",
+        "start_time": 8,
+        "end_time": 17,
+        "event": "Bir kişi dans hareketleri yaptı ve saha akışı güvenli devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_019.avi",
+    "duration_sec": 19,
+    "summary": "İstasyon önü yaya alanında bir kişinin çantasını havaya atıp tutarak şakalaştığı/oynadığı, yayaların rutin şekilde istasyondan girip çıktığı görülmekte olup sahada herhangi bir güvenlik tehdidi veya acil durum riski bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:01",
+        "start_time": 0,
+        "end_time": 7,
+        "event": "Şahıs yerdeki çantayı alarak havaya atıp tutma hareketi yaptı",
+        "is_critical": false
+      },
+      {
+        "time": "00:08",
+        "start_time": 7,
+        "end_time": 19,
+        "event": "Şahıs çantasını alıp uzaklaştı ve yayalar rutin yürüyüşüne devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_020.mp4",
+    "duration_sec": 124,
+    "summary": "Lojistik depoda koridorda duran personelin hemen arkasındaki ağır depolama rafları yapısal arıza/aşırı yük nedeniyle zincirleme şekilde çökmüş, çalışan saniyelerle enkaz altında kalmaktan kaçarak kurtulmuş ve tüm depo koridoru tonlarca malzeme ile kapanmıştır.",
+    "risk": "Kritik",
+    "risk_score": 100,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 2,
+        "end_time": 7,
+        "event": "Depo raflarında yapısal eğilme ve çökme başlangıcı görüldü",
+        "is_critical": true
+      },
+      {
+        "time": "00:08",
+        "start_time": 7,
+        "end_time": 14,
+        "event": "Raflar zincirleme devrildi ve personel koşarak enkazdan kaçtı",
+        "is_critical": true
+      },
+      {
+        "time": "00:15",
+        "start_time": 14,
+        "end_time": 25,
+        "event": "Ağır depo rafları tamamen yıkılarak koridoru malzeme ve tozla kapladı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_021.mp4",
+    "duration_sec": 29,
+    "summary": "Yoğun akan ana yolda şerit değiştiren beyaz SUV'un sıkıştırması sonucu motosiklet sürücüsü dengesini kaybederek yola devrilmiş, arkadan gelen araçlar ani fren yaparak durmuş ve sürücüler trafiği durdurarak yaralıya yardıma koşmuştur.",
+    "risk": "Yüksek",
+    "risk_score": 85,
+    "events": [
+      {
+        "time": "00:11",
+        "start_time": 8,
+        "end_time": 13,
+        "event": "Araçların arasında ilerleyen motosiklet sürücüsü şeritte sıkıştı",
+        "is_critical": false
+      },
+      {
+        "time": "00:14",
+        "start_time": 13,
+        "end_time": 18,
+        "event": "Motosiklet devrildi ve sürücüler asfalt üzerine savruldu",
+        "is_critical": true
+      },
+      {
+        "time": "00:19",
+        "start_time": 18,
+        "end_time": 25,
+        "event": "Sürücüler ayağa kalkarak trafiği durdurdu ve yardıma koşuldu",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_022.mp4",
+    "duration_sec": 40,
+    "summary": "Kavşak noktasında geçiş önceliği ve trafik kurallarına uyulmaması nedeniyle farklı zaman dilimlerinde peş peşe çoklu araç çarpışmaları ve maddi hasarlı/yaralanmalı trafik kazaları meydana gelmiştir.",
+    "risk": "Yüksek",
+    "risk_score": 85,
+    "events": [
+      {
+        "time": "00:05",
+        "start_time": 3,
+        "end_time": 8,
+        "event": "Kavşaktan dönüş alan araç ile düz ilerleyen minibüs çarpıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:17",
+        "start_time": 14,
+        "end_time": 21,
+        "event": "Kavşağa kontrolsüz giren iki binek araç çarpıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:27",
+        "start_time": 24,
+        "end_time": 33,
+        "event": "Kavşağa giren minibüs ile karşı şeritten gelen araç şiddetle çarpıştı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_023.mp4",
+    "duration_sec": 30,
+    "summary": "Kavşaktan geçiş yapan hasta taşıyan ambulans ile kavşaktaki kırmızı binek otomobilin şiddetle çarpışması sonucu ambulans takla atarak yan yatmış, yaralanmalı ve yüksek riskli ağır bir trafik kazası meydana gelmiştir.",
+    "risk": "Kritik",
+    "risk_score": 95,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 2,
+        "end_time": 6,
+        "event": "Kavşakta ambulans ile otomobil çarpışma rotasına girdi",
+        "is_critical": false
+      },
+      {
+        "time": "00:07",
+        "start_time": 6,
+        "end_time": 11,
+        "event": "Otomobil ambulansa yandan çarptı ve ambulans devrildi",
+        "is_critical": true
+      },
+      {
+        "time": "00:18",
+        "start_time": 17,
+        "end_time": 24,
+        "event": "Devrilen ambulans durdu ve ekipler olay yerine sevk edildi",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "detect_motion_density",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_024.mp4",
+    "duration_sec": 24,
+    "summary": "Gece saatlerinde şehir içi caddede ticari taksiler, binek araçlar ve ağır vasıtalar rutin trafik akışında güvenle seyretmekte olup herhangi bir kaza, ihlal veya risk durumu gözlenmemektedir.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:03",
+        "start_time": 0,
+        "end_time": 12,
+        "event": "Araçlar şeritlerinde kontrollü ve akıcı şekilde ilerledi",
+        "is_critical": false
+      },
+      {
+        "time": "00:18",
+        "start_time": 15,
+        "end_time": 24,
+        "event": "Ağır vasıta ve takip eden araçlar güvenli mesafede geçiş yaptı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_025.mp4",
+    "duration_sec": 15,
+    "summary": "Trafiğe kapalı yaya caddesinde üniformalı zabıta/belediye personeli rutin devriye yürüyüşü yapmakta, arka planda belediye bakım aracı çalışmakta ve yayalar güvenli şekilde alışveriş yapmaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:02",
+        "start_time": 0,
+        "end_time": 8,
+        "event": "Güvenlik personeli yaya yolunda rutin devriye görevini sürdürdü",
+        "is_critical": false
+      },
+      {
+        "time": "00:09",
+        "start_time": 8,
+        "end_time": 15,
+        "event": "Bakım çalışması ve yaya akışı güvenli şekilde devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_026.mp4",
+    "duration_sec": 35,
+    "summary": "Plaza/bina ana giriş kapısında çalışanlar, temizlik personeli ve ziyaretçiler düzenli şekilde binaya giriş çıkış yapmakta olup alanda herhangi bir güvenlik ihlali, tehlike veya kaza unsuru bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:03",
+        "start_time": 0,
+        "end_time": 10,
+        "event": "Personel ve ziyaretçiler turnikeden geçerek binaya giriş yaptı",
+        "is_critical": false
+      },
+      {
+        "time": "00:20",
+        "start_time": 18,
+        "end_time": 35,
+        "event": "Giriş kapısında kontrollü yaya geçişleri devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_027.mp4",
+    "duration_sec": 140,
+    "summary": "Çok şeritli şehir içi ana arterde belediye otobüsleri, ticari taksiler ve binek araçlar trafik ışıkları ve şerit kurallarına uygun şekilde düzenli akışını sürdürmekte olup herhangi bir tehlike, ihlal veya kaza durumu gözlenmemektedir.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:15",
+        "start_time": 0,
+        "end_time": 45,
+        "event": "Araçlar şerit kurallarına uygun şekilde düzenli seyretti",
+        "is_critical": false
+      },
+      {
+        "time": "01:10",
+        "start_time": 45,
+        "end_time": 140,
+        "event": "Işık değişimleriyle birlikte araç akışı güvenle devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_028.mp4",
+    "duration_sec": 55,
+    "summary": "Açık ofis ortamında çalışanların bulunduğu sırada, bir erkek personelin kadın çalışanın yanına gelerek yardım etmesi.",
+    "risk": "Orta",
+    "risk_score": 40,
+    "events": [
+      {
+        "time": "00:23",
+        "start_time": 20,
+        "end_time": 29,
+        "event": "Erkek personel bilgisayar başında çalışan kadının masasına yaklaştı",
+        "is_critical": false
+      },
+      {
+        "time": "00:39",
+        "start_time": 38,
+        "end_time": 48,
+        "event": "Erkek personel kadın çalışana izinsiz fiziksel temasta bulundu",
+        "is_critical": true
+      },
+      {
+        "time": "00:49",
+        "start_time": 48,
+        "end_time": 54,
+        "event": "Kadın personel tepki gösterdi ve erkek şahıs masadan uzaklaştı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },
+  {
+    "video_id": "test_video_029.mp4",
+    "duration_sec": 55,
+    "summary": "Otopark ve sokak alanında yayalar yürümekte, araçlar nizami hızda manevra ve dönüş yaparak ilerlemekte olup alanda herhangi bir güvenlik ihlali, tehlike veya kaza durumu gözlenmemektedir.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:20",
+        "start_time": 18,
+        "end_time": 34,
+        "event": "Yayalar yol kenarında güvenle yürürken araçlar kontrollü geçiş yaptı",
+        "is_critical": false
+      },
+      {
+        "time": "00:38",
+        "start_time": 35,
+        "end_time": 54,
+        "event": "Binek araç park alanından kontrollü dönüş alarak yolda ilerledi",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_030.mp4",
+    "duration_sec": 56,
+    "summary": "Ofis ve müşteri hizmetleri alanında çalışanlar masa başında rutin işlemlerini sürdürürken, teknik personel merdiven taşıyarak alanda bakım çalışması yapmakta olup herhangi bir güvenlik ihlali veya kaza riski bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:05",
+        "start_time": 3,
+        "end_time": 15,
+        "event": "Teknik bakım personeli merdiveni ofis girişine doğru taşıdı",
+        "is_critical": false
+      },
+      {
+        "time": "00:20",
+        "start_time": 15,
+        "end_time": 56,
+        "event": "Personel banko arkasında çalışırken bakım faaliyeti kontrollü sürdürüldü",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_031.mp4",
+    "duration_sec": 15,
+    "summary": "Alışveriş merkezinin yürüme koridorunda ziyaretçiler ve aileler rutin şekilde yürüyüş ve alışveriş yapmakta olup herhangi bir güvenlik tehdidi, kaza veya risk durumu bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:01",
+        "start_time": 0,
+        "end_time": 8,
+        "event": "Ziyaretçiler koridorda güvenli ve rutin şekilde yürüdü",
+        "is_critical": false
+      },
+      {
+        "time": "00:09",
+        "start_time": 8,
+        "end_time": 15,
+        "event": "Mağaza önündeki yaya akışı sakin ve güvenli şekilde devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_032.mp4",
+    "duration_sec": 49,
+    "summary": "Market/restoran kasasında kasiyer ve müşteri arasında nakit para ile standart ödeme ve para üstü alışverişi gerçekleşmekte olup herhangi bir hırsızlık, gasp veya güvenlik tehdidi bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:04",
+        "start_time": 0,
+        "end_time": 15,
+        "event": "Müşteri ödemeyi yaptı ve kasiyer para üstünü teslim etti",
+        "is_critical": false
+      },
+      {
+        "time": "00:20",
+        "start_time": 15,
+        "end_time": 49,
+        "event": "İşlem tamamlandıktan sonra müşteri ayrıldı ve kasa alanı sakin kaldı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_033.mp4",
+    "duration_sec": 14,
+    "summary": "Gündüz saatlerinde şehir içi sinyalize kavşakta binek araçlar, kamyonetler ve yayalar trafik akışına uygun şekilde güvenle hareket etmekte olup alanda herhangi bir kaza, ihlal veya güvenlik riski bulunmamaktadır.",
+    "risk": "Düşük",
+    "risk_score": 10,
+    "events": [
+      {
+        "time": "00:02",
+        "start_time": 0,
+        "end_time": 7,
+        "event": "Araçlar kavşaktan kontrollü ve trafik kurallarına uygun geçiş yaptı",
+        "is_critical": false
+      },
+      {
+        "time": "00:08",
+        "start_time": 7,
+        "end_time": 14,
+        "event": "Kavşakta araç ve yaya trafiği güvenli şekilde devam etti",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  },
+  {
+    "video_id": "test_video_034.mp4",
+    "duration_sec": 93,
+    "summary": "Bina koridoruna giren sokak köpeği kapı önündeki çöp kutusunu devirerek içerisindeki poşeti ve çöpleri çevreye saçmış, ardından koridordan uzaklaşmıştır.",
+    "risk": "Düşük",
+    "risk_score": 20,
+    "events": [
+      {
+        "time": "00:05",
+        "start_time": 0,
+        "end_time": 35,
+        "event": "Sokak köpeği koridorda yürüyerek çöp kutularının yanına geldi",
+        "is_critical": false
+      },
+      {
+        "time": "00:38",
+        "start_time": 36,
+        "end_time": 50,
+        "event": "Köpek çöp kutusunu devirdi ve poşeti dışarı çıkardı",
+        "is_critical": false
+      },
+      {
+        "time": "01:25",
+        "start_time": 75,
+        "end_time": 93,
+        "event": "Köpek çöpleri dağıttıktan sonra koridordan uzaklaştı",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "log_kpi_metrics"
+    ]
+  }
+]
