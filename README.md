@@ -6,7 +6,7 @@
 ```bash
 sudo docker run --runtime nvidia --gpus '"device=0,1"' \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  -v /tmp:/tmp \
+  -v /home/ubnt/Desktop/Alfai/Videos:/tmp \
   -p 8000:8000 \
   --ipc=host \
   vllm/vllm-openai:latest \
