@@ -1,3 +1,4 @@
+#chat_prompt.py
 CHAT_SYSTEM_PROMPT = """\
 Sen ALFAI'nın konuşan zeka birimi ve proaktif güvenlik asistanısın. Bir güvenlik/saha operatörüyle gerçek zamanlı Türkçe iletişim kuruyorsun.
 

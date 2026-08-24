@@ -114,13 +114,14 @@
     ],
     "actions": [
       "query_previous_incidents",
+      "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
   },
   {
     "video_id": "test_video_004.mp4",
     "duration_sec": 7,
-    "summary": "Verdiğiniz doğrultuda güncellenen özet: Mekana silahla giren yeni bir kişi panik ve korkuya yol açmış, insanların kaçışması ve arbede sırasında sandalyeler düşmüş, şahıs kısa süre sonra silahla ateş etmeye başlamıştır.",
+    "summary": "Mekan içerisinde şahıslar arasında fiziki kavga çıkmış, sandalye fırlatılmış ve çevredeki kişiler panikle kaçışarak masaların arkasına saklanmıştır.",
     "risk": "Kritik",
     "risk_score": 90,
     "events": [
@@ -375,8 +376,8 @@
     "actions": [
       "trigger_operator_alert",
       "assess_environmental_hazards",
-      "export_to_incident_management_system",
-      "get_personnel_on_duty"
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
     ]
   },
   {
@@ -418,7 +419,6 @@
     "actions": [
       "trigger_operator_alert",
       "get_personnel_on_duty",
-      "log_kpi_metrics",
       "export_to_incident_management_system"
     ]
   },
@@ -538,8 +538,8 @@
       "trigger_operator_alert",
       "detect_motion_density",
       "query_previous_incidents",
-      "export_to_incident_management_system",
-      "get_personnel_on_duty"
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
     ]
   },
   {
@@ -574,6 +574,7 @@
     "actions": [
       "trigger_operator_alert",
       "assess_environmental_hazards",
+      "query_previous_incidents",
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
@@ -610,6 +611,7 @@
     "actions": [
       "trigger_operator_alert",
       "assess_environmental_hazards",
+      "query_previous_incidents",
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
@@ -646,6 +648,7 @@
     "actions": [
       "trigger_operator_alert",
       "assess_environmental_hazards",
+      "query_previous_incidents",
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
@@ -949,7 +952,7 @@
   {
     "video_id": "test_video_028.mp4",
     "duration_sec": 55,
-    "summary": "Açık ofis ortamında çalışanların bulunduğu sırada, bir erkek personelin kadın çalışanın yanına gelerek yardım etmesi.",
+    "summary": "Açık ofis ortamında çalışanların bulunduğu sırada, bir erkek personelin kadın çalışana izinsiz fiziksel temasta bulunması.",
     "risk": "Orta",
     "risk_score": 50,
     "events": [
@@ -1142,7 +1145,8 @@
     "actions": [
       "log_kpi_metrics"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_035.mp4",
     "duration_sec": 11,
     "summary": "Yaya kaldırımında yürüyen kalabalığın üzerine kontrolden çıkan bir belediye otobüsü hızla dalarak yayalara çarpmış ve ağır can pazarı/kaza durumu gerçekleşmiştir.",
@@ -1176,7 +1180,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_036.mp4",
     "duration_sec": 12,
     "summary": "Kavşakta dönmeye çalışan araç diğer araça çarpıyor.",
@@ -1202,7 +1207,8 @@
       "trigger_operator_alert",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_037.mp4",
     "duration_sec": 15,
     "summary": "Kavşakta hızla ilerleyen iki araç çarpışmış, çarpışmanın etkisiyle araçlardan biri takla atarak ters dönmüş ve yoldan savrulmuştur.",
@@ -1236,7 +1242,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_038.mp4",
     "duration_sec": 7,
     "summary": "Kamyonet ile karşı yönden gelen araç kafa kafaya şiddetli şekilde çarpışmış, araçlarda hasar meydana gelmiştir.",
@@ -1269,7 +1276,8 @@
       "trigger_operator_alert",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_039.mp4",
     "duration_sec": 19,
     "summary": "Kavşakta seyir halindeki bir minibüs/panelvan ile araç çarpışmış, çarpışmanın etkisiyle minibüs yana devrilerek yolu kapatmıştır.",
@@ -1310,7 +1318,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_040.mp4",
     "duration_sec": 28,
     "summary": "Kalabalık protesto/miting alanında çok şiddetli bir patlama meydana gelmiş, patlamanın ardından yangın ve yoğun duman oluşmuş, alanda çok sayıda kişi yerde hareketsiz kalmıştır | yaralanmıştır.",
@@ -1353,7 +1362,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_041.mp4",
     "duration_sec": 35,
     "summary": "Akaryakıt/dolum istasyonunda tanker dolumu sırasında aniden büyük bir patlama ve şiddetli yangın meydana gelmiş, görevli personel can havliyle alevlerin arasından kaçarak uzaklaşmıştır.",
@@ -1388,7 +1398,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_042.mp4",
     "duration_sec": 22,
     "summary": "Elektrik kontrol ve pano odasında bakım/müdahale yapan teknik personelin çalıştığı panoda çok şiddetli bir patlama gerçekleşmiş, personel alevler altında/arasında kalmıştır.",
@@ -1423,7 +1434,8 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_043.mp4",
     "duration_sec": 50,
     "summary": "Akaryakıt istasyonunda yakıt ikmali sırasında aracın depo girişinde aniden yangın çıkmış, sürücü panikle yakıt tabancasını çekerek alevleri yere düşürmüş ve acil kapatma butonuna basarak müdahale etmiştir.",
@@ -1457,7 +1469,8 @@
       "assess_environmental_hazards",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_044.mp4",
     "duration_sec": 13,
     "summary": "Endüstriyel/nükleer tesis bloğunda devasa bir patlama meydana gelmiş, gökyüzüne doğru devasa bir duman yükselerek kritik durum oluşmuştur.",
@@ -1492,10 +1505,11 @@
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
-  },{
+  },
+  {
     "video_id": "test_video_045.mp4",
     "duration_sec": 17,
-    "summary": "Mağazada patlama meydana gelmiştir.Patlama sonucunda tavan kaplamaları ve aydınlatma ekipmanları aniden zemine doğru çöktü",
+    "summary": "Mağazada patlama meydana gelmiştir. Patlama sonucunda tavan kaplamaları ve aydınlatma ekipmanları aniden zemine doğru çöktü.",
     "risk": "Yüksek",
     "risk_score": 75,
     "events": [

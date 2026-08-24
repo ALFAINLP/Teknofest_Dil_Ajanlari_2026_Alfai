@@ -1,3 +1,4 @@
+#camera_triage_prompt.py
 CAMERA_TRIAGE_SYSTEM_PROMPT = """
 Sen çoklu kamera güvenlik triyaj uzmanısın. Her kamera için verilen temsilî
 kareleri karşılaştır ve operatörün önce hangi kameraya bakması gerektiğini
