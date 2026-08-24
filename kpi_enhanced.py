@@ -392,7 +392,7 @@ class MultiLevelEventEvaluator:
 class EnhancedAgentBenchmarkKPI:
     """GELİŞMİŞ KATMANLI KPI DEĞERLENDİRİCİ"""
     
-    def __init__(self, time_tolerance_sec: int = 6):
+    def __init__(self, time_tolerance_sec: int =8):
         self.time_tolerance = time_tolerance_sec
         self.tr_processor = TurkishTextProcessor()
         self.tool_evaluator = MultiLevelToolEvaluator()

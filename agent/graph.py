@@ -590,7 +590,7 @@ def compile_report_node(state: AgentState) -> AgentState:
     vision_risk = normalize_risk(
         state.get("vision_risk", "Düşük")
     )
-    # highest_risk = higher_risk(vision_risk, brain_risk)
+
     highest_risk = brain_risk if brain_risk != "Belirlenmedi" else vision_risk
     calculated_score = RISK_SCORE[highest_risk]
 

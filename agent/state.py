@@ -11,8 +11,16 @@ class AgentState(TypedDict):
     detected_events: List[Dict[str, Any]]
     risk_assessments: List[str]
     actions_recommended: List[str]
-    
-    # Ajanın trend sonucunu tutacağı değişken
+
+    # ── EKSİK OLAN ALANLAR (LangGraph node'lar arası taşınmıyor) ──
+    vision_risk: str
+    vision_risk_score: float
+    risk_score: int
+    video_summary: str
+    technical_summary: str
+    # ──────────────────────────────────────────────────────────────
+
+    # Trend
     risk_trend: str
 
     # Memory
@@ -30,5 +38,4 @@ class AgentState(TypedDict):
     # LangGraph mesaj hafızası
     messages: Annotated[list, add_messages]
 
-    current_zone: str      
-
+    current_zone: str
