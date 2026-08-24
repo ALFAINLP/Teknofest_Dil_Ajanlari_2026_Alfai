@@ -6,18 +6,14 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "TEKNOFEST AI Agent"
     DEBUG: bool = True
 
-    # Evren API Yapılandırması
+    # Evren API Yapılandırması (Baştaki boşluk temizlendi)
     EVREN_BASE_URL: str = "https://evren-llmapi.ssyz.org.tr/v1"
-    EVREN_API_KEY: str = "	sk-evren-team31-44c78fc209d8d741cbb8b180c08ce452"
+    EVREN_API_KEY: str = "sk-evren-team31-44c78fc209d8d741cbb8b180c08ce452"
 
-
-    REASONING_MODEL: str = "meta-llama/Meta-Llama-3.1-70B-Instruct"
+    # Model Tanımları (Brain için llm-fast, Vision için 32B model)
+    REASONING_MODEL: str = "llm-large"
     VISION_MODEL: str = "Qwen/Qwen3-VL-32B-Instruct"
 
-
-    # VISION_SERVER_URL: str = "http://localhost:8000"
-    # BRAIN_SERVER_URL: str = "http://localhost:8001"
-    # VLLM_SERVER_URL: str = "http://localhost:8001"
     CMS_EXPORT_URL: str = "http://localhost:8080/v1/incident/export"
     
     TEMPERATURE: float = 0.0
@@ -49,7 +45,5 @@ class Settings(BaseSettings):
     }
 
     model_config = ConfigDict(env_file=".env")
-
-    
 
 settings = Settings()

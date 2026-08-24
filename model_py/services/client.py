@@ -12,6 +12,6 @@ vision_client = OpenAI(
 )
 
 brain_client = OpenAI(
-    api_key="dummy",
-    base_url=BRAIN_BASE_URL,
+    api_key=EVREN_API_KEY,
+    base_url=EVREN_BASE_URL,
 )
