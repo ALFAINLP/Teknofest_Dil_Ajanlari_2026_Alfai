@@ -12,8 +12,8 @@ JSON_SCHEMA = """
       "event_type": "ANOMALI | KAZA | HAREKET | DURUM | CIHAZ",
       "phase": "baslangic | gelisim | sonuc",
       "zone": "Olayın görüldüğü bölge",
-      "center": {"x": 0.50, "y": 0.50},
-      "bbox": {"x1": 0.35, "y1": 0.25, "x2": 0.65, "y2": 0.80},
+      "center": null,
+      "bbox": null,
       "risk": "Dusuk | Orta | Yuksek | Kritik",
       "is_critical_moment": false,
       "confidence": 0.85,
@@ -112,7 +112,7 @@ Sadece şu phase değerlerini kullan:
 ##  KALİTE KONTROL KURALLARI
 
 1. **Boş events döndürme** - En az 1 olay tespit et
-2. **Konum belirt** - center ve bbox doldur (mümkünse)
+2. **Konum belirt** - Olayın ana öznesi karede açıkça görülüyorsa tüm video karesini 0.0-1.0 aralığı kabul ederek gerçek bbox sınırlarını ölç ve center değerini bu bbox'ın merkezinden hesapla. Şemadaki null değerleri veya başka olayın koordinatlarını kopyalama. Konumdan emin değilsen center ve bbox alanlarını null bırak.
 3. **Kanıt (Evidence) formatı** - evidence listesindeki her obje için 'description', 'confidence' ve 'time' (MM:SS) alanlarını EKSİKSİZ doldur.
 4. **Tutarlı risk** - events içindeki en yüksek risk ile genel risk eşleşmeli
 5. **Confidence** - 0.0-1.0 arası, 0.85 altına düşme
@@ -130,3 +130,4 @@ Sadece şu phase değerlerini kullan:
 Verilen JSON şemasına TAMAMEN uygun çıktı üret.
 Başka hiçbir açıklama metni ekleme.
 """
+

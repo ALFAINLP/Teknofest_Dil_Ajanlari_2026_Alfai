@@ -52,6 +52,29 @@ function confidencePercent(value) {
   return numeric <= 1 ? numeric * 100 : numeric
 }
 
+const ACTION_RISK_THRESHOLD = 80
+const ACTION_EVENT_LIMIT = 2
+
+function numericRiskScore(value) {
+  const numeric = Number.parseFloat(String(value ?? '').replace('%', '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return 0
+  return numeric <= 1 ? numeric * 100 : numeric
+}
+
+function getPriorityActionEvents(events) {
+  const riskWeight = { Kritik: 4, Yüksek: 3, Orta: 2, Düşük: 1 }
+  return [...events]
+    .filter(event => (event.ranked_actions?.length ?? 0) > 0)
+    .sort((first, second) => {
+      const riskDifference = (riskWeight[second.risk] ?? 0) - (riskWeight[first.risk] ?? 0)
+      if (riskDifference !== 0) return riskDifference
+      const confidenceDifference = confidencePercent(second.conf) - confidencePercent(first.conf)
+      if (confidenceDifference !== 0) return confidenceDifference
+      return (first.start_time ?? 0) - (second.start_time ?? 0)
+    })
+    .slice(0, ACTION_EVENT_LIMIT)
+}
+
 function formatTimelineTime(seconds) {
   const safeSeconds = Math.max(0, Math.round(seconds || 0))
   const minutes = Math.floor(safeSeconds / 60)
@@ -214,33 +237,90 @@ function RiskBadge({ level, isDark = true }) {
   )
 }
 
+// Aynı fiziksel bölgeye düşen yakın model koordinatlarını tek kartta toplar.
+// 0.12, video karesinin yaklaşık %12'si; ayrı bölgeleri korurken üst üste
+// binen model tahminlerini erişilebilir hâle getirir.
+const HEATMAP_CLUSTER_DISTANCE = 0.12
+
+function buildHeatmapClusters(events) {
+  return events.reduce((clusters, event) => {
+    const x = Number(event.center?.x)
+    const y = Number(event.center?.y)
+    const existing = clusters.find(cluster =>
+      Math.hypot(cluster.x - x, cluster.y - y) <= HEATMAP_CLUSTER_DISTANCE)
+
+    if (existing) {
+      existing.events.push(event)
+      const count = existing.events.length
+      existing.x = ((existing.x * (count - 1)) + x) / count
+      existing.y = ((existing.y * (count - 1)) + y) / count
+      return clusters
+    }
+
+    clusters.push({ x, y, events: [event] })
+    return clusters
+  }, [])
+}
+
 // ─── Heatmap Canvas ───────────────────────────────────────────────────────────
 function HeatmapView({ fullscreen = false, eventRows = [] }) {
   const [riskFilter, setRiskFilter] = useState('all')
-  const [focusedEvent, setFocusedEvent] = useState(null)
+  const [focusedCluster, setFocusedCluster] = useState(null)
   const riskColors = { Kritik: '#ff6b6b', Yüksek: '#ff9f43', Orta: '#a3e635', Düşük: '#60a5fa' }
   const visibleEvents = eventRows.filter(event => riskFilter === 'all' || event.risk === riskFilter)
   const locatedEvents = visibleEvents.filter(event =>
-    Number.isFinite(Number(event.center?.x)) && Number.isFinite(Number(event.center?.y)))
+    Number.isFinite(Number(event.center?.x)) && Number.isFinite(Number(event.center?.y)) &&
+    Number(event.center.x) >= 0 && Number(event.center.x) <= 1 &&
+    Number(event.center.y) >= 0 && Number(event.center.y) <= 1)
   const missingLocationCount = visibleEvents.length - locatedEvents.length
-  const points = locatedEvents.map((event) => {
-    const confidence = Number.parseFloat(String(event.conf ?? '85').replace('%', '')) || 85
+  const clusters = buildHeatmapClusters(locatedEvents)
+  const points = clusters.map((cluster) => {
+    const confidence = Math.max(...cluster.events.map(event =>
+      Number.parseFloat(String(event.conf ?? event.confidence ?? '0').replace('%', '')) || 0))
+    const highestRisk = ['Kritik', 'Yüksek', 'Orta', 'Düşük'].find(level =>
+      cluster.events.some(event => event.risk === level)) || 'Düşük'
+    const riskSummary = ['Kritik', 'Yüksek', 'Orta', 'Düşük']
+      .map(level => ({ level, count: cluster.events.filter(event => event.risk === level).length }))
+      .filter(item => item.count > 0)
+      .map(item => `${item.count} ${item.level}`)
+      .join(' · ')
+    const riskSlices = ['Kritik', 'Yüksek', 'Orta', 'Düşük']
+      .flatMap(level => cluster.events.filter(event => event.risk === level).map(() => riskColors[level]))
+    const markerSlices = riskSlices.length > 0 ? riskSlices : [riskColors.Düşük]
+    const sliceSize = 100 / markerSlices.length
+    const markerBackground = `conic-gradient(${markerSlices.map((color, index) =>
+      `${color} ${(index * sliceSize).toFixed(2)}% ${((index + 1) * sliceSize).toFixed(2)}%`).join(', ')})`
     return {
-      event,
-      left: `${Number(event.center.x) * 100}%`,
-      top: `${Number(event.center.y) * 100}%`,
-      size: 80 + confidence,
-      color: riskColors[event.risk] ?? riskColors.Düşük,
+      cluster: { ...cluster, highestRisk, riskSummary, markerBackground },
+      left: `${cluster.x * 100}%`,
+      top: `${cluster.y * 100}%`,
+      size: Math.min(190, 72 + confidence + (cluster.events.length - 1) * 14),
+      color: riskColors[highestRisk],
     }
   })
   return (
     <div className={cn('t-heatmap-bg relative w-full rounded-xl overflow-hidden border border-[#2a3540] bg-[#060f16]', fullscreen ? 'h-full' : 'min-h-[420px]')}
       style={{ backgroundImage: 'linear-gradient(#1e2d3d 1px, transparent 1px), linear-gradient(90deg, #1e2d3d 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-      {points.map(({ event, ...point }) => (
-        <button key={event.id} type="button" onClick={() => setFocusedEvent(event)}
-          className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#a2c9ff]"
-          style={{ top: point.top, left: point.left, width: point.size, height: point.size, background: point.color, opacity: 0.42, filter: 'blur(18px)' }}
-          aria-label={`${event.time} ${event.event}`} />
+      {points.map(({ cluster, ...point }, index) => (
+        <div key={`${cluster.x}-${cluster.y}-${index}`}>
+          <button type="button" onClick={() => setFocusedCluster(cluster)}
+            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#a2c9ff]"
+            style={{ top: point.top, left: point.left, width: point.size, height: point.size, background: point.color, opacity: 0.42, filter: 'blur(18px)' }}
+            aria-label={`${cluster.events.length} olay bulunan konum`} />
+          <button type="button" onClick={() => setFocusedCluster(cluster)}
+            className="absolute z-10 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#dae3ee]/70 p-[3px] shadow-lg transition-transform hover:scale-110"
+            style={{ top: point.top, left: point.left, background: cluster.markerBackground }}
+            aria-label={`Bu konumda ${cluster.events.length} olay var`}>
+            <span className="flex h-full w-full items-center justify-center rounded-full bg-[#0d1520] font-mono text-[10px] font-bold text-[#dae3ee]">
+              {cluster.events.length}
+            </span>
+          </button>
+          <button type="button" onClick={() => setFocusedCluster(cluster)}
+            className="absolute z-10 -translate-x-1/2 translate-y-5 whitespace-nowrap rounded-md border border-[#2a3540] bg-[#0d1520]/95 px-2 py-1 font-sans text-[9px] font-semibold text-[#c0c7d4] shadow-md"
+            style={{ top: point.top, left: point.left }}>
+            En yüksek: <span style={{ color: point.color }}>{cluster.highestRisk}</span>
+          </button>
+        </div>
       ))}
       {eventRows.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center font-sans text-sm text-[#414752]">
@@ -252,18 +332,31 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
           Model bu analizde güvenilir mekânsal koordinat üretmedi. Yanlış konum göstermemek için nokta çizilmedi.
         </div>
       )}
-      {focusedEvent && (
-        <div className="absolute left-5 top-14 max-w-sm rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 p-3 shadow-xl">
-          <div className="flex items-center justify-between gap-4">
-            <span className="font-mono text-[11px] text-[#a2c9ff]">{focusedEvent.time}</span>
-            <RiskBadge level={focusedEvent.risk} />
+      {focusedCluster && (
+        <div className="absolute left-5 top-14 z-20 max-h-[65%] w-[min(390px,calc(100%-40px))] overflow-y-auto rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 p-3 shadow-xl">
+          <div className="mb-2 flex items-center justify-between gap-4 border-b border-[#2a3540] pb-2">
+            <div>
+              <p className="font-sans text-xs font-semibold text-[#dae3ee]">Bu bölgede {focusedCluster.events.length} olay</p>
+              <p className="mt-0.5 font-sans text-[10px] text-[#8b919d]">{focusedCluster.riskSummary} · En yüksek risk {focusedCluster.highestRisk}</p>
+            </div>
+            <button type="button" onClick={() => setFocusedCluster(null)} className="font-sans text-[11px] text-[#8b919d] hover:text-[#dae3ee]">Kapat ×</button>
           </div>
-          <p className="mt-2 font-sans text-xs text-[#dae3ee]">{focusedEvent.event}</p>
-          <p className="mt-1 font-sans text-[10px] text-[#8b919d]">{focusedEvent.zone} · Güven {focusedEvent.conf}</p>
+          <div className="space-y-2">
+            {focusedCluster.events.map(event => (
+              <div key={event.id} className="rounded-md border border-[#2a3540] bg-[#0b141c] p-2.5">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="font-mono text-[11px] text-[#a2c9ff]">{event.time}</span>
+                  <RiskBadge level={event.risk} />
+                </div>
+                <p className="mt-2 font-sans text-xs text-[#dae3ee]">{event.event}</p>
+                <p className="mt-1 font-sans text-[10px] text-[#8b919d]">{event.zone} · Güven {event.conf}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
       <div className="absolute top-4 left-5">
-        <p className="font-sans text-[10px] uppercase tracking-widest text-[#8b919d]">Video karesi olay konumları · {points.length}/{visibleEvents.length} konumlu</p>
+        <p className="font-sans text-[10px] uppercase tracking-widest text-[#8b919d]">Video karesi olay konumları · {locatedEvents.length}/{visibleEvents.length} konumlu · {clusters.length} bölge</p>
         {missingLocationCount > 0 && <p className="mt-1 font-sans text-[9px] text-[#ffb77d]">{missingLocationCount} olay için konum üretilemedi</p>}
       </div>
       <div className="absolute bottom-4 left-5 glass rounded-lg p-3 space-y-1.5">
@@ -274,8 +367,8 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-4 right-5 flex gap-2">
-        {[['all', 'Tümü'], ['Kritik', 'Kritik'], ['Yüksek', 'Yüksek'], ['Orta', 'Orta']].map(([value, label]) => (
+      <div className="absolute bottom-4 right-5 flex max-w-[72%] flex-wrap justify-end gap-2">
+        {[['all', 'Tümü'], ['Kritik', 'Kritik'], ['Yüksek', 'Yüksek'], ['Orta', 'Orta'], ['Düşük', 'Düşük']].map(([value, label]) => (
           <button key={value} type="button" onClick={() => setRiskFilter(value)} className={cn('font-sans text-[11px] px-3 py-1.5 rounded-lg border transition-colors',
             riskFilter === value ? 'bg-[#a2c9ff]/15 border-[#a2c9ff]/30 text-[#a2c9ff]'
                     : 'border-[#2a3540] text-[#8b919d] hover:border-[#a2c9ff]/30 hover:text-[#a2c9ff]')}>
@@ -781,8 +874,6 @@ function RankedActionButtons({ event, selectedRank, savedOrder, onSelect, onSave
 }
 
 function ActionCenter({ open, events, actionDrafts, operationOrders, onSelect, onSave, onClose }) {
-  const riskOrder = { Kritik: 0, Yüksek: 1, Orta: 2, Düşük: 3 }
-  const orderedEvents = [...events].sort((first, second) => (riskOrder[first.risk] ?? 9) - (riskOrder[second.risk] ?? 9))
   const pendingCount = events.filter(event => !operationOrders[event.id]).length
 
   useEffect(() => {
@@ -809,7 +900,7 @@ function ActionCenter({ open, events, actionDrafts, operationOrders, onSelect, o
         </button>
       </div>
       <div className="flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
-        {orderedEvents.map(event => (
+        {events.map(event => (
           <section key={event.id} className={cn('rounded-xl border p-3', operationOrders[event.id] ? 'border-[#4ade80]/30 bg-[#052e16]/10' : 'border-[#2a3540] bg-[#101b27]')}>
             <div className="mb-3 flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -1336,7 +1427,7 @@ export default function Dashboard() {
       setTick(normalizedEvents.length)
       normalizedEvents.forEach(showEventAlert)
       setAnalyzing(false)
-      if (normalizedEvents.length > 0) {
+      if (numericRiskScore(data.risk_score) >= ACTION_RISK_THRESHOLD && getPriorityActionEvents(normalizedEvents).length > 0) {
         actionCenterTimerRef.current = window.setTimeout(() => {
           setActionCenterOpen(true)
           actionCenterTimerRef.current = null
@@ -1360,6 +1451,10 @@ export default function Dashboard() {
   const visibleLogs = settings.showInfoLogs
     ? logs
     : logs.filter(log => log.level !== 'info')
+
+  const actionRiskScore = numericRiskScore(analysis?.risk_score)
+  const priorityActionEvents = getPriorityActionEvents(eventRows)
+  const canShowActionCenter = actionRiskScore >= ACTION_RISK_THRESHOLD && priorityActionEvents.length > 0
 
   return (
     <div className="t-surface-2 flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
@@ -1397,7 +1492,7 @@ export default function Dashboard() {
       )}
 
       <ActionCenter open={actionCenterOpen}
-        events={eventRows}
+        events={priorityActionEvents}
         actionDrafts={actionDrafts}
         operationOrders={operationOrders}
         onSelect={selectOperationAction}
@@ -1500,10 +1595,10 @@ export default function Dashboard() {
                       </TabsTrigger>
                     ))}
                   </TabsList>
-                  {eventRows.length > 0 && (
+                  {canShowActionCenter && (
                     <button type="button" onClick={() => setActionCenterOpen(true)}
                       className="rounded-lg border border-[#a2c9ff]/40 bg-[#101b27] px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-widest text-[#a2c9ff] hover:bg-[#1d2b45]">
-                      Aksiyon Merkezi · {eventRows.filter(event => !operationOrders[event.id]).length} bekleyen
+                      Aksiyon Merkezi · {priorityActionEvents.filter(event => !operationOrders[event.id]).length} bekleyen
                     </button>
                   )}
                 </div>

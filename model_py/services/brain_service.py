@@ -90,7 +90,7 @@ def analyze_state(messages: list, force_json: bool = False):
             tools=active_tools,
             tool_choice="auto" if active_tools else None,
             frequency_penalty=0.5,
-            temperature=0.1,  # Deterministik ve hatasız tool çağrısı için 0.0 önerilir
+            temperature=0.2,  # Deterministik ve hatasız tool çağrısı için 0.0 önerilir
         )
 
     return response.choices[0].message

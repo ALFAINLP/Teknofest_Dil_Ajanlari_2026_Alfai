@@ -29,7 +29,8 @@ VALID_TOOLS = {
     "assess_environmental_hazards",
     "query_previous_incidents",
     "export_to_incident_management_system",
-    "detect_motion_density"
+    "detect_motion_density",
+    "log_kpi_metrics"
     }
 
 SEPARATOR = "=" * 60

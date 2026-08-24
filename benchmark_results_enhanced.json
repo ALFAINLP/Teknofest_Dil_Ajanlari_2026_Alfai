@@ -3,47 +3,47 @@
     "video_id": "test_video_001.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 49.681,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.911
+        "total_processing_time_sec": 47.657,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.833
       },
       "accuracy": {
         "event_f1_score": 0.667,
         "event_recall": 0.667,
-        "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.0,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.667,
         "tool_exact_match": 0.0
       },
       "layer_analysis": {
         "tool_selection": {
-          "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.0,
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.667,
           "tool_exact_match": 0.0,
           "detected_tools": [
-            "log_kpi_metrics"
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
           ],
           "expected_tools": [
             "trigger_operator_alert",
             "export_to_incident_management_system",
             "get_personnel_on_duty"
           ],
-          "hallucination_rate": 1.0,
-          "tp": 0,
-          "fp": 1,
-          "fn": 3
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 1
         },
         "argument_extraction": {
-          "parameter_accuracy": 0.333,
-          "missing_calls": 2,
+          "parameter_accuracy": 0.667,
+          "missing_calls": 1,
           "errors": [
-            "'get_personnel_on_duty' çağrısı yapılmamış",
-            "'export_to_incident_management_system' çağrısı yapılmamış"
+            "'get_personnel_on_duty' çağrısı yapılmamış"
           ]
         },
         "grounding": {
-          "grounding_score": 0.2,
-          "total_tool_results": 1,
-          "grounded_items": 1
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
         },
         "error_recovery": {
           "recovery_score": 1.0,
@@ -60,11 +60,12 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.293
+        "overall_score": 0.697
       },
       "debug_tools": {
         "matched_predictions": [
-          "log_kpi_metrics"
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
@@ -78,13 +79,13 @@
     "video_id": "test_video_002.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 59.275,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.912
+        "total_processing_time_sec": 59.15,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.91
       },
       "accuracy": {
-        "event_f1_score": 0.25,
-        "event_recall": 0.25,
+        "event_f1_score": 0.444,
+        "event_recall": 0.5,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -134,7 +135,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.759
+        "overall_score": 0.802
       },
       "debug_tools": {
         "matched_predictions": [
@@ -154,122 +155,46 @@
     "video_id": "test_video_003.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 37.844,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.326
+        "total_processing_time_sec": 56.822,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 3.342
       },
       "accuracy": {
-        "event_f1_score": 0.5,
+        "event_f1_score": 0.364,
         "event_recall": 0.5,
         "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.0,
+        "tool_jaccard_score": 0.25,
         "tool_exact_match": 0.0
       },
       "layer_analysis": {
         "tool_selection": {
           "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.0,
+          "tool_jaccard_iou": 0.25,
           "tool_exact_match": 0.0,
           "detected_tools": [
-            "log_kpi_metrics"
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
           ],
           "expected_tools": [
-            "trigger_operator_alert",
-            "query_previous_incidents",
-            "export_to_incident_management_system"
+            "export_to_incident_management_system",
+            "query_previous_incidents"
           ],
-          "hallucination_rate": 1.0,
-          "tp": 0,
-          "fp": 1,
-          "fn": 3
+          "hallucination_rate": 0.667,
+          "tp": 1,
+          "fp": 2,
+          "fn": 1
         },
         "argument_extraction": {
-          "parameter_accuracy": 0.0,
-          "missing_calls": 3,
+          "parameter_accuracy": 0.5,
+          "missing_calls": 1,
           "errors": [
-            "'trigger_operator_alert' çağrısı yapılmamış",
-            "'query_previous_incidents' çağrısı yapılmamış",
-            "'export_to_incident_management_system' çağrısı yapılmamış"
+            "'query_previous_incidents' çağrısı yapılmamış"
           ]
         },
         "grounding": {
-          "grounding_score": 0.75,
-          "total_tool_results": 1,
-          "grounded_items": 3
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.297
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "log_kpi_metrics"
-        ],
-        "expected_ground_truth": [
-          "trigger_operator_alert",
-          "query_previous_incidents",
-          "export_to_incident_management_system"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_004.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 42.176,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 6.025
-      },
-      "accuracy": {
-        "event_f1_score": 0.8,
-        "event_recall": 0.667,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.75,
-        "tool_exact_match": 0.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.75,
-          "tool_exact_match": 0.0,
-          "detected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty"
-          ],
-          "expected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "get_personnel_on_duty"
-          ],
-          "hallucination_rate": 0.25,
-          "tp": 3,
-          "fp": 1,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
-        },
-        "grounding": {
           "grounding_score": 0.444,
-          "total_tool_results": 5,
+          "total_tool_results": 4,
           "grounded_items": 4
         },
         "error_recovery": {
@@ -287,13 +212,87 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.784
+        "overall_score": 0.408
       },
       "debug_tools": {
         "matched_predictions": [
           "trigger_operator_alert",
           "export_to_incident_management_system",
-          "query_previous_incidents",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "export_to_incident_management_system",
+          "query_previous_incidents"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_004.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 42.79,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 6.113
+      },
+      "accuracy": {
+        "event_f1_score": 0.8,
+        "event_recall": 0.667,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 4,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.68
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
           "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
@@ -308,91 +307,13 @@
     "video_id": "test_video_005.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 111.212,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 2.366
+        "total_processing_time_sec": 59.772,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.272
       },
       "accuracy": {
-        "event_f1_score": 0.0,
-        "event_recall": 0.0,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.75,
-        "tool_exact_match": 0.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.75,
-          "tool_exact_match": 0.0,
-          "detected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty"
-          ],
-          "expected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "get_personnel_on_duty"
-          ],
-          "hallucination_rate": 0.25,
-          "tp": 3,
-          "fp": 1,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
-        },
-        "grounding": {
-          "grounding_score": 0.444,
-          "total_tool_results": 5,
-          "grounded_items": 4
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.67
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty"
-        ],
-        "expected_ground_truth": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "get_personnel_on_duty"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_006.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 54.19,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 3.188
-      },
-      "accuracy": {
-        "event_f1_score": 0.571,
-        "event_recall": 0.667,
+        "event_f1_score": 0.444,
+        "event_recall": 0.5,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -442,7 +363,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.83
+        "overall_score": 0.802
       },
       "debug_tools": {
         "matched_predictions": [
@@ -459,15 +380,91 @@
     }
   },
   {
+    "video_id": "test_video_006.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 43.476,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.557
+      },
+      "accuracy": {
+        "event_f1_score": 0.5,
+        "event_recall": 0.667,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.667,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.667,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.667,
+          "missing_calls": 1,
+          "errors": [
+            "'get_personnel_on_duty' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.697
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
     "video_id": "test_video_007.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 66.82,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 5.14
+        "total_processing_time_sec": 54.11,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 4.162
       },
       "accuracy": {
-        "event_f1_score": 0.857,
+        "event_f1_score": 1.0,
         "event_recall": 1.0,
         "risk_accuracy": 0.0,
         "tool_jaccard_score": 0.75,
@@ -481,7 +478,7 @@
           "detected_tools": [
             "trigger_operator_alert",
             "export_to_incident_management_system",
-            "query_previous_incidents",
+            "assess_environmental_hazards",
             "get_personnel_on_duty"
           ],
           "expected_tools": [
@@ -500,171 +497,9 @@
           "errors": []
         },
         "grounding": {
-          "grounding_score": 0.2,
-          "total_tool_results": 4,
-          "grounded_items": 1
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.654
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty"
-        ],
-        "expected_ground_truth": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "get_personnel_on_duty"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_008.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 91.811,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 2.623
-      },
-      "accuracy": {
-        "event_f1_score": 0.5,
-        "event_recall": 0.667,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.8,
-        "tool_exact_match": 0.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.8,
-          "tool_exact_match": 0.0,
-          "detected_tools": [
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty",
-            "trigger_operator_alert",
-            "assess_environmental_hazards"
-          ],
-          "expected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "assess_environmental_hazards",
-            "get_personnel_on_duty"
-          ],
-          "hallucination_rate": 0.2,
-          "tp": 4,
-          "fp": 1,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
-        },
-        "grounding": {
           "grounding_score": 0.462,
-          "total_tool_results": 6,
+          "total_tool_results": 5,
           "grounded_items": 6
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.795
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty",
-          "trigger_operator_alert",
-          "assess_environmental_hazards"
-        ],
-        "expected_ground_truth": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "assess_environmental_hazards",
-          "get_personnel_on_duty"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_009.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 84.122,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.779
-      },
-      "accuracy": {
-        "event_f1_score": 0.0,
-        "event_recall": 0.0,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.8,
-        "tool_exact_match": 0.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.8,
-          "tool_exact_match": 0.0,
-          "detected_tools": [
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty",
-            "trigger_operator_alert",
-            "assess_environmental_hazards"
-          ],
-          "expected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "assess_environmental_hazards",
-            "get_personnel_on_duty"
-          ],
-          "hallucination_rate": 0.2,
-          "tp": 4,
-          "fp": 1,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
-        },
-        "grounding": {
-          "grounding_score": 0.538,
-          "total_tool_results": 6,
-          "grounded_items": 7
         },
         "error_recovery": {
           "recovery_score": 1.0,
@@ -685,11 +520,89 @@
       },
       "debug_tools": {
         "matched_predictions": [
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty",
           "trigger_operator_alert",
-          "assess_environmental_hazards"
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_008.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 73.003,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.086
+      },
+      "accuracy": {
+        "event_f1_score": 0.25,
+        "event_recall": 0.333,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.462,
+          "total_tool_results": 5,
+          "grounded_items": 6
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.776
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
@@ -701,41 +614,40 @@
     }
   },
   {
-    "video_id": "test_video_010.mp4",
+    "video_id": "test_video_009.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 76.78,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 2.953
+        "total_processing_time_sec": 87.042,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.806
       },
       "accuracy": {
-        "event_f1_score": 0.222,
-        "event_recall": 0.333,
-        "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.8,
-        "tool_exact_match": 0.0
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
       },
       "layer_analysis": {
         "tool_selection": {
-          "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.8,
-          "tool_exact_match": 0.0,
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
           "detected_tools": [
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty",
             "trigger_operator_alert",
-            "assess_environmental_hazards"
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
           ],
           "expected_tools": [
             "trigger_operator_alert",
+            "export_to_incident_management_system",
             "assess_environmental_hazards",
-            "get_personnel_on_duty",
-            "export_to_incident_management_system"
+            "get_personnel_on_duty"
           ],
-          "hallucination_rate": 0.2,
+          "hallucination_rate": 0.0,
           "tp": 4,
-          "fp": 1,
+          "fp": 0,
           "fn": 0
         },
         "argument_extraction": {
@@ -745,7 +657,7 @@
         },
         "grounding": {
           "grounding_score": 0.538,
-          "total_tool_results": 6,
+          "total_tool_results": 5,
           "grounded_items": 7
         },
         "error_recovery": {
@@ -763,59 +675,59 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.6
+        "overall_score": 0.731
       },
       "debug_tools": {
         "matched_predictions": [
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty",
           "trigger_operator_alert",
-          "assess_environmental_hazards"
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
+          "export_to_incident_management_system",
           "assess_environmental_hazards",
-          "get_personnel_on_duty",
-          "export_to_incident_management_system"
+          "get_personnel_on_duty"
         ]
       }
     }
   },
   {
-    "video_id": "test_video_011.mp4",
+    "video_id": "test_video_010.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 85.955,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.433
+        "total_processing_time_sec": 71.011,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.731
       },
       "accuracy": {
-        "event_f1_score": 0.267,
-        "event_recall": 0.5,
+        "event_f1_score": 0.286,
+        "event_recall": 0.333,
         "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.75,
-        "tool_exact_match": 0.0
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
       },
       "layer_analysis": {
         "tool_selection": {
           "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.75,
-          "tool_exact_match": 0.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
           "detected_tools": [
             "trigger_operator_alert",
             "export_to_incident_management_system",
-            "query_previous_incidents",
+            "assess_environmental_hazards",
             "get_personnel_on_duty"
           ],
           "expected_tools": [
             "trigger_operator_alert",
-            "query_previous_incidents",
-            "export_to_incident_management_system"
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
           ],
-          "hallucination_rate": 0.25,
-          "tp": 3,
-          "fp": 1,
+          "hallucination_rate": 0.0,
+          "tp": 4,
+          "fp": 0,
           "fn": 0
         },
         "argument_extraction": {
@@ -824,9 +736,9 @@
           "errors": []
         },
         "grounding": {
-          "grounding_score": 0.444,
+          "grounding_score": 0.462,
           "total_tool_results": 5,
-          "grounded_items": 4
+          "grounded_items": 6
         },
         "error_recovery": {
           "recovery_score": 1.0,
@@ -843,19 +755,99 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.6
+        "overall_score": 0.626
       },
       "debug_tools": {
         "matched_predictions": [
           "trigger_operator_alert",
           "export_to_incident_management_system",
-          "query_previous_incidents",
+          "assess_environmental_hazards",
           "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
-          "query_previous_incidents",
-          "export_to_incident_management_system"
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_011.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 36.93,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.154
+      },
+      "accuracy": {
+        "event_f1_score": 0.75,
+        "event_recall": 0.75,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.5,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.5,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "log_kpi_metrics",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 2
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.5,
+          "missing_calls": 2,
+          "errors": [
+            "'trigger_operator_alert' çağrısı yapılmamış",
+            "'log_kpi_metrics' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.75,
+          "total_tool_results": 3,
+          "grounded_items": 3
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.548
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "log_kpi_metrics",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
         ]
       }
     }
@@ -864,12 +856,12 @@
     "video_id": "test_video_012.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 95.79,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.848
+        "total_processing_time_sec": 86.11,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.762
       },
       "accuracy": {
-        "event_f1_score": 0.125,
+        "event_f1_score": 0.118,
         "event_recall": 0.25,
         "risk_accuracy": 0.0,
         "tool_jaccard_score": 0.5,
@@ -887,8 +879,8 @@
           ],
           "expected_tools": [
             "trigger_operator_alert",
-            "query_previous_incidents",
-            "export_to_incident_management_system"
+            "export_to_incident_management_system",
+            "query_previous_incidents"
           ],
           "hallucination_rate": 0.333,
           "tp": 2,
@@ -932,8 +924,8 @@
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
-          "query_previous_incidents",
-          "export_to_incident_management_system"
+          "export_to_incident_management_system",
+          "query_previous_incidents"
         ]
       }
     }
@@ -942,34 +934,33 @@
     "video_id": "test_video_013.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 42.482,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.634
+        "total_processing_time_sec": 28.038,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.078
       },
       "accuracy": {
         "event_f1_score": 0.667,
         "event_recall": 0.667,
         "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.667,
-        "tool_exact_match": 0.0
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
       },
       "layer_analysis": {
         "tool_selection": {
           "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.667,
-          "tool_exact_match": 0.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
           "detected_tools": [
             "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "get_personnel_on_duty"
+            "export_to_incident_management_system"
           ],
           "expected_tools": [
             "trigger_operator_alert",
             "export_to_incident_management_system"
           ],
-          "hallucination_rate": 0.333,
+          "hallucination_rate": 0.0,
           "tp": 2,
-          "fp": 1,
+          "fp": 0,
           "fn": 0
         },
         "argument_extraction": {
@@ -979,7 +970,7 @@
         },
         "grounding": {
           "grounding_score": 0.444,
-          "total_tool_results": 4,
+          "total_tool_results": 3,
           "grounded_items": 4
         },
         "error_recovery": {
@@ -997,13 +988,12 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.613
+        "overall_score": 0.68
       },
       "debug_tools": {
         "matched_predictions": [
           "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "get_personnel_on_duty"
+          "export_to_incident_management_system"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
@@ -1016,9 +1006,9 @@
     "video_id": "test_video_014.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 72.41,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.965
+        "total_processing_time_sec": 60.945,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.813
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -1040,9 +1030,9 @@
           "expected_tools": [
             "export_to_incident_management_system",
             "query_previous_incidents",
-            "get_personnel_on_duty",
+            "trigger_operator_alert",
             "detect_motion_density",
-            "trigger_operator_alert"
+            "get_personnel_on_duty"
           ],
           "hallucination_rate": 0.0,
           "tp": 3,
@@ -1088,9 +1078,9 @@
         "expected_ground_truth": [
           "export_to_incident_management_system",
           "query_previous_incidents",
-          "get_personnel_on_duty",
+          "trigger_operator_alert",
           "detect_motion_density",
-          "trigger_operator_alert"
+          "get_personnel_on_duty"
         ]
       }
     }
@@ -1099,9 +1089,9 @@
     "video_id": "test_video_015.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 58.372,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.526
+        "total_processing_time_sec": 53.15,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.479
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -1179,9 +1169,9 @@
     "video_id": "test_video_016.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 50.972,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.341
+        "total_processing_time_sec": 48.284,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.271
       },
       "accuracy": {
         "event_f1_score": 0.333,
@@ -1259,13 +1249,13 @@
     "video_id": "test_video_017.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 66.781,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.498
+        "total_processing_time_sec": 59.68,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.445
       },
       "accuracy": {
-        "event_f1_score": 0.286,
-        "event_recall": 0.333,
+        "event_f1_score": 0.571,
+        "event_recall": 0.667,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -1298,9 +1288,9 @@
           "errors": []
         },
         "grounding": {
-          "grounding_score": 0.538,
+          "grounding_score": 0.462,
           "total_tool_results": 5,
-          "grounded_items": 7
+          "grounded_items": 6
         },
         "error_recovery": {
           "recovery_score": 1.0,
@@ -1317,7 +1307,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.787
+        "overall_score": 0.833
       },
       "debug_tools": {
         "matched_predictions": [
@@ -1339,9 +1329,9 @@
     "video_id": "test_video_018.avi",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 21.591,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.27
+        "total_processing_time_sec": 18.589,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.093
       },
       "accuracy": {
         "event_f1_score": 0.5,
@@ -1409,91 +1399,21 @@
     "video_id": "test_video_019.avi",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 42.465,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 2.235
+        "total_processing_time_sec": 69.224,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 3.643
       },
       "accuracy": {
-        "event_f1_score": 0.333,
+        "event_f1_score": 0.167,
         "event_recall": 0.5,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 1.0,
-        "tool_exact_match": 1.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 1.0,
-          "tool_exact_match": 1.0,
-          "detected_tools": [
-            "log_kpi_metrics"
-          ],
-          "expected_tools": [
-            "log_kpi_metrics"
-          ],
-          "hallucination_rate": 0.0,
-          "tp": 1,
-          "fp": 0,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 0.0,
-          "missing_calls": 1,
-          "errors": [
-            "'log_kpi_metrics' çağrısı yapılmamış"
-          ]
-        },
-        "grounding": {
-          "grounding_score": 0.75,
-          "total_tool_results": 2,
-          "grounded_items": 3
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.697
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "log_kpi_metrics"
-        ],
-        "expected_ground_truth": [
-          "log_kpi_metrics"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_020.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 45.55,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.367
-      },
-      "accuracy": {
-        "event_f1_score": 0.333,
-        "event_recall": 0.333,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.667,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.0,
         "tool_exact_match": 0.0
       },
       "layer_analysis": {
         "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.667,
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.0,
           "tool_exact_match": 0.0,
           "detected_tools": [
             "trigger_operator_alert",
@@ -1501,18 +1421,19 @@
             "get_personnel_on_duty"
           ],
           "expected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system"
+            "log_kpi_metrics"
           ],
-          "hallucination_rate": 0.333,
-          "tp": 2,
-          "fp": 1,
-          "fn": 0
+          "hallucination_rate": 1.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 1
         },
         "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
+          "parameter_accuracy": 0.0,
+          "missing_calls": 1,
+          "errors": [
+            "'log_kpi_metrics' çağrısı yapılmamış"
+          ]
         },
         "grounding": {
           "grounding_score": 0.444,
@@ -1534,7 +1455,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.706
+        "overall_score": 0.252
       },
       "debug_tools": {
         "matched_predictions": [
@@ -1543,8 +1464,87 @@
           "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
+          "log_kpi_metrics"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_020.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 55.373,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.447
+      },
+      "accuracy": {
+        "event_f1_score": 0.333,
+        "event_recall": 0.333,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.462,
+          "total_tool_results": 5,
+          "grounded_items": 6
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.776
+      },
+      "debug_tools": {
+        "matched_predictions": [
           "trigger_operator_alert",
-          "export_to_incident_management_system"
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
         ]
       }
     }
@@ -1553,13 +1553,13 @@
     "video_id": "test_video_021.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 44.187,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.524
+        "total_processing_time_sec": 42.489,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.465
       },
       "accuracy": {
-        "event_f1_score": 0.571,
-        "event_recall": 0.667,
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
         "risk_accuracy": 0.0,
         "tool_jaccard_score": 0.667,
         "tool_exact_match": 0.0
@@ -1610,7 +1610,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.547
+        "overall_score": 0.433
       },
       "debug_tools": {
         "matched_predictions": [
@@ -1629,13 +1629,13 @@
     "video_id": "test_video_022.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 51.071,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.277
+        "total_processing_time_sec": 46.455,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.161
       },
       "accuracy": {
-        "event_f1_score": 0.571,
-        "event_recall": 0.667,
+        "event_f1_score": 0.857,
+        "event_recall": 1.0,
         "risk_accuracy": 0.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -1683,7 +1683,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.68
+        "overall_score": 0.737
       },
       "debug_tools": {
         "matched_predictions": [
@@ -1701,48 +1701,46 @@
     "video_id": "test_video_023.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 60.976,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 2.033
+        "total_processing_time_sec": 46.428,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.548
       },
       "accuracy": {
         "event_f1_score": 0.571,
         "event_recall": 0.667,
         "risk_accuracy": 1.0,
-        "tool_jaccard_score": 0.75,
+        "tool_jaccard_score": 0.667,
         "tool_exact_match": 0.0
       },
       "layer_analysis": {
         "tool_selection": {
           "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 0.75,
+          "tool_jaccard_iou": 0.667,
           "tool_exact_match": 0.0,
           "detected_tools": [
             "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "get_personnel_on_duty"
+            "export_to_incident_management_system"
           ],
           "expected_tools": [
             "trigger_operator_alert",
             "export_to_incident_management_system",
-            "detect_motion_density",
             "get_personnel_on_duty"
           ],
           "hallucination_rate": 0.0,
-          "tp": 3,
+          "tp": 2,
           "fp": 0,
           "fn": 1
         },
         "argument_extraction": {
-          "parameter_accuracy": 0.75,
+          "parameter_accuracy": 0.667,
           "missing_calls": 1,
           "errors": [
-            "'detect_motion_density' çağrısı yapılmamış"
+            "'get_personnel_on_duty' çağrısı yapılmamış"
           ]
         },
         "grounding": {
           "grounding_score": 0.444,
-          "total_tool_results": 4,
+          "total_tool_results": 3,
           "grounded_items": 4
         },
         "error_recovery": {
@@ -1760,18 +1758,16 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.734
+        "overall_score": 0.697
       },
       "debug_tools": {
         "matched_predictions": [
           "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "get_personnel_on_duty"
+          "export_to_incident_management_system"
         ],
         "expected_ground_truth": [
           "trigger_operator_alert",
           "export_to_incident_management_system",
-          "detect_motion_density",
           "get_personnel_on_duty"
         ]
       }
@@ -1781,9 +1777,9 @@
     "video_id": "test_video_024.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 16.193,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.675
+        "total_processing_time_sec": 24.56,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.023
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -1851,13 +1847,89 @@
     "video_id": "test_video_025.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 26.1,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.74
+        "total_processing_time_sec": 61.579,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 4.105
       },
       "accuracy": {
-        "event_f1_score": 0.4,
+        "event_f1_score": 0.333,
         "event_recall": 0.5,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.0,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.0,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "log_kpi_metrics"
+          ],
+          "hallucination_rate": 1.0,
+          "tp": 0,
+          "fp": 4,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.0,
+          "missing_calls": 1,
+          "errors": [
+            "'log_kpi_metrics' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.538,
+          "total_tool_results": 5,
+          "grounded_items": 7
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.266
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "log_kpi_metrics"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_026.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 17.493,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.5
+      },
+      "accuracy": {
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -1905,75 +1977,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.697
-      },
-      "debug_tools": {
-        "matched_predictions": [
-          "log_kpi_metrics"
-        ],
-        "expected_ground_truth": [
-          "log_kpi_metrics"
-        ]
-      }
-    }
-  },
-  {
-    "video_id": "test_video_026.mp4",
-    "metrics": {
-      "performance": {
-        "total_processing_time_sec": 37.219,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.063
-      },
-      "accuracy": {
-        "event_f1_score": 0.333,
-        "event_recall": 0.5,
-        "risk_accuracy": 1.0,
-        "tool_jaccard_score": 1.0,
-        "tool_exact_match": 1.0
-      },
-      "layer_analysis": {
-        "tool_selection": {
-          "risk_accuracy": 1.0,
-          "tool_jaccard_iou": 1.0,
-          "tool_exact_match": 1.0,
-          "detected_tools": [
-            "log_kpi_metrics"
-          ],
-          "expected_tools": [
-            "log_kpi_metrics"
-          ],
-          "hallucination_rate": 0.0,
-          "tp": 1,
-          "fp": 0,
-          "fn": 0
-        },
-        "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
-        },
-        "grounding": {
-          "grounding_score": 0.6,
-          "total_tool_results": 2,
-          "grounded_items": 3
-        },
-        "error_recovery": {
-          "recovery_score": 1.0,
-          "error_count": 0,
-          "retry_count": 0,
-          "recoveries": [],
-          "error_messages": []
-        },
-        "layer_weights": {
-          "tool": 0.25,
-          "event": 0.2,
-          "risk": 0.15,
-          "argument": 0.15,
-          "grounding": 0.15,
-          "recovery": 0.1
-        },
-        "overall_score": 0.825
+        "overall_score": 0.612
       },
       "debug_tools": {
         "matched_predictions": [
@@ -1989,9 +1993,9 @@
     "video_id": "test_video_027.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 25.081,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.179
+        "total_processing_time_sec": 25.256,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.18
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -2059,46 +2063,46 @@
     "video_id": "test_video_028.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 54.101,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.984
+        "total_processing_time_sec": 30.674,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.558
       },
       "accuracy": {
-        "event_f1_score": 0.571,
+        "event_f1_score": 0.5,
         "event_recall": 0.667,
         "risk_accuracy": 0.0,
-        "tool_jaccard_score": 0.5,
+        "tool_jaccard_score": 0.0,
         "tool_exact_match": 0.0
       },
       "layer_analysis": {
         "tool_selection": {
           "risk_accuracy": 0.0,
-          "tool_jaccard_iou": 0.5,
+          "tool_jaccard_iou": 0.0,
           "tool_exact_match": 0.0,
           "detected_tools": [
-            "trigger_operator_alert",
-            "export_to_incident_management_system",
-            "query_previous_incidents",
-            "get_personnel_on_duty"
+            "log_kpi_metrics"
           ],
           "expected_tools": [
             "export_to_incident_management_system",
             "get_personnel_on_duty"
           ],
-          "hallucination_rate": 0.5,
-          "tp": 2,
-          "fp": 2,
-          "fn": 0
+          "hallucination_rate": 1.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 2
         },
         "argument_extraction": {
-          "parameter_accuracy": 1.0,
-          "missing_calls": 0,
-          "errors": []
+          "parameter_accuracy": 0.0,
+          "missing_calls": 2,
+          "errors": [
+            "'get_personnel_on_duty' çağrısı yapılmamış",
+            "'export_to_incident_management_system' çağrısı yapılmamış"
+          ]
         },
         "grounding": {
-          "grounding_score": 0.444,
-          "total_tool_results": 5,
-          "grounded_items": 4
+          "grounding_score": 0.75,
+          "total_tool_results": 1,
+          "grounded_items": 3
         },
         "error_recovery": {
           "recovery_score": 1.0,
@@ -2115,14 +2119,11 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.588
+        "overall_score": 0.326
       },
       "debug_tools": {
         "matched_predictions": [
-          "trigger_operator_alert",
-          "export_to_incident_management_system",
-          "query_previous_incidents",
-          "get_personnel_on_duty"
+          "log_kpi_metrics"
         ],
         "expected_ground_truth": [
           "export_to_incident_management_system",
@@ -2135,9 +2136,9 @@
     "video_id": "test_video_029.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 36.204,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.658
+        "total_processing_time_sec": 32.492,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.591
       },
       "accuracy": {
         "event_f1_score": 0.25,
@@ -2205,12 +2206,12 @@
     "video_id": "test_video_030.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 104.314,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.863
+        "total_processing_time_sec": 106.859,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.908
       },
       "accuracy": {
-        "event_f1_score": 0.1,
+        "event_f1_score": 0.077,
         "event_recall": 0.5,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
@@ -2273,9 +2274,9 @@
     "video_id": "test_video_031.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 15.783,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.052
+        "total_processing_time_sec": 15.949,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.063
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -2343,13 +2344,13 @@
     "video_id": "test_video_032.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 45.238,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.923
+        "total_processing_time_sec": 36.421,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.743
       },
       "accuracy": {
-        "event_f1_score": 0.286,
-        "event_recall": 0.5,
+        "event_f1_score": 0.5,
+        "event_recall": 1.0,
         "risk_accuracy": 1.0,
         "tool_jaccard_score": 1.0,
         "tool_exact_match": 1.0
@@ -2395,7 +2396,7 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.825
+        "overall_score": 0.91
       },
       "debug_tools": {
         "matched_predictions": [
@@ -2411,9 +2412,9 @@
     "video_id": "test_video_033.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 15.283,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 1.092
+        "total_processing_time_sec": 15.721,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.123
       },
       "accuracy": {
         "event_f1_score": 0.0,
@@ -2481,13 +2482,13 @@
     "video_id": "test_video_034.mp4",
     "metrics": {
       "performance": {
-        "total_processing_time_sec": 69.564,
-        "peak_vram_gb": 40.79,
-        "real_time_factor": 0.748
+        "total_processing_time_sec": 49.87,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 0.536
       },
       "accuracy": {
-        "event_f1_score": 0.167,
-        "event_recall": 0.333,
+        "event_f1_score": 0.444,
+        "event_recall": 0.667,
         "risk_accuracy": 0.0,
         "tool_jaccard_score": 0.0,
         "tool_exact_match": 0.0
@@ -2499,7 +2500,6 @@
           "tool_exact_match": 0.0,
           "detected_tools": [
             "trigger_operator_alert",
-            "query_previous_incidents",
             "export_to_incident_management_system"
           ],
           "expected_tools": [
@@ -2507,7 +2507,7 @@
           ],
           "hallucination_rate": 1.0,
           "tp": 0,
-          "fp": 3,
+          "fp": 2,
           "fn": 1
         },
         "argument_extraction": {
@@ -2515,6 +2515,855 @@
           "missing_calls": 1,
           "errors": [
             "'log_kpi_metrics' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.28
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ],
+        "expected_ground_truth": [
+          "log_kpi_metrics"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_035.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 58.766,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 5.342
+      },
+      "accuracy": {
+        "event_f1_score": 0.571,
+        "event_recall": 0.667,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.75,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.75,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.25,
+          "tp": 3,
+          "fp": 1,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.538,
+          "total_tool_results": 5,
+          "grounded_items": 7
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.798
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_036.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 26.58,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.215
+      },
+      "accuracy": {
+        "event_f1_score": 0.4,
+        "event_recall": 0.5,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.652
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_037.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 37.327,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.488
+      },
+      "accuracy": {
+        "event_f1_score": 0.8,
+        "event_recall": 0.667,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.667,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.667,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.667,
+          "missing_calls": 1,
+          "errors": [
+            "'get_personnel_on_duty' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.547
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_038.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 34.345,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 4.906
+      },
+      "accuracy": {
+        "event_f1_score": 0.4,
+        "event_recall": 0.333,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 3,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.773
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_039.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 48.308,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.543
+      },
+      "accuracy": {
+        "event_f1_score": 1.0,
+        "event_recall": 1.0,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.444,
+          "total_tool_results": 4,
+          "grounded_items": 4
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.737
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_040.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 53.937,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.926
+      },
+      "accuracy": {
+        "event_f1_score": 0.5,
+        "event_recall": 0.5,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.8,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.8,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "export_to_incident_management_system",
+            "trigger_operator_alert",
+            "assess_environmental_hazards",
+            "detect_motion_density",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.8,
+          "missing_calls": 1,
+          "errors": [
+            "'detect_motion_density' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.538,
+          "total_tool_results": 5,
+          "grounded_items": 7
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.738
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "export_to_incident_management_system",
+          "trigger_operator_alert",
+          "assess_environmental_hazards",
+          "detect_motion_density",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_041.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 48.934,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.398
+      },
+      "accuracy": {
+        "event_f1_score": 0.333,
+        "event_recall": 0.333,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.0,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.0,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "log_kpi_metrics"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 1.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 4
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.5,
+          "missing_calls": 2,
+          "errors": [
+            "'get_personnel_on_duty' çağrısı yapılmamış",
+            "'export_to_incident_management_system' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.333,
+          "total_tool_results": 2,
+          "grounded_items": 3
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.282
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "log_kpi_metrics"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_042.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 57.821,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.628
+      },
+      "accuracy": {
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 1.0,
+        "tool_exact_match": 1.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 1.0,
+          "tool_exact_match": 1.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 4,
+          "fp": 0,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.538,
+          "total_tool_results": 5,
+          "grounded_items": 7
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.731
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_043.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 52.761,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 1.055
+      },
+      "accuracy": {
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.75,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.75,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards"
+          ],
+          "hallucination_rate": 0.25,
+          "tp": 3,
+          "fp": 1,
+          "fn": 0
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 1.0,
+          "missing_calls": 0,
+          "errors": []
+        },
+        "grounding": {
+          "grounding_score": 0.538,
+          "total_tool_results": 5,
+          "grounded_items": 7
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.679
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_044.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 31.93,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.456
+      },
+      "accuracy": {
+        "event_f1_score": 0.8,
+        "event_recall": 0.667,
+        "risk_accuracy": 1.0,
+        "tool_jaccard_score": 0.75,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 1.0,
+          "tool_jaccard_iou": 0.75,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.75,
+          "missing_calls": 1,
+          "errors": [
+            "'get_personnel_on_duty' çağrısı yapılmamış"
+          ]
+        },
+        "grounding": {
+          "grounding_score": 0.462,
+          "total_tool_results": 4,
+          "grounded_items": 6
+        },
+        "error_recovery": {
+          "recovery_score": 1.0,
+          "error_count": 0,
+          "retry_count": 0,
+          "recoveries": [],
+          "error_messages": []
+        },
+        "layer_weights": {
+          "tool": 0.25,
+          "event": 0.2,
+          "risk": 0.15,
+          "argument": 0.15,
+          "grounding": 0.15,
+          "recovery": 0.1
+        },
+        "overall_score": 0.731
+      },
+      "debug_tools": {
+        "matched_predictions": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards"
+        ],
+        "expected_ground_truth": [
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
+        ]
+      }
+    }
+  },
+  {
+    "video_id": "test_video_045.mp4",
+    "metrics": {
+      "performance": {
+        "total_processing_time_sec": 43.063,
+        "peak_vram_gb": 41.25,
+        "real_time_factor": 2.533
+      },
+      "accuracy": {
+        "event_f1_score": 0.0,
+        "event_recall": 0.0,
+        "risk_accuracy": 0.0,
+        "tool_jaccard_score": 0.75,
+        "tool_exact_match": 0.0
+      },
+      "layer_analysis": {
+        "tool_selection": {
+          "risk_accuracy": 0.0,
+          "tool_jaccard_iou": 0.75,
+          "tool_exact_match": 0.0,
+          "detected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "get_personnel_on_duty"
+          ],
+          "expected_tools": [
+            "trigger_operator_alert",
+            "export_to_incident_management_system",
+            "assess_environmental_hazards",
+            "get_personnel_on_duty"
+          ],
+          "hallucination_rate": 0.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 1
+        },
+        "argument_extraction": {
+          "parameter_accuracy": 0.75,
+          "missing_calls": 1,
+          "errors": [
+            "'assess_environmental_hazards' çağrısı yapılmamış"
           ]
         },
         "grounding": {
@@ -2537,16 +3386,19 @@
           "grounding": 0.15,
           "recovery": 0.1
         },
-        "overall_score": 0.223
+        "overall_score": 0.47
       },
       "debug_tools": {
         "matched_predictions": [
           "trigger_operator_alert",
-          "query_previous_incidents",
-          "export_to_incident_management_system"
+          "export_to_incident_management_system",
+          "get_personnel_on_duty"
         ],
         "expected_ground_truth": [
-          "log_kpi_metrics"
+          "trigger_operator_alert",
+          "export_to_incident_management_system",
+          "assess_environmental_hazards",
+          "get_personnel_on_duty"
         ]
       }
     }

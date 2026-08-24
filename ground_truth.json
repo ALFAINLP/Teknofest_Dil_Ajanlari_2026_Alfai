@@ -78,42 +78,41 @@
   },
   {
     "video_id": "test_video_003.mp4",
-    "duration_sec": 116,
-    "summary": "Sokağa gelen şüpheli beyaz bir araçtan inen iki şahıs, sokakta park halinde duran aracın kaputunu zorla açarak akü/motor parçası hırsızlığı gerçekleştirmiş ve araçlarına binerek olay yerinden kaçmıştır.",
-    "risk": "Yüksek",
-    "risk_score": 75,
+    "duration_sec": 17,
+    "summary": "Bekleme salonuna giren bir şahıs, oturan kişiye aniden fiziksel saldırıda bulunmuş; taraflar arasında çıkan şiddetli arbede ve kavga sonucu şahıslar yere düşmüş ve çevredekiler müdahale etmiştir.",
+    "risk": "Orta",
+    "risk_score": 50,
     "events": [
       {
-        "time": "00:15",
-        "start_time": 10,
-        "end_time": 23,
-        "event": "Şüpheli araç sokağa girdi ve park halindeki aracın arkasına yanaştı",
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 3,
+        "event": "Takım elbiseli şahıs salona girerek oturan kişiye doğru yöneldi",
         "is_critical": false
       },
       {
-        "time": "00:30",
-        "start_time": 24,
-        "end_time": 42,
-        "event": "Araçtan inen şahıslar park halindeki aracın tekerlek ve kaput kısmını kurcaladı",
+        "time": "00:03",
+        "start_time": 3,
+        "end_time": 8,
+        "event": "Şahıs oturan kişiye aniden yumruk atarak fiziksel saldırı başlattı",
         "is_critical": true
       },
       {
-        "time": "00:45",
-        "start_time": 43,
-        "end_time": 70,
-        "event": "Şüpheliler park halindeki aracın motor kaputunu açarak parça hırsızlığı yaptı",
+        "time": "00:08",
+        "start_time": 8,
+        "end_time": 13,
+        "event": "Saldırıya uğrayan kişi ile saldırgan arasında arbede çıktı ve yere düştüler",
         "is_critical": true
       },
       {
-        "time": "01:15",
-        "start_time": 71,
-        "end_time": 88,
-        "event": "Çalınan malzeme araca yüklendi ve şüpheliler olay yerinden araçla uzaklaştı",
-        "is_critical": true
+        "time": "00:14",
+        "start_time": 14,
+        "end_time": 17,
+        "event": "Çevredeki güvenlik ve vatandaşlar kavgayı ayırmak için müdahale etti",
+        "is_critical": false
       }
     ],
     "actions": [
-      "trigger_operator_alert",
       "query_previous_incidents",
       "export_to_incident_management_system"
     ]
@@ -382,43 +381,44 @@
   },
   {
     "video_id": "test_video_011.mp4",
-    "duration_sec": 60,
-    "summary": "Gece saatlerinde dükkanın cam giriş kapısını minibüs/kamyonet ile geri manevra yaparak kıran maskeli hırsızlar, içerideki ATM/para kasasını zorla söküp araca yükleyerek olay yerinden kaçmıştır.",
-    "risk": "Yüksek",
-    "risk_score": 85,
+    "duration_sec": 32,
+    "summary": "Restoranda şahıslar arasında aniden silahlı/bıçaklı şiddetli çatışma çıkmış, açılan ateş sonucu bir kişi vurularak sandalyelerin arasına yığılmış ve yerde hareketsiz kalmıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
     "events": [
       {
-        "time": "00:04",
-        "start_time": 3,
-        "end_time": 9,
-        "event": "Araç dükkanın cam kapısına geri manevrayla çarparak kapıyı kırdı",
+        "time": "00:01",
+        "start_time": 1,
+        "end_time": 5,
+        "event": "Masada oturan ve ayakta duran kişiler arasında ani bir arbede ve silahlı saldırı başladı",
         "is_critical": true
       },
       {
-        "time": "00:10",
-        "start_time": 9,
-        "end_time": 32,
-        "event": "Maskeli şahıslar içeri girerek ATM makinesini yerinden sökmeye çalıştı",
+        "time": "00:06",
+        "start_time": 6,
+        "end_time": 13,
+        "event": "Saldırıya uğrayan şahıs vurularak köşedeki sandalyelerin arasına yere yığıldı",
         "is_critical": true
       },
       {
-        "time": "00:34",
-        "start_time": 33,
-        "end_time": 38,
-        "event": "Araç dükkan önüne tekrar geri yanaşarak yükleme pozisyonu aldı",
+        "time": "00:14",
+        "start_time": 14,
+        "end_time": 20,
+        "event": "Saldırganlar ve diğer müşteriler hızla olay yerinden kaçarak uzaklaştı",
         "is_critical": false
       },
       {
-        "time": "00:43",
-        "start_time": 39,
-        "end_time": 54,
-        "event": "Şüpheliler ATM cihazını aracın bagajına yükleyerek olay yerinden kaçtı",
+        "time": "00:21",
+        "start_time": 21,
+        "end_time": 32,
+        "event": "Vurulan şahıs yerde hareketsiz şekilde kaldı",
         "is_critical": true
       }
     ],
     "actions": [
       "trigger_operator_alert",
-      "query_previous_incidents",
+      "get_personnel_on_duty",
+      "log_kpi_metrics",
       "export_to_incident_management_system"
     ]
   },
@@ -733,6 +733,8 @@
     ],
     "actions": [
       "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
   },
@@ -836,7 +838,6 @@
     ],
     "actions": [
       "trigger_operator_alert",
-      "detect_motion_density",
       "get_personnel_on_duty",
       "export_to_incident_management_system"
     ]
@@ -950,7 +951,7 @@
     "duration_sec": 55,
     "summary": "Açık ofis ortamında çalışanların bulunduğu sırada, bir erkek personelin kadın çalışanın yanına gelerek yardım etmesi.",
     "risk": "Orta",
-    "risk_score": 40,
+    "risk_score": 50,
     "events": [
       {
         "time": "00:23",
@@ -1140,6 +1141,391 @@
     ],
     "actions": [
       "log_kpi_metrics"
+    ]
+  },{
+    "video_id": "test_video_035.mp4",
+    "duration_sec": 11,
+    "summary": "Yaya kaldırımında yürüyen kalabalığın üzerine kontrolden çıkan bir belediye otobüsü hızla dalarak yayalara çarpmış ve ağır can pazarı/kaza durumu gerçekleşmiştir.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 6,
+        "event": "Yayalar kaldırımda ve durak çevresinde normal şekilde yürümektedir",
+        "is_critical": false
+      },
+      {
+        "time": "00:07",
+        "start_time": 7,
+        "end_time": 9,
+        "event": "Kontrolden çıkan otobüs aniden kaldırıma çıkarak yayaların arasına daldı",
+        "is_critical": true
+      },
+      {
+        "time": "00:09",
+        "start_time": 9,
+        "end_time": 11,
+        "event": "Otobüs yayalara çarptı, panik ve ağır yaralanmalı kaza meydana geldi",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_036.mp4",
+    "duration_sec": 12,
+    "summary": "Kavşakta dönmeye çalışan araç diğer araça çarpıyor.",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 3,
+        "event": "Kavşak genelinde araç trafiği düzenli şekilde ilerlemektedir",
+        "is_critical": false
+      },
+      {
+        "time": "00:04",
+        "start_time": 4,
+        "end_time": 12,
+        "event": "Araçlar birbirine çarpıyor.",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_037.mp4",
+    "duration_sec": 15,
+    "summary": "Kavşakta hızla ilerleyen iki araç çarpışmış, çarpışmanın etkisiyle araçlardan biri takla atarak ters dönmüş ve yoldan savrulmuştur.",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 6,
+        "event": "Kavşakta araçlar beklemekte ve yavaş şekilde geçiş yapmaktadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:07",
+        "start_time": 7,
+        "end_time": 9,
+        "event": "Kavşak merkezinde iki araç yüksek hızla birbirine çarptı",
+        "is_critical": true
+      },
+      {
+        "time": "00:09",
+        "start_time": 9,
+        "end_time": 15,
+        "event": "Çarpışan araçlardan biri takla atarak ters vaziyette yol kenarında bir insana çarparak savruldu",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_038.mp4",
+    "duration_sec": 7,
+    "summary": "Kamyonet ile karşı yönden gelen araç kafa kafaya şiddetli şekilde çarpışmış, araçlarda hasar meydana gelmiştir.",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 2,
+        "event": "Kavşakta araçlar dönüş ve geçiş için manevra yapmaktadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:02",
+        "start_time": 2,
+        "end_time": 4,
+        "event": "Dönüş yapan kamyonet ile düz ilerleyen araç kavşak ortasında kafa kafaya çarpıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:04",
+        "start_time": 4,
+        "end_time": 7,
+        "event": "Çarpışmanın şiddetiyle araçlardan duman yükseldi ve araçlar yolda savruldu",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_039.mp4",
+    "duration_sec": 19,
+    "summary": "Kavşakta seyir halindeki bir minibüs/panelvan ile araç çarpışmış, çarpışmanın etkisiyle minibüs yana devrilerek yolu kapatmıştır.",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 5,
+        "event": "Kavşakta araçlar ve yayalar olağan akışında hareket etmektedir",
+        "is_critical": false
+      },
+      {
+        "time": "00:06",
+        "start_time": 6,
+        "end_time": 8,
+        "event": "Kavşak ortasında binek araç ile minibüs çarpıştı",
+        "is_critical": true
+      },
+      {
+        "time": "00:08",
+        "start_time": 8,
+        "end_time": 12,
+        "event": "Çarpışmanın etkisiyle minibüs yan yatarak devrildi ve yol ortasında sürüklendi",
+        "is_critical": true
+      },
+      {
+        "time": "00:13",
+        "start_time": 13,
+        "end_time": 19,
+        "event": "Çevredeki yayalar ve araç sürücüleri kaza yapan araca doğru yöneldi",
+        "is_critical": false
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_040.mp4",
+    "duration_sec": 28,
+    "summary": "Kalabalık protesto/miting alanında çok şiddetli bir patlama meydana gelmiş, patlamanın ardından yangın ve yoğun duman oluşmuş, alanda çok sayıda kişi yerde hareketsiz kalmıştır | yaralanmıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 3,
+        "event": "Meydanda yoğun bir kalabalık toplanmış durumdadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:04",
+        "start_time": 4,
+        "end_time": 7,
+        "event": "Kalabalığın merkezinde büyük bir alev topu ile şiddetli patlama meydana geldi",
+        "is_critical": true
+      },
+      {
+        "time": "00:08",
+        "start_time": 8,
+        "end_time": 18,
+        "event": "Patlama sonrası yoğun duman, yangın ve ikincil parlamalar alanı kapladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:19",
+        "start_time": 19,
+        "end_time": 28,
+        "event": "Duman dağıldıkça yerde çok sayıda kişinin hareketsiz yattığı ve kitlesel can pazarı oluştuğu görüldü",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "detect_motion_density",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_041.mp4",
+    "duration_sec": 35,
+    "summary": "Akaryakıt/dolum istasyonunda tanker dolumu sırasında aniden büyük bir patlama ve şiddetli yangın meydana gelmiş, görevli personel can havliyle alevlerin arasından kaçarak uzaklaşmıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 25,
+        "event": "Görevli personel tankerin üst kısmında ve dolum hattı çevresinde çalışma yapmaktadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:26",
+        "start_time": 26,
+        "end_time": 30,
+        "event": "Tanker dolum noktasında aniden şiddetli bir patlama ve büyük alev parlaması gerçekleşti",
+        "is_critical": true
+      },
+      {
+        "time": "00:31",
+        "start_time": 31,
+        "end_time": 35,
+        "event": "Aktif yangın hızla yayıldı ve personel alevlerin arasından kaçarak uzaklaştı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_042.mp4",
+    "duration_sec": 22,
+    "summary": "Elektrik kontrol ve pano odasında bakım/müdahale yapan teknik personelin çalıştığı panoda çok şiddetli bir patlama gerçekleşmiş, personel alevler altında/arasında kalmıştır.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 10,
+        "event": "Teknik personel elektrik panosu kapağını açarak müdahale ve kontrol çalışması yapmaktadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:11",
+        "start_time": 11,
+        "end_time": 15,
+        "event": "Panoda şiddetli bir elektrik ark patlaması meydana geldi ve odayı alevler kapladı",
+        "is_critical": true
+      },
+      {
+        "time": "00:16",
+        "start_time": 16,
+        "end_time": 22,
+        "event": "Patlamanın etkisiyle yoğun duman oluştu ve odada elektrik kesintisi meydana geldi",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_043.mp4",
+    "duration_sec": 50,
+    "summary": "Akaryakıt istasyonunda yakıt ikmali sırasında aracın depo girişinde aniden yangın çıkmış, sürücü panikle yakıt tabancasını çekerek alevleri yere düşürmüş ve acil kapatma butonuna basarak müdahale etmiştir.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 39,
+        "event": "Sürücü aracına yakıt doldururken aracın içine girip çıkarak statik elektrik yüklenmesine sebep oldu",
+        "is_critical": false
+      },
+      {
+        "time": "00:40",
+        "start_time": 40,
+        "end_time": 44,
+        "event": "Yakıt tabancasına dokunulduğu anda depo ağzında aniden alev parlaması ve yangın çıktı",
+        "is_critical": true
+      },
+      {
+        "time": "00:45",
+        "start_time": 45,
+        "end_time": 50,
+        "event": "Sürücü alev alan tabancayı çekip yere bıraktı ve pompa acil kapatma butonuna bastı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_044.mp4",
+    "duration_sec": 13,
+    "summary": "Endüstriyel/nükleer tesis bloğunda devasa bir patlama meydana gelmiş, gökyüzüne doğru devasa bir duman yükselerek kritik durum oluşmuştur.",
+    "risk": "Kritik",
+    "risk_score": 90,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 1,
+        "event": "Tesis genelinde uzaktan izlenen reaktör/üretim binaları görülmektedir",
+        "is_critical": false
+      },
+      {
+        "time": "00:01",
+        "start_time": 1,
+        "end_time": 4,
+        "event": "Tesis binalarından birinde ani ve şiddetli bir patlama ile alev parlaması gerçekleşti",
+        "is_critical": true
+      },
+      {
+        "time": "00:04",
+        "start_time": 4,
+        "end_time": 13,
+        "event": "Patlamanın ardından gökyüzüne doğru devasa duman ve toz bulutu yükseldi",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
+    ]
+  },{
+    "video_id": "test_video_045.mp4",
+    "duration_sec": 17,
+    "summary": "Mağazada patlama meydana gelmiştir.Patlama sonucunda tavan kaplamaları ve aydınlatma ekipmanları aniden zemine doğru çöktü",
+    "risk": "Yüksek",
+    "risk_score": 75,
+    "events": [
+      {
+        "time": "00:00",
+        "start_time": 0,
+        "end_time": 11,
+        "event": "Mağaza içinde müşteriler ve personel reyonlar arasında dolaşmaktadır",
+        "is_critical": false
+      },
+      {
+        "time": "00:12",
+        "start_time": 12,
+        "end_time": 14,
+        "event": "Patlama sonucunda tavan kaplamaları ve aydınlatma ekipmanları aniden zemine doğru çöktü",
+        "is_critical": true
+      },
+      {
+        "time": "00:14",
+        "start_time": 14,
+        "end_time": 17,
+        "event": "Çöken parçalar zemine ve reyonlara saçıldı, içeridekiler güvenli alana kaçtı",
+        "is_critical": true
+      }
+    ],
+    "actions": [
+      "trigger_operator_alert",
+      "assess_environmental_hazards",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
     ]
   }
 ]

@@ -15,6 +15,7 @@ from model_py.prompts.brain_prompt import BRAIN_SYSTEM_PROMPT
 import json
 import logging
 import re
+import time
 
 logger = logging.getLogger("ALFAI_API")
 
@@ -23,7 +24,7 @@ RISK_SCORE = {"Düşük": 25, "Orta": 50, "Yüksek": 75, "Kritik": 90}
 
 def sanitize_text(text) -> str:
     """
-    Unicode surrogate karakterlerini temizler (\ud800-\udfff aralığı).
+    Unicode surrogate karakterlerini temizler (\\ud800-\\udfff aralığı).
     Vision modeli bazen bu karakterleri üretiyor; UTF-8 encode edilemiyor
     ve API'ye gönderilince 400 hatası veriyor.
     """
@@ -115,6 +116,7 @@ def higher_risk(a, b):
     return a if RISK_ORDER[a] >= RISK_ORDER[b] else b
 
 def extract_video_info_node(state: AgentState) -> AgentState:
+    node_start = time.time()
     import tools.mock_actions as mock_actions
 
     video_path = state.get("video_path", "")
@@ -227,6 +229,9 @@ def extract_video_info_node(state: AgentState) -> AgentState:
         ]
     }]
     logger.info(f"🎯 Vision Risk={vision_risk} | Score=%{state['vision_risk_score']}")
+    logger.info(
+        f"⏱️ EXTRACT VIDEO NODE SÜRESİ: {time.time() - node_start:.2f} saniye"
+    )
     return state
 
 
@@ -237,23 +242,15 @@ def _build_required_tools_hint(events: list) -> str:
         for e in events
     )
 
-    if any(k in event_texts for k in ["yangın", "duman", "patlama", "alev", "gaz"]):
-        lines.append("- Ortamda yangın/duman tespit edildi: assess_environmental_hazards aracı KESİNLİKLE kullanılmalıdır.")
-    
-    # 🌟 Kalabalık/İzdiham İpucu (Sokak toplanması ve kaçışmalar için)
-    if any(k in event_texts for k in ["kalabalık", "kaçıştı", "toplandı", "izdiham", "kargaşa"]):
-        lines.append("- Olay yerinde toplu kaçışma veya kalabalık toplanması var: detect_motion_density aracı ZORUNLU olarak çağrılmalıdır.")
-
-    # 🌟 Kasıtlı Suç/Saldırı İpucu (Soygun ve Sokak Darp olayları için)
-    if any(k in event_texts for k in ["kaput", "kurcala", "sök", "bagaj", "hırsız", "çal", "soygun", "maskeli", "atm", "kasa", "gasp", "şüpheli", "vitrin", "darp", "sopayla", "saldırgan", "kavga"]):
-        lines.append("- Kasıtlı Suç/Saldırı tespiti: Bu olay bir kaza değil, KASITLI BİR SUÇTUR! trigger_operator_alert ve query_previous_incidents araçları DERHAL VE ZORUNLU OLARAK çağrılmalıdır.")
-        
-    if any(k in event_texts for k in ["işçi", "personel", "kişi", "çalışan", "şahıs", "insan", "yaralı", "müşteri", "birey", "tahliye", "kaç"]):
+    if any(k in event_texts for k in ["işçi", "personel", "kişi", "çalışan", "şahıs", "insan", "yaralı", "müşteri", "birey", "tahliye", "kaç", "devasa patlama"]):
         lines.append("- Sahada etkilenen insan/personel var: get_personnel_on_duty ile can güvenliği veya görevli durumu ZORUNLU OLARAK sorgulanmalıdır.")
     
     if any(k in event_texts for k in ["kaza", "çarpış", "devril", "yangın", "patlama", "silah", "saldırı"]):
         lines.append("- Kritik/Acil olay tespit edildi: trigger_operator_alert ile operatör DERHAL uyarılmalıdır.")
-
+    
+    if any(k in event_texts for k in ["yangın", "alev", "duman", "patlama", "kimyasal", "gaz", "sızıntı", "çöktü", "çöker", "çökmesi", "çökme", "yıkıl", "enkaz"]):
+        lines.append("- ÇEVRESEL TEHLİKE TESPİTİ: Olayda yangın, patlama, sızıntı veya yapısal çökme (raf/eşya devrilmesi dahil) tespit edildi! Çevresel etki ve enkaz değerlendirmesi için 'assess_environmental_hazards' aracı ZORUNLU OLARAK çağrılmalıdır.")
+    
     if not lines:
         return ""
 
@@ -264,6 +261,7 @@ def _build_required_tools_hint(events: list) -> str:
     )
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
+    node_start = time.time()
     zone = state.get("current_zone", "Genel Saha")
     video_path = state.get("video_path", "")
     vision_risk = normalize_risk(state.get("vision_risk", "Düşük"))
@@ -315,7 +313,11 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     decision_made = False
     while react_step < 5 and not decision_made:
         react_step += 1
+        brain_start = time.time()
         brain_response = analyze_state(react_messages, force_json=False)
+        logger.info(
+            f"⏱️ BRAIN MODEL SÜRESİ: {time.time() - brain_start:.2f} saniye"
+        )
         assistant_msg = {"role": "assistant", "content": brain_response.content or ""}
         if getattr(brain_response, "tool_calls", None):
             assistant_msg["tool_calls"] = [{
@@ -382,6 +384,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
                 args["zone"] = zone
 
             logger.info(f"⚙️ [{react_step}] '{tool_name}' çalıştırılıyor")
+            tool_start = time.time()
 
             if tool_name == "submit_final_decision":
                 raw = str(args.get("risk_level", highest_risk)).strip()
@@ -402,6 +405,10 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
                     "args": normalized_args,
                     "result": tool_result
                 })
+                logger.info(
+                    f"⏱️ TOOL SÜRESİ | {tool_name}: "
+                    f"{time.time() - tool_start:.2f} saniye"
+                )
                 logger.info(f"🛡️ Risk koruma | Vision={vision_risk} | Brain={brain_risk} | Final={highest_risk}")
                 react_messages.append({
                     "role": "tool", "tool_call_id": tc.id,
@@ -436,6 +443,10 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             except Exception as e:
                 tool_result = {"error": str(e)}
 
+            logger.info(
+                f"⏱️ TOOL SÜRESİ | {tool_name}: "
+                f"{time.time() - tool_start:.2f} saniye"
+            )
             executed_tools.add(tool_name)
             
             # 🔥 SADECE BİR APPEND - normalized_args ile
@@ -482,6 +493,9 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     logger.info(
         f"📋 ReAct Özeti | Toplam Adım: {react_step} | "
         f"Vision={vision_risk} | Final Risk={highest_risk} | Score=%{state['risk_score']}"
+    )
+    logger.info(
+        f"⏱️ EVALUATE RISKS NODE SÜRESİ: {time.time() - node_start:.2f} saniye"
     )
     return state
 
@@ -569,6 +583,7 @@ def _validate_tool_choice(tool_name: str, state: AgentState) -> tuple[bool, str]
     return True, f"'{tool_name}' seçimi dinamik olarak onaylandı."
 
 def compile_report_node(state: AgentState) -> AgentState:
+    node_start = time.time()
     brain_risk = normalize_risk(
         state.get("risk_assessments", ["Düşük"])[0]
     )
@@ -734,6 +749,9 @@ def compile_report_node(state: AgentState) -> AgentState:
     logger.info(
         f"📤 FINAL RISK | Vision={vision_risk} | Brain={brain_risk} | "
         f"Final={highest_risk} | Score=%{calculated_score}"
+    )
+    logger.info(
+        f"⏱️ COMPILE REPORT NODE SÜRESİ: {time.time() - node_start:.2f} saniye"
     )
     return state
 
