@@ -1,259 +1,216 @@
-# kpi.py
+"""
+diagnose_kpi.py — "F1 neden düşük?" sorusunu veriye dayandırır.
+
+Pipeline'ı YENİDEN ÇALIŞTIRMAZ. Mevcut benchmark_results_enhanced.json
+içindeki missed_gt / false_positives kayıtlarını okuyup her kaçırılan GT
+olayı için kabahatin nerede olduğunu sınıflandırır:
+
+  ZAMAN     : hiçbir tahmin bu GT aralığıyla zamanda örtüşmüyor
+              -> model olayı yanlış saniyeye koymuş VEYA GT süresi bozuk
+  METİN     : zamanda örtüşen bir tahmin var ama metin benzerliği eşiğin altında
+              -> model olayı gördü, farklı kelimelerle anlattı
+  TAHMİN_YOK: model o video için hiç (eşleşmemiş) tahmin üretmemiş
+
+Kullanım:
+    python diagnose_kpi.py
+    python diagnose_kpi.py --input benchmark_results_enhanced.json --top 10
+"""
+
+from __future__ import annotations
+
+import argparse
 import json
-import os
 import re
-import time
-import numpy as np
-import torch
-from typing import List, Dict, Any, Set
+import sys
+from collections import Counter
+from typing import Any, Dict, List, Optional, Tuple
 
-from agent.graph import app
+try:
+    from kpi_enhanced import (TurkishTextProcessor, TEXT_THRESHOLD,
+                              IOM_THRESHOLD, tolerance_for_duration)
+except ImportError:
+    print("❌ kpi_enhanced.py aynı klasörde olmalı.")
+    sys.exit(1)
 
-def run_agent_pipeline(video_path: str) -> dict:
-    """
-    Her video için sıfırdan temiz bir state ile LangGraph pipeline'ını çalıştırır.
-    Hafıza kirliliğini önlemek için tool_history sıfır başlatılır.
-    """
-    initial_state = {
-        "video_path": video_path,
-        "current_time_segments": [],
-        "detected_events": [],
-        "risk_assessments": [],
-        "actions_recommended": [],
-        "final_json_output": "",
-        "next_step": "",
-        "event_history": [],
-        "risk_history": [],
-        "tool_history": [],
-        "messages": []
-    }
 
-    final_output = app.invoke(initial_state)
+def _overlap(a: List[float], b: List[float]) -> float:
+    return max(0.0, min(a[1], b[1]) - max(a[0], b[0]))
 
-    # 1. JSON çıktısını çözümle
-    final_json = final_output.get("final_json_output", "")
-    parsed_report = {}
-    if isinstance(final_json, str) and final_json.strip():
-        try:
-            cleaned_json = re.sub(r"^```json\s*|\s*```$", "", final_json.strip(), flags=re.MULTILINE)
-            parsed_report = json.loads(cleaned_json)
-        except Exception:
-            parsed_report = {}
-    elif isinstance(final_json, dict):
-        parsed_report = final_json
 
-    # 2. Risk ve Olaylar
-    detected_risk = parsed_report.get("risk", final_output.get("risk_assessments", ["Düşük"])[0])
-    detected_events = parsed_report.get("events", final_output.get("detected_events", []))
-    
-    # 3. Actions / Tools (actions_recommended ve tool_history birleşimi)
-    executed_tools = set(final_output.get("actions_recommended", []))
-    for item in final_output.get("tool_history", []):
-        if isinstance(item, dict) and "tool" in item:
-            executed_tools.add(item["tool"])
+def _iom(a: List[float], b: List[float]) -> float:
+    la, lb = a[1] - a[0], b[1] - b[0]
+    denom = min(la, lb)
+    return _overlap(a, b) / denom if denom > 0 else 0.0
 
-    return {
-        "risk_level": detected_risk,
-        "events": detected_events,
-        "actions": list(executed_tools)
-    }
 
-class AgentBenchmarkKPI:
-    def __init__(self, time_tolerance_sec: int = 6):
-        self.time_tolerance = time_tolerance_sec
+def classify_miss(miss: Dict[str, Any],
+                  fps: List[Dict[str, Any]]) -> Tuple[str, Optional[float], Optional[float]]:
+    """Kaçırılan bir GT olayı için kabahati sınıflandır."""
+    gt_iv = miss.get("interval")
+    if not fps:
+        return "TAHMIN_YOK", None, None
+    if not gt_iv:
+        return "ZAMAN", None, None
 
-    def _time_to_seconds(self, time_val: Any) -> int:
-        if isinstance(time_val, (int, float)):
-            return int(time_val)
-        if isinstance(time_val, str):
-            parts = time_val.strip().split(':')
-            if len(parts) == 2:
-                return int(parts[0]) * 60 + int(parts[1])
-            elif len(parts) == 3:
-                return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
-        return 0
-
-    def _extract_tool_names(self, action_list: List[str]) -> Set[str]:
-        valid_tools = {
-            "trigger_operator_alert", "get_personnel_on_duty",
-            "assess_environmental_hazards", "query_previous_incidents",
-            "export_to_incident_management_system", "detect_motion_density"
-        }
-        extracted = set()
-        for item in action_list:
-            item_str = str(item).lower()
-            for vt in valid_tools:
-                if vt in item_str:
-                    extracted.add(vt)
-        return extracted
-
-    def evaluate_events(self, pred_events: List[Dict], true_events: List[Dict]) -> Dict[str, float]:
-        tp, fp = 0, 0
-        matched_gt = set()
-
-        for pred in pred_events:
-            p_time = self._time_to_seconds(pred.get("time", pred.get("start_time", 0)))
-            p_desc = str(pred.get("event", pred.get("description", ""))).lower()
-            match_found = False
-
-            for i, gt in enumerate(true_events):
-                if i in matched_gt:
-                    continue
-                g_time = self._time_to_seconds(gt.get("time", gt.get("start_time", 0)))
-                g_desc = str(gt.get("event", "")).lower()
-
-                # Zaman farkı toleransı
-                if abs(p_time - g_time) <= self.time_tolerance:
-                    # En az bir ortak anahtar kelime eşleşmesi
-                    pred_words = set([w for w in re.findall(r'\w+', p_desc) if len(w) > 2])
-                    gt_words = set([w for w in re.findall(r'\w+', g_desc) if len(w) > 2])
-                    if pred_words.intersection(gt_words) or len(pred_words) == 0:
-                        tp += 1
-                        matched_gt.add(i)
-                        match_found = True
-                        break
-            if not match_found:
-                fp += 1
-
-        fn = len(true_events) - len(matched_gt)
-        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
-        return {"precision": precision, "recall": recall, "f1_score": f1}
-
-    def evaluate_actions_and_risk(self, pred: Dict, true: Dict) -> Dict[str, Any]:
-        pred_risk = str(pred.get("risk_level", pred.get("risk", ""))).strip().lower()
-        true_risk = str(true.get("risk_level", true.get("risk", ""))).strip().lower()
-        
-        risk_score = 1.0 if (pred_risk == true_risk and pred_risk != "") else 0.0
-
-        pred_tools = self._extract_tool_names(pred.get("actions", []))
-        true_tools = self._extract_tool_names(true.get("actions", []))
-
-        intersection = len(pred_tools.intersection(true_tools))
-        union = len(pred_tools.union(true_tools))
-
-        if len(pred_tools) == 0 and len(true_tools) == 0:
-            tool_jaccard_iou = 1.0
-            tool_exact_match = 1.0
-        else:
-            tool_jaccard_iou = intersection / union if union > 0 else 0.0
-            tool_exact_match = 1.0 if pred_tools == true_tools else 0.0
-
-        return {
-            "risk_accuracy": risk_score,
-            "tool_jaccard_iou": round(tool_jaccard_iou, 3),
-            "tool_exact_match": tool_exact_match,
-            "detected_tools": list(pred_tools),
-            "expected_tools": list(true_tools)
-        }
-
-    def run_benchmark(self, pipeline_fn, video_path: str, ground_truth: Dict[str, Any], video_duration_sec: float) -> Dict[str, Any]:
-        if torch.cuda.is_available():
-            torch.cuda.reset_peak_memory_stats()
-            torch.cuda.synchronize()
-
-        start_time = time.perf_counter()
-        prediction = pipeline_fn(video_path)
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
-        total_latency = time.perf_counter() - start_time
-
-        peak_vram_gb = torch.cuda.max_memory_allocated() / (1024 ** 3) if torch.cuda.is_available() else 0.0
-        rtf = total_latency / video_duration_sec if video_duration_sec > 0 else 0.0
-
-        event_kpis = self.evaluate_events(prediction.get("events", []), ground_truth.get("events", []))
-        decision_kpis = self.evaluate_actions_and_risk(prediction, ground_truth)
-
-        return {
-            "performance": {
-                "total_processing_time_sec": round(total_latency, 3),
-                "peak_vram_gb": round(peak_vram_gb, 2),
-                "real_time_factor": round(rtf, 3)
-            },
-            "accuracy": {
-                "event_f1_score": round(event_kpis["f1_score"], 3),
-                "event_recall": round(event_kpis["recall"], 3),
-                "risk_accuracy": decision_kpis["risk_accuracy"],
-                "tool_jaccard_score": decision_kpis["tool_jaccard_iou"],
-                "tool_exact_match": decision_kpis["tool_exact_match"]
-            },
-            "debug_tools": {
-                "matched_predictions": decision_kpis["detected_tools"],
-                "expected_ground_truth": decision_kpis["expected_tools"]
-            }
-        }
-
-def run_full_benchmark(ground_truth_path: str = "ground_truth.json", videos_dir: str = "Videos"):
-    if not os.path.exists(ground_truth_path):
-        print(f"❌ Hata: '{ground_truth_path}' bulunamadı.")
-        return
-
-    with open(ground_truth_path, "r", encoding="utf-8") as f:
-        ground_truth_list = json.load(f)
-
-    benchmark = AgentBenchmarkKPI(time_tolerance_sec=6)
-    all_results = []
-    
-    f1_scores, recalls, risk_accs, tool_jaccards, tool_exacts, rtf_scores, vram_usages, latencies = [], [], [], [], [], [], [], []
-
-    print(f"\n🚀 {len(ground_truth_list)} video için KPI Benchmark başlatılıyor...\n" + "="*70)
-
-    for item in ground_truth_list:
-        video_id = item.get("video_id", "")
-        duration = float(item.get("duration_sec", 1.0))
-        video_path = os.path.join(videos_dir, video_id)
-
-        if not os.path.exists(video_path):
-            print(f"⚠️ Video bulunamadı: {video_path} (atlanıyor)")
+    best_iom, best_sim, best_sim_at_overlap = 0.0, 0.0, 0.0
+    for fp in fps:
+        fp_iv = fp.get("interval")
+        if not fp_iv:
             continue
+        iom = _iom(gt_iv, fp_iv)
+        sim = TurkishTextProcessor.similarity(miss.get("text", ""), fp.get("text", ""))
+        best_iom = max(best_iom, iom)
+        best_sim = max(best_sim, sim)
+        if iom >= IOM_THRESHOLD:
+            best_sim_at_overlap = max(best_sim_at_overlap, sim)
 
-        print(f"▶️ Test ediliyor: {video_id} ({duration} sn)")
+    if best_iom < IOM_THRESHOLD:
+        return "ZAMAN", best_iom, best_sim
+    return "METIN", best_iom, best_sim_at_overlap
 
-        res = benchmark.run_benchmark(
-            pipeline_fn=run_agent_pipeline,
-            video_path=video_path,
-            ground_truth=item,
-            video_duration_sec=duration
-        )
 
-        all_results.append({"video_id": video_id, "metrics": res})
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--input", default="benchmark_results_enhanced.json")
+    ap.add_argument("--top", type=int, default=8, help="Kaç kötü video listelensin")
+    args = ap.parse_args()
 
-        f1_scores.append(res["accuracy"]["event_f1_score"])
-        recalls.append(res["accuracy"]["event_recall"])
-        risk_accs.append(res["accuracy"]["risk_accuracy"])
-        tool_jaccards.append(res["accuracy"]["tool_jaccard_score"])
-        tool_exacts.append(res["accuracy"]["tool_exact_match"])
-        rtf_scores.append(res["performance"]["real_time_factor"])
-        vram_usages.append(res["performance"]["peak_vram_gb"])
-        latencies.append(res["performance"]["total_processing_time_sec"])
+    with open(args.input, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-    if not all_results:
-        print("❌ Hiçbir video işlenemedi.")
-        return
+    results = data["results"] if isinstance(data, dict) and "results" in data else data
+    run_summary = data.get("run_summary", {}) if isinstance(data, dict) else {}
 
-    print("\n" + "="*70)
-    print("📊 TEKNOFEST KPI DEĞERLENDİRME RAPORU")
-    print("="*70)
-    print(f"Toplam Test Edilen Video : {len(all_results)}")
+    reasons: Counter = Counter()
+    per_video: List[Dict[str, Any]] = []
+    total_gt = total_tp = total_fp = 0
+    crit_missed = 0
+    near_miss_text: List[Tuple[str, str, str, float, float]] = []
+
+    for row in results:
+        vid = row["video_id"]
+        ev = row["metrics"]["layer_analysis"]["event_analysis"]
+        misses = ev.get("missed_gt", [])
+        fps = ev.get("false_positives", [])
+
+        total_gt += ev.get("total_gt_events", 0)
+        total_tp += ev.get("tp", 0)
+        total_fp += ev.get("fp", 0)
+
+        vid_reasons: Counter = Counter()
+        for miss in misses:
+            reason, iom, sim = classify_miss(miss, fps)
+            reasons[reason] += 1
+            vid_reasons[reason] += 1
+            if miss.get("critical"):
+                crit_missed += 1
+            if reason == "METIN" and sim is not None:
+                near_miss_text.append(
+                    (vid, miss.get("text", "")[:48],
+                     max((f.get("text", "") for f in fps), key=len, default="")[:48],
+                     iom or 0.0, sim))
+
+        per_video.append({
+            "video": vid,
+            "f1": row["metrics"]["accuracy"]["event_f1_score"],
+            "gt": ev.get("total_gt_events", 0),
+            "pred": ev.get("detected_events", 0),
+            "tp": ev.get("tp", 0), "fp": ev.get("fp", 0), "fn": ev.get("fn", 0),
+            "tol": ev.get("tolerance_sec"),
+            "reasons": dict(vid_reasons),
+            "unparsable": ev.get("unparsable_pred_times", 0),
+        })
+
+    total_missed = sum(reasons.values())
+
+    print("\n" + "=" * 70)
+    print("KAÇIRILAN OLAYLARIN KABAHAT DAĞILIMI")
+    print("=" * 70)
+    print(f"Toplam GT olayı      : {total_gt}")
+    print(f"Eşleşen (TP)         : {total_tp}")
+    print(f"Kaçırılan (FN)       : {total_missed}")
+    print(f"Fazladan tahmin (FP) : {total_fp}")
+    print(f"Kaçırılan kritik olay: {crit_missed}")
     print("-" * 70)
-    print("🎯 DOĞRULUK METRİKLERİ:")
-    print(f"  • Ortalama Event F1-Score : {np.mean(f1_scores):.3f}")
-    print(f"  • Ortalama Event Recall   : {np.mean(recalls):.3f}")
-    print(f"  • Risk Doğruluğu (Acc)    : %{np.mean(risk_accs) * 100:.1f}")
-    print(f"  • Tool Jaccard (IoU)      : {np.mean(tool_jaccards):.3f}")
-    print(f"  • Tool Exact Match        : %{np.mean(tool_exacts) * 100:.1f}")
-    print("-" * 70)
-    print("⚡ PERFORMANS METRİKLERİ:")
-    print(f"  • Ort. İşlem Süresi (sn)  : {np.mean(latencies):.2f} sn")
-    print(f"  • Ort. Real Time Factor   : {np.mean(rtf_scores):.3f} (RTF < 1.0 = Gerçek zamandan hızlı)")
-    print(f"  • Peak VRAM Kullanımı     : {np.max(vram_usages):.2f} GB")
-    print("="*70)
+    for reason, count in reasons.most_common():
+        pct = 100 * count / total_missed if total_missed else 0
+        label = {
+            "ZAMAN": "ZAMAN     — zamanda örtüşen tahmin yok",
+            "METIN": "METİN     — zaman tuttu, kelimeler tutmadı",
+            "TAHMIN_YOK": "TAHMİN_YOK— model o videoda tahmin üretmemiş",
+        }.get(reason, reason)
+        bar = "█" * int(pct / 2.5)
+        print(f"  {label:<45} {count:>4}  %{pct:5.1f} {bar}")
 
-    with open("benchmark_results.json", "w", encoding="utf-8") as f_out:
-        json.dump(all_results, f_out, indent=2, ensure_ascii=False)
-    print("📁 Detaylı loglar 'benchmark_results.json' dosyasına kaydedildi.\n")
+    print("\n" + "=" * 70)
+    print("YORUM")
+    print("=" * 70)
+    z = 100 * reasons.get("ZAMAN", 0) / total_missed if total_missed else 0
+    t = 100 * reasons.get("METIN", 0) / total_missed if total_missed else 0
+    if z > 55:
+        print("→ Baskın sorun ZAMAN. Bu genelde modelin olayı gördüğü ama yanlış")
+        print("  saniyeye koyduğu ya da GT'nin zaman ekseninin kaymış olduğu anlamına")
+        print("  gelir. Önce duration uyarısı olan videoları ayıklayın; onlarda GT")
+        print("  zaten farklı bir zaman eksenine göre etiketlenmiş olabilir.")
+    elif t > 55:
+        print("→ Baskın sorun METİN. Model olayları doğru anda tespit ediyor ama")
+        print("  GT'den farklı kelimelerle anlatıyor. Bu bir tespit sorunu DEĞİL,")
+        print("  bir ifade/eşik sorunu. Vision prompt'unda GT'ye yakın terminoloji")
+        print("  istemek veya TEXT_THRESHOLD'u düşürmek gündeme gelir.")
+    else:
+        print("→ Zaman ve metin sorunları dengeli dağılmış; ikisi de tek başına")
+        print("  baskın değil. Aşağıdaki video listesinden başlayın.")
+
+    warnings = run_summary.get("duration_warnings", [])
+    if warnings:
+        bad = {w.split(":")[0] for w in warnings}
+        affected = [v for v in per_video if v["video"] in bad]
+        clean = [v for v in per_video if v["video"] not in bad]
+        f1_bad = sum(v["f1"] for v in affected) / len(affected) if affected else 0
+        f1_clean = sum(v["f1"] for v in clean) / len(clean) if clean else 0
+        print("\n" + "=" * 70)
+        print("SÜRE TUTARSIZLIĞININ ETKİSİ")
+        print("=" * 70)
+        print(f"  Süresi tutarsız {len(affected):>2} video -> ort. F1 = {f1_bad:.3f}")
+        print(f"  Süresi tutarlı  {len(clean):>2} video -> ort. F1 = {f1_clean:.3f}")
+        if f1_clean > f1_bad + 0.05:
+            print(f"\n  ⚠️  Fark {f1_clean - f1_bad:.3f}. Düşük F1'in kayda değer bir kısmı")
+            print("      ground_truth.json'daki yanlış duration_sec / kaymış zaman")
+            print("      ekseninden geliyor. Model hatası değil, etiket hatası.")
+        else:
+            print("\n  Süre tutarsızlığı F1 üzerinde belirgin bir fark yaratmamış;")
+            print("  sorun başka yerde.")
+
+    print("\n" + "=" * 70)
+    print(f"EN KÖTÜ {args.top} VİDEO")
+    print("=" * 70)
+    print(f"{'video':<24}{'F1':>6}{'GT':>4}{'Pr':>4}{'TP':>4}{'FP':>4}{'FN':>4}"
+          f"{'tol':>6}  kabahat")
+    for v in sorted(per_video, key=lambda x: x["f1"])[:args.top]:
+        r = ", ".join(f"{k}×{n}" for k, n in v["reasons"].items()) or "-"
+        tol = f"{v['tol']:.1f}" if v["tol"] else "-"
+        print(f"{v['video']:<24}{v['f1']:>6.2f}{v['gt']:>4}{v['pred']:>4}"
+              f"{v['tp']:>4}{v['fp']:>4}{v['fn']:>4}{tol:>6}  {r}")
+
+    unparsable = sum(v["unparsable"] for v in per_video)
+    if unparsable:
+        print(f"\n⚠️  {unparsable} tahminin zaman alanı ayrıştırılamadı "
+              f"(eşleşme şansı yok). Vision çıktısındaki time formatını kontrol edin.")
+
+    if near_miss_text:
+        print("\n" + "=" * 70)
+        print("ZAMAN TUTTU, METİN TUTMADI — en yakın kaçanlar")
+        print("=" * 70)
+        print(f"(eşik: metin ≥ {TEXT_THRESHOLD})")
+        for vid, gt_t, pred_t, iom, sim in sorted(
+                near_miss_text, key=lambda x: -x[4])[:6]:
+            print(f"\n  {vid}  IoM={iom:.2f}  benzerlik={sim:.2f}")
+            print(f"    GT   : {gt_t}")
+            print(f"    Pred : {pred_t}")
+
+    print("\n" + "=" * 70 + "\n")
+    return 0
+
 
 if __name__ == "__main__":
-    run_full_benchmark(ground_truth_path="ground_truth.json", videos_dir="Videos")
+    sys.exit(main())

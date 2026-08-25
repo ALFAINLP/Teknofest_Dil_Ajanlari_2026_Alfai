@@ -235,29 +235,44 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     return state
 
 
-def _build_required_tools_hint(events: list) -> str:
+def _build_required_tools_hint(events: list, vision_risk: str = "Düşük") -> str:
     lines = []
     event_texts = " ".join(
         str(e.get("event", "")).lower() if isinstance(e, dict) else str(e).lower()
         for e in events
     )
+    risk_level = normalize_risk(vision_risk)
+    is_high = risk_level in ["Kritik", "Yüksek"]
 
-    if any(k in event_texts for k in ["işçi", "personel", "kişi", "çalışan", "şahıs", "insan", "yaralı", "müşteri", "birey", "tahliye", "kaç", "devasa patlama"]):
-        lines.append("- Sahada etkilenen insan/personel var: get_personnel_on_duty ile can güvenliği veya görevli durumu ZORUNLU OLARAK sorgulanmalıdır.")
-    
-    if any(k in event_texts for k in ["kaza", "çarpış", "devril", "yangın", "patlama", "silah", "saldırı"]):
-        lines.append("- Kritik/Acil olay tespit edildi: trigger_operator_alert ile operatör DERHAL uyarılmalıdır.")
-    
-    if any(k in event_texts for k in ["yangın", "alev", "duman", "patlama", "kimyasal", "gaz", "sızıntı", "çöktü", "çöker", "çökmesi", "çökme", "yıkıl", "enkaz"]):
-        lines.append("- ÇEVRESEL TEHLİKE TESPİTİ: Olayda yangın, patlama, sızıntı veya yapısal çökme (raf/eşya devrilmesi dahil) tespit edildi! Çevresel etki ve enkaz değerlendirmesi için 'assess_environmental_hazards' aracı ZORUNLU OLARAK çağrılmalıdır.")
-    
+    if is_high or any(k in event_texts for k in [
+        "işçi", "personel", "kişi", "çalışan", "şahıs", "yaralı",
+        "müşteri", "tahliye", "kaç", "yardım", "koştu"
+    ]):
+        lines.append("- Sahadaki personelin durumu ve can güvenliği değerlendirilmeli")
+
+    if is_high or any(k in event_texts for k in [
+        "kaza", "çarpış", "devril", "yangın", "patlama", "saldırı", "silah"
+    ]):
+        lines.append("- Kritik olay nedeniyle operatörün bilgilendirilmesi gerekip gerekmediği değerlendirilmeli")
+
+    if any(k in event_texts for k in [
+        "yangın", "alev", "duman", "patlama", "kimyasal", "gaz",
+        "çöktü", "çökme", "yıkıl", "enkaz", "parlama", "ateş"
+    ]):
+        lines.append("- Yangın, patlama veya yapısal hasar nedeniyle çevresel tehlike değerlendirmesi yapılmalı")
+
+    if any(k in event_texts for k in [
+        "hırsız", "soygun", "maskeli", "şüpheli", "kasıtlı", "kundak"
+    ]):
+        lines.append("- Kasıtlı/planlı bir olay şüphesi var, geçmiş benzer vakalar incelenmeli")
+
     if not lines:
         return ""
 
     return (
-        "\nSahada tespit edilen durumlara göre kullanman GEREKEN araçlar:\n"
+        "\nOlay içeriğine göre aşağıdaki konuları analiz etmeni öneririm:\n"
         + "\n".join(lines)
-        + "\nBu ipuçlarını dikkate alarak eksiksiz bir analiz yap."
+        + "\nHangilerinin bu senaryo için gerekli olduğuna sen karar ver."
     )
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
@@ -302,7 +317,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     tool_history_entries = []
     impact_desc = "Otonom yapay zeka analizi devrede."
 
-    required_tools_hint = _build_required_tools_hint(events)
+    required_tools_hint = _build_required_tools_hint(events, vision_risk=vision_risk)
 
     react_messages = [
         {"role": "system", "content": BRAIN_SYSTEM_PROMPT},

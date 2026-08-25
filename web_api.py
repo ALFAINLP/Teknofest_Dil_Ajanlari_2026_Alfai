@@ -15,6 +15,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 
 from model_py.services.vision_service import analyze_video
+from model_py.services.client import vision_client
 from model_py.services.camera_triage_service import analyze_camera_triage
 from model_py.config.settings import VISION_BASE_URL, VISION_MODEL
 
@@ -243,24 +244,31 @@ def export_incident(payload: dict) -> dict:
 @app.get("/api/health")
 def health() -> dict:
     try:
-        with urlopen(f"{VISION_BASE_URL}/models", timeout=2) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-        available_models = {item.get("id") for item in payload.get("data", [])}
-        model_ready = VISION_MODEL in available_models
+        response = vision_client.models.list()
+        available_models = {
+            model.id
+            for model in response.data
+            if getattr(model, "id", None)
+        }
+
+        model_ready = bool(available_models)
+
         return {
             "status": "healthy" if model_ready else "degraded",
             "vision_model": VISION_MODEL,
             "model_ready": model_ready,
+            "connection": "evren_api",
+            "available_models": sorted(available_models),
         }
-    except (OSError, URLError, ValueError, json.JSONDecodeError) as error:
+
+    except Exception as error:
         return {
             "status": "degraded",
             "vision_model": VISION_MODEL,
             "model_ready": False,
+            "connection": "evren_api",
             "detail": str(error),
-        }
-
-
+}
 @app.get("/api/performance")
 def performance() -> dict:
     """Analiz sırasında panelin sorguladığı anlık donanım telemetrisi."""

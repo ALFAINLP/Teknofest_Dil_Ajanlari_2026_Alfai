@@ -24,7 +24,7 @@
         "time": "00:19",
         "start_time": 18,
         "end_time": 22,
-        "event": "Kamyon işçiye çarptı ve işçi yerde hareketsiz kaldı",
+        "event": "Kamyon kapağı işçiye çarptı ve işçi yerde hareketsiz kaldı",
         "is_critical": true
       }
     ],
@@ -435,27 +435,6 @@
         "end_time": 16,
         "event": "Araç market vitrinine çarparak içeri girdi ve rafları yıktı",
         "is_critical": true
-      },
-      {
-        "time": "00:24",
-        "start_time": 22,
-        "end_time": 45,
-        "event": "Şüpheli şahıs içeri girerek kasa ve tezgah arkasını kurcaladı",
-        "is_critical": true
-      },
-      {
-        "time": "00:48",
-        "start_time": 46,
-        "end_time": 75,
-        "event": "Şüpheli dükkandaki malzemeleri dışarıya doğru taşımaya başladı",
-        "is_critical": true
-      },
-      {
-        "time": "01:05",
-        "start_time": 100,
-        "end_time": 113,
-        "event": "İki şüpheli malzemeleri araca yükleyerek olay yerinden kaçtı",
-        "is_critical": true
       }
     ],
     "actions": [
@@ -488,7 +467,7 @@
       {
         "time": "00:08",
         "start_time": 7,
-        "end_time": 26,
+        "end_time": 13,
         "event": "Devrilen malzeme yola saçıldı ve operatör kaza alanını kontrol etti",
         "is_critical": false
       }
@@ -714,7 +693,7 @@
     "events": [
       {
         "time": "00:04",
-        "start_time": 2,
+        "start_time": 3,
         "end_time": 7,
         "event": "Depo raflarında yapısal eğilme ve çökme başlangıcı görüldü",
         "is_critical": true
@@ -1417,7 +1396,7 @@
         "time": "00:11",
         "start_time": 11,
         "end_time": 15,
-        "event": "Panoda şiddetli bir elektrik ark patlaması meydana geldi ve odayı alevler kapladı",
+        "event": "Panoda şiddetli bir elektrik patlaması meydana geldi ve odayı alevler kapladı",
         "is_critical": true
       },
       {
