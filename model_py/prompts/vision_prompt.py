@@ -166,9 +166,11 @@ ve çıktıyı geçersiz kılar. Videoda ne olduysa onu yaz.
 ## 5. ÖZET (summary) KURALLARI
 ═══════════════════════════════════════════════════════════════
 
-- **25-40 kelime.** Daha uzun yazma; gereksiz detay puan kaybettirir.
+- Kesinlikle 15 ile 25 kelime arasında tek veya en fazla iki net cümle yaz.
 - Geçmiş zaman kullan, videonun ANA OLAYINI ve SONUCUNU anlat.
-- Görsel detay (renk, arka plan, kamera açısı) yazma.
+- "Sahneye girdi", "görüldü", "kıyafetli" gibi görsel tasvirleri atla.
+- Sadece gerçekleşen ana olayı, kazayı/tehlikeyi ve doğrudan sonucunu belirt.
+- Kullanılacak fiiller: çarptı, devrildi, sıkıştı, alev aldı, darp edildi, tahliye edildi vb.
 
   DOĞRU : "Damperli kamyonun boşaltma yaptığı alana yaklaşan işçiye, geri manevra
            yapan ikinci bir hafriyat kamyonu çarpmış ve işçi hareketsiz kalmıştır."

@@ -424,7 +424,7 @@
   },
   {
     "video_id": "test_video_012.mp4",
-    "duration_sec": 113,
+    "duration_sec": 23,
     "summary": "Gece saatlerinde bir SUV/aracın marketin cam vitrinine çarparak içeri girmesi sonucu dükkan tahrip edilmiş, ardından maskeli ve kapüşonlu iki şahıs içeri girerek kasa hırsızlığı yapıp olay yerinden uzaklaşmıştır.",
     "risk": "Yüksek",
     "risk_score": 85,
@@ -445,7 +445,7 @@
   },
   {
     "video_id": "test_video_013.mp4",
-    "duration_sec": 26,
+    "duration_sec": 13,
     "summary": "Yolda ahşap/panel yükü taşıyan forkliftin motoru görmesi sonucunda ani fren yaparak dengesini kaybediyor ön aksı üzerine yatması sonucu yük yere devriliyor, bu esnada forkliftin önünden geçen motosikletli sürücü yükün altında kalmaktan son anda kurtulmuştur.",
     "risk": "Yüksek",
     "risk_score": 80,
@@ -686,7 +686,7 @@
   },
   {
     "video_id": "test_video_020.mp4",
-    "duration_sec": 124,
+    "duration_sec": 23,
     "summary": "Lojistik depoda koridorda duran personelin hemen arkasındaki ağır depolama rafları yapısal arıza/aşırı yük nedeniyle zincirleme şekilde çökmüş, çalışan saniyelerle enkaz altında kalmaktan kaçarak kurtulmuş ve tüm depo koridoru tonlarca malzeme ile kapanmıştır.",
     "risk": "Kritik",
     "risk_score": 100,
@@ -1344,7 +1344,7 @@
   },
   {
     "video_id": "test_video_041.mp4",
-    "duration_sec": 35,
+    "duration_sec": 61,
     "summary": "Akaryakıt/dolum istasyonunda tanker dolumu sırasında aniden büyük bir patlama ve şiddetli yangın meydana gelmiş, görevli personel can havliyle alevlerin arasından kaçarak uzaklaşmıştır.",
     "risk": "Kritik",
     "risk_score": 90,

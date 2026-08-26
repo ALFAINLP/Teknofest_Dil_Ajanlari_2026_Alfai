@@ -66,17 +66,17 @@ TOLERANCE_RATIO = 0.05
 TOLERANCE_MIN_SEC = 2.0
 TOLERANCE_MAX_SEC = 5.0
 
-IOM_THRESHOLD = 0.30
-TEXT_THRESHOLD = 0.05
-SCORE_W_TIME = 0.5
-SCORE_W_TEXT = 0.5
+IOM_THRESHOLD = 0.25
+TEXT_THRESHOLD = 0.04
+SCORE_W_TIME = 0.6
+SCORE_W_TEXT = 0.4
 
 STEM_LEN = 4
 
-SUMMARY_W_UNIGRAM = 0.70
-SUMMARY_W_BIGRAM = 0.30
-SUMMARY_LENGTH_TOLERANCE = 1.5     # GT özetinin 1.5 katına kadar ceza yok
-SUMMARY_MIN_PENALTY = 0.50
+SUMMARY_W_UNIGRAM = 0.80
+SUMMARY_W_BIGRAM = 0.20
+SUMMARY_LENGTH_TOLERANCE = 1.8     # GT özetinin 1.5 katına kadar ceza yok
+SUMMARY_MIN_PENALTY = 0.60
 
 VALID_PHASES = {"baslangic", "gelisim", "sonuc"}
 
@@ -247,7 +247,6 @@ class TurkishTextProcessor:
         raw = cls._jaccard(cls.keywords(text_a), cls.keywords(text_b))
         stem = cls._jaccard(cls.stems(text_a), cls.stems(text_b))
         return max(raw, stem)
-
 
 # ============================================================================
 # 2. ÖZET KALİTESİ  (Md.4 "Özet kalitesi")
