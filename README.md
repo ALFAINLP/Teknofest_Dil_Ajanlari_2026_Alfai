@@ -1,4 +1,6 @@
-# ALFA-AI — Otonom Video Analiz ve Karar Destek Sistemi
+# Ekip Adı: ALFAI 
+---
+**Otonom Video Analiz ve Karar Destek Sistemi**
 
 > Endüstriyel saha güvenliği ve operasyon izleme için gerçek zamanlı video analizi yapan, olayları Türkçe olarak yorumlayan ve otonom araç zinciriyle operatöre karar desteği sunan çok katmanlı yapay zekâ sistemi.
 
