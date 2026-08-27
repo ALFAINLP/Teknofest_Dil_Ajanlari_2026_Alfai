@@ -11,7 +11,6 @@
 ```
 Proje mimarisinde video analizi için iki model farklı amaçlar için kullanılmıştır.
 
----
 
 Vision model(Qwen3-VL-32B-Instruct), video girdisi alarak önemli zaman adımlarını JSON formatında verir.
 
