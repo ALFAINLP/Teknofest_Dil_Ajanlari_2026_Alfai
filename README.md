@@ -9,39 +9,13 @@
 ## Mimari Genel Bakış
 
 ```
-Video Girişi
-     │
-     ▼
-┌─────────────────────────────────────┐
-│  Vision Katmanı (Qwen3-VL-32B)      │  ← Port 8000
-│  Videoyu kare kare analiz eder,     │
-│  olayları, riski ve zaman           │
-│  damgalarını JSON'a dönüştürür      │
-└─────────────┬───────────────────────┘
-              │  Yapılandırılmış world_state
-              ▼
-┌─────────────────────────────────────┐
-│  LangGraph Pipeline                 │
-│  ┌─────────────────────────────┐    │
-│  │ extract_video_info_node     │    │
-│  │ Sahne meta, zone, risk norm │    │
-│  └──────────────┬──────────────┘    │
-│                 │                   │
-│  ┌──────────────▼──────────────┐    │
-│  │ evaluate_risks_node (ReAct) │    │
-│  │ Brain (llm-large) + Tools   │    │  ← Port 8001
-│  │ Max 5 adımlı karar döngüsü  │    │
-│  └──────────────┬──────────────┘    │
-│                 │                   │
-│  ┌──────────────▼──────────────┐    │
-│  │ compile_report_node         │    │
-│  │ Pydantic doğrulama + CMS    │    │
-│  └──────────────┬──────────────┘    │
-└─────────────────┼───────────────────┘
-                  │  FinalReportSchema (JSON)
-                  ▼
-         FastAPI Web API
-         (Operatör Arayüzü)
+Proje mimarisinde video analizi için iki model farklı amaçlar için kullanılmıştır.
+
+Vision model(Qwen3-VL-32B-Instruct), video girdisi alarak önemli zaman adımlarını JSON formatında verir.
+
+
+Brain model (Qwen/Qwen3.5-122B-A10B), video sonuçlarına göre LangGraph mimarisi ile uygun tool zincirini bulur.
+
 ```
 
 **Teknoloji Yığını:**
