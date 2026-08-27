@@ -79,39 +79,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Model Servisleri
-
-Sistem iki ayrı vLLM sunucusuna ihtiyaç duyar:
-
-```bash
-# Vision Modeli — Port 8000
-CUDA_VISIBLE_DEVICES=0,1 vllm serve Qwen/Qwen3-VL-32B-Instruct \
-    --port 8000 \
-    --tensor-parallel-size 2 \
-    --max-model-len 8192
-
-# Brain Modeli — LiteLLM Proxy üzerinden (llm-large alias)
-# [DOLDUR: LiteLLM proxy başlatma komutu]
-litellm --config litellm_config.yaml --port 8002
-```
-
-### Yapılandırma
-
-```bash
-# .env dosyasını oluştur
-cp .env.example .env
-```
-
-`.env.example`:
-```env
-VISION_BASE_URL=http://localhost:8000/v1
-BRAIN_BASE_URL=http://localhost:8001/v1
-VISION_MODEL=Qwen/Qwen3-VL-32B-Instruct
-BRAIN_MODEL=llm-large
-MAX_TOKENS=4096
-TEMPERATURE=0.0
-```
-
 ---
 
 ## Kullanım
@@ -122,21 +89,10 @@ TEMPERATURE=0.0
 uvicorn web_api:app --host 0.0.0.0 --port 8080 --reload
 ```
 
-### Video Analizi
+### NPM Başlat
 
 ```bash
-# cURL ile
-curl -X POST http://localhost:8080/api/analyze-video \
-  -F "file=@Videos/test_video.mp4"
-
-# Python ile
-import requests
-with open("Videos/test_video.mp4", "rb") as f:
-    response = requests.post(
-        "http://localhost:8080/api/analyze-video",
-        files={"file": f}
-    )
-print(response.json())
+npm run -- --host --127.0.0.1
 ```
 
 ### Örnek Çıktı
