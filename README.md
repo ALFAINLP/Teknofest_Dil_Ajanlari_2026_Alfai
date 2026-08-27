@@ -2,28 +2,38 @@
 ---
 **Otonom Video Analiz ve Karar Destek Sistemi**
 
-> Endüstriyel saha güvenliği ve operasyon izleme için gerçek zamanlı video analizi yapan, olayları Türkçe olarak yorumlayan ve otonom araç zinciriyle operatöre karar desteği sunan çok katmanlı yapay zekâ sistemi.
+> ALFAI, endüstriyel saha güvenliği ve operasyon izleme için geliştirilmiş çok katmanlı bir video analiz ve karar destek sistemidir. Sistem, gelen video girdisini iki ayrı yapay zekâ modeline sırayla işleterek yapılandırılmış bir risk raporu ve operatöre yönelik aksiyon önerileri üretir.
+
+Sistemin temel çalışma mantığı şöyledir: bir Göz (Vision) modeli videoyu kare kare analiz ederek olayları, zaman damgalarını ve risk seviyesini JSON formatında çıkarır; ardından bir Beyin (Brain) modeli bu yapılandırılmış veriyi alarak araç çağrıları (tool calls) aracılığıyla derinlemesine karar analizi yapar ve nihai raporu üretir. İki model arasındaki orkestrasyon LangGraph tarafından yönetilir.
+
+---
+## Kullanılan Agentic Framework
+
+LangGraph tercih edilmiştir. Tek bir LLM çağrısına dayalı basit pipeline yaklaşımı yerine, her node'un ayrı sorumluluğa sahip olduğu ve durumun (state) node'lar arasında akışla taşındığı graf tabanlı bir mimari kurulmuştur. Bu yapı sayesinde Vision ve Brain katmanları birbirinden bağımsız geliştirilebilmekte, ReAct döngüsü kontrollü şekilde çalıştırılabilmekte ve pipeline hataları izole edilebilmektedir. 
 
 ---
 
 ## Mimari Genel Bakış
 
-```
+
 Proje mimarisinde video analizi için iki model farklı amaçlar için kullanılmıştır.
 
-
+```
 Vision model(Qwen3-VL-32B-Instruct), video girdisi alarak önemli zaman adımlarını JSON formatında verir.
 
 Brain model (Qwen/Qwen3.5-122B-A10B), video sonuçlarına göre LangGraph mimarisi ile uygun tool zincirini bulur.
-
 ```
 
-**Teknoloji Yığını:**
+*Her iki model de vLLM ile yerel ortamda servislenmiştir. Harici API bağımlılığı bulunmamaktadır.*
+
+
+
+**Teknolojiler:**
 
 | Katman | Teknoloji |
 |---|---|
 | Vision Modeli | Qwen3-VL-32B-Instruct (vLLM) |
-| Brain Modeli | llm-large — Llama tabanlı (vLLM) |
+| Brain Modeli | Qwen/Qwen3.5-122B-A10B (vLLM) |
 | Ajan Orkestrasyonu | LangGraph |
 | Model Servisleme | vLLM + LiteLLM Proxy |
 | API Katmanı | FastAPI |
@@ -32,7 +42,23 @@ Brain model (Qwen/Qwen3.5-122B-A10B), video sonuçlarına göre LangGraph mimari
 | Benchmark | Özel KPI motoru (kpi_enhanced.py) |
 
 ---
+## İmplemente Edilen Senaryolar ve Mock Fonksiyonlar
 
+Sistem aşağıdaki 7 ana senaryo kategorisinde analiz yapabilmektedir:
+
+- Endüstriyel İş Kazaları: Forklift devrilmesi, makineye sıkışma, yüksekten düşme, malzeme çökmesi
+- Yangın ve Patlama: Fabrika yangını, akaryakıt istasyonu patlaması, elektrik ark patlaması, kundaklama
+- Trafik Kazaları: Araç çarpışması, kavşak kazası, yaya ezilmesi, ambulans kazası
+- Güvenlik İhlalleri: Silahlı saldırı, sokak darpı
+- Kişisel Güvenlik: İzinsiz fiziksel temas, ofis içi taciz, fiziksel kavga
+- Yapısal Hasar: Depo raf çökmesi, tavan yıkılması, enkaz oluşumu
+- Rutin Operasyon: Normal trafik akışı, ofis çalışması, yaya geçişi
+
+---
+## Karşılaşılan Zorluklar ve Çözümler
+
+- 
+---
 ## Kurulum ve Çalıştırma
 
 ### Ön Koşullar
