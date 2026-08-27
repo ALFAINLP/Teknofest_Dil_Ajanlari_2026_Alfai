@@ -218,24 +218,11 @@ python kpi_enhanced.py
 
 ---
 
-## İleriye Dönük Planlar
+## VİDEO LİNKLERİ
 
-- [ ] Çok kameralı eş zamanlı analiz (triage endpoint genişletilmesi)
-- [ ] Streaming video desteği (RTSP/HLS)
-- [ ] Olay bazlı model fine-tuning pipeline'ı
-- [ ] Kullanıcı geri bildirimi ile aktif öğrenme döngüsü
-- [ ] Web arayüzü için gerçek zamanlı WebSocket desteği
-
----
-
-## Katkı
-
-1. Repoyu fork'la
-2. Feature branch aç: `git checkout -b feature/yeni-ozellik`
-3. Değişikliklerini commit'le: `git commit -m "feat: açıklama"`
-4. Pull request aç
-
-Kod stili: PEP 8, tip anotasyonları zorunlu, yeni node'lar için test ekle.
+https://www.kaggle.com/datasets/minmints/ufc-crime-full-dataset/data
+https://www.youtube.com/watch?v=WjZB-g01JLE&list=PLz05EIQjBV2J8nRtbRgOouEJ0pAvdzPEq
+https://www.cse.cuhk.edu.hk/leojia/projects/detectabnormal/dataset.html
 
 ---
 
