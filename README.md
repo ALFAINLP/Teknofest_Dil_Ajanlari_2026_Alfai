@@ -35,7 +35,7 @@ Brain model (Qwen/Qwen3.5-122B-A10B), video sonuçlarına göre LangGraph mimari
 | Vision Modeli | Qwen3-VL-32B-Instruct (vLLM) |
 | Brain Modeli | Qwen/Qwen3.5-122B-A10B (vLLM) |
 | Ajan Orkestrasyonu | LangGraph |
-| Model Servisleme | vLLM + LiteLLM Proxy |
+| Model Servisleme | vLLM |
 | API Katmanı | FastAPI |
 | Şema Doğrulama | Pydantic v2 |
 | Hafıza Yönetimi | JSON tabanlı MemoryManager |
