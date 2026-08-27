@@ -241,7 +241,7 @@ Kod stili: PEP 8, tip anotasyonları zorunlu, yeni node'lar için test ekle.
 
 ## İletişim ve Lisans
 
-- **Takım:** [ALFAI]
+- **Takım Adı:** [ALFAI]
 - **Lisans:** [Apache 2.0]
 
 ---
