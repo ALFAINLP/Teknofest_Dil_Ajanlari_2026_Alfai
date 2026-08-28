@@ -20,7 +20,7 @@ import time
 logger = logging.getLogger("ALFAI_API")
 
 RISK_ORDER = {"Düşük": 1, "Orta": 2, "Yüksek": 3, "Kritik": 4}
-RISK_SCORE = {"Düşük": 25, "Orta": 50, "Yüksek": 75, "Kritik": 90}
+RISK_SCORE = {"Düşük": 25, "Orta": 50, "Yüksek": 75, "Kritik": 95}
 
 def sanitize_text(text) -> str:
     """
@@ -106,10 +106,6 @@ def normalize_risk(value):
     # Eğer hiçbir pattern eşleşmezse, varsayılan olarak "Düşük" döndür
     return "Düşük"
 
-
-# RISK_ORDER ve RISK_SCORE sözlüklerini güncelle (üstteki tanımlamalar)
-RISK_ORDER = {"Düşük": 1, "Orta": 2, "Yüksek": 3, "Kritik": 4}
-RISK_SCORE = {"Düşük": 25, "Orta": 50, "Yüksek": 75, "Kritik": 90}
 
 def higher_risk(a, b):
     a, b = normalize_risk(a), normalize_risk(b)

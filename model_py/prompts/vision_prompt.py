@@ -197,6 +197,7 @@ ve çıktıyı geçersiz kılar. Videoda ne olduysa onu yaz.
 
     YANLIŞ:
     "Mavi pantolonlu genç çantasını alıp yürüyerek ayrıldı. Ardından kadın ve gruplar binaya giriş yaptı."
+
 ═══════════════════════════════════════════════════════════════
 ## 6. RİSK DEĞERLENDİRME KRİTERLERİ
 ═══════════════════════════════════════════════════════════════

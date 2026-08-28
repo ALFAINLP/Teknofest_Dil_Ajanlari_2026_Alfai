@@ -92,7 +92,7 @@ function buildStrategicRecommendations(modelActions = []) {
   return [...new Set(humanActions)]
 }
 
-// Backend'in (agent.py) risk_score esikleriyle birebir eslesir: >=70 kritik, >=40 orta.
+// Backend/model zincirinden gelen risk_score değerini yalnızca arayüz açıklamasına dönüştürür.
 function getRiskGuidance(riskScore) {
   if (riskScore == null) {
     return {
@@ -102,26 +102,34 @@ function getRiskGuidance(riskScore) {
       color: '#414752',
     }
   }
-  if (riskScore >= 70) {
+  if (riskScore >= 95) {
     return {
       level: 'Kritik',
       headline: 'Devriye sıklığı artırılmalı',
-      detail: `Risk skoru %${riskScore} — kritik eşiğin (%70) üzerinde. Devriye sıklığı ve müdahale kapasitesi artırılmalı.`,
+      detail: `Risk skoru %${riskScore} — kritik seviyede. Devriye sıklığı ve müdahale kapasitesi artırılmalı.`,
       color: '#ffb4ab',
     }
   }
-  if (riskScore >= 40) {
+  if (riskScore >= 75) {
+    return {
+      level: 'Yüksek',
+      headline: 'Hızlı operasyonel müdahale gerekli',
+      detail: `Risk skoru %${riskScore} — yüksek seviyede. Olay yakından izlenmeli ve ilgili ekip bilgilendirilmeli.`,
+      color: '#ffb77d',
+    }
+  }
+  if (riskScore >= 50) {
     return {
       level: 'Orta',
       headline: 'İzleme sıklığı artırılmalı',
       detail: `Risk skoru %${riskScore} — orta seviyede. KKD ve ekipman denetimleri sıklaştırılmalı.`,
-      color: '#ffb77d',
+      color: '#a3e635',
     }
   }
   return {
     level: 'Düşük',
     headline: 'Stabil, standart protokol yeterli',
-    detail: `Risk skoru %${riskScore} — düşük seviyede (%40 eşiğinin altında). Mevcut izleme protokolü stabil şekilde sürdürülebilir.`,
+    detail: `Risk skoru %${riskScore} — düşük seviyede. Mevcut izleme protokolü stabil şekilde sürdürülebilir.`,
     color: '#4ade80',
   }
 }
@@ -241,9 +249,45 @@ function buildHeatmapClusters(events) {
 }
 
 // ─── Heatmap Canvas ───────────────────────────────────────────────────────────
-function HeatmapView({ fullscreen = false, eventRows = [] }) {
+function HeatmapView({ fullscreen = false, eventRows = [], videoSrc = null }) {
   const [riskFilter, setRiskFilter] = useState('all')
   const [focusedCluster, setFocusedCluster] = useState(null)
+  const [zoom, setZoom] = useState(1)
+  const [videoSize, setVideoSize] = useState({ width: 16, height: 9 })
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 })
+  const viewportRef = useRef(null)
+
+  useEffect(() => {
+    if (!videoSrc) {
+      setVideoSize({ width: 16, height: 9 })
+      setZoom(1)
+      return undefined
+    }
+    const video = document.createElement('video')
+    video.preload = 'metadata'
+    video.src = videoSrc
+    setZoom(1)
+    video.onloadedmetadata = () => {
+      if (video.videoWidth > 0 && video.videoHeight > 0) {
+        setVideoSize({ width: video.videoWidth, height: video.videoHeight })
+      }
+    }
+    return () => {
+      video.onloadedmetadata = null
+      video.removeAttribute('src')
+      video.load()
+    }
+  }, [videoSrc])
+
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport) return undefined
+    const updateSize = () => setViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight })
+    updateSize()
+    const observer = new ResizeObserver(updateSize)
+    observer.observe(viewport)
+    return () => observer.disconnect()
+  }, [])
   const riskColors = { Kritik: '#ff6b6b', Yüksek: '#ff9f43', Orta: '#a3e635', Düşük: '#60a5fa' }
   const visibleEvents = eventRows.filter(event => riskFilter === 'all' || event.risk === riskFilter)
   const locatedEvents = visibleEvents.filter(event =>
@@ -252,6 +296,14 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
     Number(event.center.y) >= 0 && Number(event.center.y) <= 1)
   const missingLocationCount = visibleEvents.length - locatedEvents.length
   const clusters = buildHeatmapClusters(locatedEvents)
+  const fitZoom = viewportSize.width > 0 && viewportSize.height > 0
+    ? Math.min(1, viewportSize.width / videoSize.width, viewportSize.height / videoSize.height)
+    : 1
+  const minimumZoom = Math.min(0.5, fitZoom)
+  const canvasWidth = Math.max(1, videoSize.width * zoom)
+  const canvasHeight = Math.max(1, videoSize.height * zoom)
+  const canvasMarginLeft = Math.max(0, (viewportSize.width - canvasWidth) / 2)
+  const canvasMarginTop = Math.max(0, (viewportSize.height - canvasHeight) / 2)
   const points = clusters.map((cluster) => {
     const confidence = Math.max(...cluster.events.map(event =>
       Number.parseFloat(String(event.conf ?? event.confidence ?? '0').replace('%', '')) || 0))
@@ -277,8 +329,17 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
     }
   })
   return (
-    <div className={cn('t-heatmap-bg relative w-full rounded-xl overflow-hidden border border-[#2a3540] bg-[#060f16]', fullscreen ? 'h-full' : 'min-h-[420px]')}
-      style={{ backgroundImage: 'linear-gradient(#1e2d3d 1px, transparent 1px), linear-gradient(90deg, #1e2d3d 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+    <div className={cn('relative w-full rounded-xl overflow-hidden border border-[#2a3540] bg-[#060f16]', fullscreen ? 'h-full' : 'min-h-[420px]')}>
+      <div ref={viewportRef} className="absolute inset-0 overflow-auto">
+        <div className="t-heatmap-bg relative shrink-0 bg-[#060f16]"
+          style={{
+            width: canvasWidth,
+            height: canvasHeight,
+            marginLeft: canvasMarginLeft,
+            marginTop: canvasMarginTop,
+            backgroundImage: 'linear-gradient(#1e2d3d 1px, transparent 1px), linear-gradient(90deg, #1e2d3d 1px, transparent 1px)',
+            backgroundSize: `${40 * zoom}px ${40 * zoom}px`,
+          }}>
       {points.map(({ cluster, ...point }, index) => (
         <div key={`${cluster.x}-${cluster.y}-${index}`}>
           <button type="button" onClick={() => setFocusedCluster(cluster)}
@@ -310,6 +371,18 @@ function HeatmapView({ fullscreen = false, eventRows = [] }) {
           Model bu analizde güvenilir mekânsal koordinat üretmedi. Yanlış konum göstermemek için nokta çizilmedi.
         </div>
       )}
+        </div>
+      </div>
+      <div className="absolute right-4 top-4 z-30 flex items-center overflow-hidden rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 shadow-lg">
+        <button type="button" onClick={() => setZoom(value => Math.max(minimumZoom, Number((value - 0.1).toFixed(2))))}
+          disabled={zoom <= minimumZoom + 0.001} aria-label="Isı haritasını küçült"
+          className="h-8 w-9 border-r border-[#2a3540] font-sans text-base text-[#a2c9ff] hover:bg-[#1d2b45] disabled:cursor-not-allowed disabled:text-[#414752]">−</button>
+        <button type="button" onClick={() => setZoom(minimumZoom)} title="Isı haritasını video ekranı boyutuna getir"
+          className="h-8 min-w-14 px-2 font-mono text-[10px] text-[#dae3ee] hover:bg-[#1d2b45]">%{Math.round(zoom * 100)}</button>
+        <button type="button" onClick={() => setZoom(value => Math.min(4, Number((value + 0.1).toFixed(2))))}
+          disabled={zoom >= 4} aria-label="Isı haritasını büyüt"
+          className="h-8 w-9 border-l border-[#2a3540] font-sans text-base text-[#a2c9ff] hover:bg-[#1d2b45] disabled:cursor-not-allowed disabled:text-[#414752]">+</button>
+      </div>
       {focusedCluster && (
         <div className="absolute left-5 top-14 z-20 max-h-[65%] w-[min(390px,calc(100%-40px))] overflow-y-auto rounded-lg border border-[#a2c9ff]/30 bg-[#0d1520]/95 p-3 shadow-xl">
           <div className="mb-2 flex items-center justify-between gap-4 border-b border-[#2a3540] pb-2">
@@ -1685,7 +1758,7 @@ export default function Dashboard() {
                   <h2 className="t-text-base font-sans text-sm font-bold uppercase tracking-widest">Isı Haritası</h2>
                   <p className="t-text-dim font-sans text-[11px] mt-0.5">Hareket yoğunluğu · Anomali dağılımı</p>
                 </div>
-                <div className="flex-1 overflow-hidden"><HeatmapView fullscreen eventRows={eventRows} /></div>
+                <div className="flex-1 overflow-hidden"><HeatmapView fullscreen eventRows={eventRows} videoSrc={videoSrc} /></div>
               </div>
             )}
             {activeNav === 'tactical' && <TacticalReportsPage eventRows={eventRows} analysis={analysis} isDark={isDark} />}

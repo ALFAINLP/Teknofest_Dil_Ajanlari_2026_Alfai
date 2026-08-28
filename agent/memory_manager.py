@@ -1,5 +1,8 @@
 import json
 import os
+import threading
+import uuid
+from datetime import datetime
 from typing import List, Dict, Any
 
 
@@ -20,6 +23,27 @@ class MemoryManager:
 
     MAX_EVENT_HISTORY = 50   # Tutulacak maksimum olay sayısı
     MAX_RISK_HISTORY  = 20   # Tutulacak maksimum risk geçmişi
+    MEMORY_PATH = "memory/memory.json"
+    _FILE_LOCK = threading.RLock()
+
+    @staticmethod
+    def _read_memory_unlocked() -> Dict[str, Any]:
+        if not os.path.exists(MemoryManager.MEMORY_PATH):
+            return {}
+        try:
+            with open(MemoryManager.MEMORY_PATH, "r", encoding="utf-8") as file:
+                loaded = json.load(file)
+                return loaded if isinstance(loaded, dict) else {}
+        except (OSError, json.JSONDecodeError):
+            return {}
+
+    @staticmethod
+    def _write_memory_unlocked(memory: Dict[str, Any]) -> None:
+        os.makedirs(os.path.dirname(MemoryManager.MEMORY_PATH), exist_ok=True)
+        temporary_path = f"{MemoryManager.MEMORY_PATH}.tmp"
+        with open(temporary_path, "w", encoding="utf-8") as file:
+            json.dump(memory, file, ensure_ascii=False, indent=4)
+        os.replace(temporary_path, MemoryManager.MEMORY_PATH)
 
     @staticmethod
     def add_events(
@@ -248,25 +272,37 @@ class MemoryManager:
         Hafızayı JSON dosyasına kaydeder.
         """
 
-        os.makedirs("memory", exist_ok=True)
+        with MemoryManager._FILE_LOCK:
+            memory = MemoryManager._read_memory_unlocked()
+            memory.update({
+                "event_history": event_history,
+                "risk_history": risk_history,
+                "tool_history": tool_history,
+            })
+            memory.setdefault("analysis_history", [])
+            MemoryManager._write_memory_unlocked(memory)
 
-        memory = {
-            "event_history": event_history,
-            "risk_history": risk_history,
-            "tool_history": tool_history
+    @staticmethod
+    def append_analysis_result(video_filename: str, result: Dict[str, Any]) -> Dict[str, Any]:
+        """Nihai Dashboard JSON'unu eski analizleri silmeden kalıcı hafızaya ekler."""
+        entry = {
+            "analysis_id": str(uuid.uuid4()),
+            "video_filename": video_filename,
+            "saved_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+            "result": result,
         }
-
-        with open(
-            "memory/memory.json",
-            "w",
-            encoding="utf-8"
-        ) as f:
-            json.dump(
-                memory,
-                f,
-                ensure_ascii=False,
-                indent=4
-            )
+        with MemoryManager._FILE_LOCK:
+            memory = MemoryManager._read_memory_unlocked()
+            history = memory.get("analysis_history")
+            if not isinstance(history, list):
+                history = []
+            history.append(entry)
+            memory["analysis_history"] = history
+            memory.setdefault("event_history", [])
+            memory.setdefault("risk_history", [])
+            memory.setdefault("tool_history", [])
+            MemoryManager._write_memory_unlocked(memory)
+        return entry
 
     @staticmethod
     def load_memory() -> Dict[str, Any]:
@@ -274,21 +310,13 @@ class MemoryManager:
         Hafızayı JSON dosyasından yükler.
         """
 
-        path = "memory/memory.json"
-
-        if not os.path.exists(path):
-            return {
-                "event_history": [],
-                "risk_history": [],
-                "tool_history": []
-            }
-
-        with open(
-            path,
-            "r",
-            encoding="utf-8"
-        ) as f:
-            return json.load(f)
+        with MemoryManager._FILE_LOCK:
+            memory = MemoryManager._read_memory_unlocked()
+        memory.setdefault("event_history", [])
+        memory.setdefault("risk_history", [])
+        memory.setdefault("tool_history", [])
+        memory.setdefault("analysis_history", [])
+        return memory
             
     @staticmethod
     def calculate_risk_trend(risk_history: list) -> str:
@@ -321,3 +349,4 @@ class MemoryManager:
             if scores[-1] >= 3:
                 return "⚠️ KRONİK YÜKSEK RİSK (Tehlike Devam Ediyor)"
             return "➡️ STABİL (Değişim Yok)"
+

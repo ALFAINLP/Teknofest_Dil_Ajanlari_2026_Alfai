@@ -636,6 +636,15 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             "vision_inference_ms": vision_inference_ms,
             "gpu": _read_gpu_metrics(),
         }
+        saved_analysis = MemoryManager.append_analysis_result(
+            file.filename or "video.mp4",
+            final_response,
+        )
+        logger.info(
+            "💾 Analiz kalıcı hafızaya eklendi | ID=%s | Video=%s",
+            saved_analysis["analysis_id"],
+            saved_analysis["video_filename"],
+        )
         logger.info(f"🏁 [TAMAMLANDI] Toplam İşlem Süresi: {elapsed_time:.2f} saniye.")
         logger.debug(f"📤 Frontend'e dönen final JSON: Risk={final_response.get('risk')}, Olay={len(final_response.get('events', []))}")
 
