@@ -64,6 +64,7 @@
       }
     ],
     "actions": [
+      "query_previous_incidents",
       "trigger_operator_alert",
       "assess_environmental_hazards",
       "get_personnel_on_duty",
@@ -803,30 +804,33 @@
   },
   {
     "video_id": "test_video_025.mp4",
-    "duration_sec": 15,
-    "summary": "İnşaat kamyonu çalışmakta ve üç güvenlik görevlisi yürüyüşte/devriyede.",
-    "risk": "Düşük",
-    "risk_score": 25,
+    "duration_sec": 25,
+    "summary": "Yüksek platformda çalışan işçi dengesini kaybederek aşağıya savrulmuş, bağlı olduğu güvenlik halatı sayesinde zemine çarpmadan havada asılı kalarak kurtulmuştur.",
+    "risk": "Kritik",
+    "risk_score": 85,
     "events": [
       {
-        "time": "00:02",
+        "time": "00:09",
         "start_time": 0,
-        "end_time": 8,
-        "event": "Güvenlik personeli yaya yolunda rutin devriye görevini sürdürdü",
-        "is_critical": false
+        "end_time": 9,
+        "event": "İşçi yüksek platformda çalışırken dengesini kaybetti ve platformdan aşağıya doğru savruldu.",
+        "is_critical": true
       },
       {
-        "time": "00:09",
-        "start_time": 8,
-        "end_time": 15,
-        "event": "Bakım çalışması ve yaya akışı güvenli şekilde devam etti",
+        "time": "00:10",
+        "start_time": 10,
+        "end_time": 25,
+        "event": "İşçi güvenlik halatı sayesinde zemine çarpmadan havada asılı kaldı ve kurtuldu.",
         "is_critical": false
       }
     ],
     "actions": [
-      "log_kpi_metrics"
+      "trigger_operator_alert",
+      "get_personnel_on_duty",
+      "export_to_incident_management_system"
     ]
-  },
+  }
+  ,
   {
     "video_id": "test_video_026.mp4",
     "duration_sec": 35,

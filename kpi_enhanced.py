@@ -236,7 +236,6 @@ class SummaryEvaluator:
             penalty = 1.0
         else:
             penalty = max(SUMMARY_MIN_PENALTY, SUMMARY_LENGTH_TOLERANCE / length_ratio)
-
         base = SUMMARY_W_UNIGRAM * r1["f1"] + SUMMARY_W_BIGRAM * r2["f1"]
         score = base * penalty
 

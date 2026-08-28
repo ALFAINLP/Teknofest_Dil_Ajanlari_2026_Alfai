@@ -240,7 +240,6 @@ def _build_context_block(state, highest_risk, critical_count):
         f"Bölge: {state.get('current_zone')}\n"
         f"Vision risk: {highest_risk} (%{state.get('vision_risk_score')})\n"
         f"Kritik işaretli an sayısı: {critical_count}\n"
-        f"Geçmiş benzer olay kaydı mevcut: {bool(state.get('event_history'))}\n"
     )
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
@@ -430,6 +429,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             # 🔥 SADECE BİR APPEND - normalized_args ile
             tool_history_entries.append({
                 "tool": tool_name,
+                "react_step": react_step,
                 "args": normalized_args,
                 "result": tool_result
             })
