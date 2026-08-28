@@ -98,3 +98,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # main() içinde, pipeline çalıştıktan hemen sonra
+    print(f"  [DEBUG] final_json uzunluğu: {len(final_output.get('final_json_output', ''))}")
+    print(f"  [DEBUG] video_summary: {final_output.get('video_summary', '(yok)')[:80]}")

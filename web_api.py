@@ -13,6 +13,8 @@ from typing import Any, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from starlette.background import BackgroundTask
 
 from model_py.services.vision_service import analyze_video
 from model_py.services.client import vision_client
@@ -107,7 +109,7 @@ def _read_gpu_metrics() -> dict:
         return {"available": False, "detail": str(error)}
 
 
-def _normalize_ranked_actions(event: dict, description: str, zone: str) -> list[dict]:
+def _normalize_ranked_actions(event: dict) -> list[dict]:
     raw_actions = event.get("ranked_actions") or []
     actions = []
     for fallback_rank, action in enumerate(raw_actions, start=1):
@@ -121,19 +123,15 @@ def _normalize_ranked_actions(event: dict, description: str, zone: str) -> list[
             rank = fallback_rank
         if rank not in (1, 2, 3) or any(existing["rank"] == rank for existing in actions):
             continue
+        label = str(action.get("label") or action.get("action") or "").strip()
+        reason = str(action.get("reason") or "").strip()
+        if not label:
+            continue
         actions.append({
             "rank": rank,
-            "label": str(action.get("label") or action.get("action") or "Operatör incelemesi başlat"),
-            "reason": str(action.get("reason") or "Modelin olaya özel operasyon önerisi."),
+            "label": label,
+            "reason": reason,
         })
-
-    fallbacks = [
-        {"rank": 1, "label": f"{zone} operatörüne bildir", "reason": f"'{description}' bulgusunun hızla doğrulanması için."},
-        {"rank": 2, "label": "Görüntüyü odağa al", "reason": "Olayın gelişimini ve çevresel bağlamı izlemek için."},
-        {"rank": 3, "label": "Önleyici inceleme oluştur", "reason": "Benzer olayların tekrarını azaltacak uzun vadeli önlemleri belirlemek için."},
-    ]
-    existing_ranks = {action["rank"] for action in actions}
-    actions.extend(action for action in fallbacks if action["rank"] not in existing_ranks)
     return sorted(actions, key=lambda action: action["rank"])[:3]
 
 
@@ -188,7 +186,7 @@ def _normalize_event(event: Any, index: int) -> dict:
         "uncertainties": event.get("uncertainties") or [
             "Model çıktısı operatör doğrulamasına açıktır."
         ],
-        "ranked_actions": _normalize_ranked_actions(event, str(description), zone),
+        "ranked_actions": _normalize_ranked_actions(event),
     }
 
 
@@ -275,6 +273,85 @@ def performance() -> dict:
     return _read_gpu_metrics()
 
 
+@app.get("/api/kpi-results")
+def kpi_results() -> dict:
+    """kpi_enhanced.py tarafından üretilen son benchmark sonuçlarını sunar."""
+    result_path = Path(__file__).resolve().parent / "benchmark_results_enhanced.json"
+    if not result_path.exists():
+        raise HTTPException(status_code=404, detail="KPI sonucu bulunamadı. Önce python kpi_enhanced.py çalıştırılmalı.")
+
+    try:
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise HTTPException(status_code=500, detail=f"KPI sonuç dosyası okunamadı: {error}") from error
+
+    results = payload.get("results") or []
+
+    def values(section: str, key: str) -> list[float]:
+        collected = []
+        for item in results:
+            value = (item.get("metrics") or {}).get(section, {}).get(key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                collected.append(float(value))
+        return collected
+
+    def layer_values(key: str) -> list[float]:
+        collected = []
+        for item in results:
+            value = (item.get("metrics") or {}).get("layer_analysis", {}).get(key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                collected.append(float(value))
+        return collected
+
+    def average(items: list[float]) -> Optional[float]:
+        return round(sum(items) / len(items), 3) if items else None
+
+    video_results = []
+    for item in results:
+        metrics = item.get("metrics") or {}
+        accuracy = metrics.get("accuracy") or {}
+        perf = metrics.get("performance") or {}
+        layers = metrics.get("layer_analysis") or {}
+        video_results.append({
+            "video_id": item.get("video_id"),
+            "overall_score": layers.get("overall_score"),
+            "event_f1_score": accuracy.get("event_f1_score"),
+            "critical_recall": accuracy.get("critical_recall"),
+            "summary_score": accuracy.get("summary_score"),
+            "tool_jaccard_score": accuracy.get("tool_jaccard_score"),
+            "risk_accuracy": accuracy.get("risk_accuracy"),
+            "processing_seconds": perf.get("total_processing_time_sec"),
+            "real_time_factor": perf.get("real_time_factor"),
+            "peak_gpu_gb": perf.get("peak_gpu_gb"),
+            "peak_rss_gb": perf.get("peak_rss_gb"),
+            "schema_valid": metrics.get("prediction_schema_valid"),
+        })
+
+    return {
+        "source": "kpi_enhanced.py",
+        "result_file": result_path.name,
+        "generated_at": result_path.stat().st_mtime,
+        "run_summary": payload.get("run_summary") or {},
+        "layer_weights": payload.get("layer_weights") or {},
+        "metric_definitions": payload.get("metric_definitions") or {},
+        "aggregate": {
+            "overall_score": average(layer_values("overall_score")),
+            "event_f1_score": average(values("accuracy", "event_f1_score")),
+            "event_precision": average(values("accuracy", "event_precision")),
+            "event_recall": average(values("accuracy", "event_recall")),
+            "critical_recall": average(values("accuracy", "critical_recall")),
+            "summary_score": average(values("accuracy", "summary_score")),
+            "tool_jaccard_score": average(values("accuracy", "tool_jaccard_score")),
+            "risk_accuracy": average(values("accuracy", "risk_accuracy")),
+            "processing_seconds": average(values("performance", "total_processing_time_sec")),
+            "real_time_factor": average(values("performance", "real_time_factor")),
+            "peak_gpu_gb": max(values("performance", "peak_gpu_gb"), default=None),
+            "peak_rss_gb": max(values("performance", "peak_rss_gb"), default=None),
+        },
+        "results": video_results,
+    }
+
+
 @app.post("/api/triage-cameras")
 async def triage_cameras(
     files: list[UploadFile] = File(...),
@@ -307,6 +384,69 @@ async def triage_cameras(
         for path in temporary_paths:
             if os.path.exists(path):
                 os.remove(path)
+
+
+def _remove_temporary_video_files(*paths: str) -> None:
+    for path in paths:
+        try:
+            if path and os.path.exists(path):
+                os.remove(path)
+        except OSError:
+            logger.warning("Geçici video dosyası silinemedi: %s", path)
+
+
+@app.post("/api/convert-video")
+async def convert_uploaded_video(file: UploadFile = File(...)) -> FileResponse:
+    suffix = Path(file.filename or "video.avi").suffix.lower()
+    if suffix != ".avi":
+        raise HTTPException(status_code=400, detail="Bu endpoint yalnızca AVI dosyalarını MP4'e dönüştürür.")
+
+    input_path = ""
+    output_path = ""
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".avi") as input_file:
+            input_path = input_file.name
+            while chunk := await file.read(1024 * 1024):
+                input_file.write(chunk)
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as output_file:
+            output_path = output_file.name
+
+        process = await run_in_threadpool(
+            subprocess.run,
+            [
+                "ffmpeg", "-y", "-i", input_path,
+                "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+                "-c:a", "aac", "-b:a", "128k",
+                "-movflags", "+faststart", output_path,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if process.returncode != 0:
+            logger.error("FFmpeg dönüştürme hatası: %s", process.stderr[-2000:])
+            raise HTTPException(status_code=422, detail="AVI dosyası MP4 formatına dönüştürülemedi.")
+
+        output_name = f"{Path(file.filename or 'video').stem}.mp4"
+        return FileResponse(
+            output_path,
+            media_type="video/mp4",
+            filename=output_name,
+            background=BackgroundTask(_remove_temporary_video_files, input_path, output_path),
+        )
+    except FileNotFoundError as exc:
+        _remove_temporary_video_files(input_path, output_path)
+        raise HTTPException(status_code=503, detail="FFmpeg sunucuda kurulu değil.") from exc
+    except HTTPException:
+        _remove_temporary_video_files(input_path, output_path)
+        raise
+    except Exception as exc:
+        _remove_temporary_video_files(input_path, output_path)
+        logger.exception("Video dönüştürme sırasında beklenmeyen hata")
+        raise HTTPException(status_code=500, detail="Video dönüştürme işlemi başarısız oldu.") from exc
+    finally:
+        await file.close()
 
 
 @app.post("/api/analyze-video")
@@ -344,6 +484,10 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
             "video_path": temporary_path,
             "current_time_segments": [],
             "detected_events": model_output.get("events", []), # Vision modelinin çıktısını LangGraph'a besliyoruz!
+            "video_summary": model_output.get("summary", ""),
+            "vision_actions": model_output.get("actions", []),
+            "vision_risk": model_output.get("risk", "Düşük"),
+            "vision_risk_score": model_output.get("risk_score", 0),
             "risk_assessments": [],
             "actions_recommended": [],
             "final_json_output": "",
@@ -465,9 +609,11 @@ async def analyze_uploaded_video(file: UploadFile = File(...)) -> dict:
         )
         print(f"🧹 [FİLTRELEME] Model toplam {total_raw_events} olay buldu. Metin kopyası {removed} silindi. Kalan net olay: {total_safe_events}")
 
-        safe_actions = graph_output.get("actions_recommended", [])
+        # Stratejik öneriler tool adlarından değil, vision modelinin rapora
+        # yazdığı insan-okunabilir operasyonel önerilerden gelir.
+        safe_actions = parsed_json.get("actions") or graph_output.get("vision_actions", [])
         if not safe_actions:
-            safe_actions = ["Rutin saha izlemesi devam ediyor, anomali tespiti bekleniyor."]
+            safe_actions = []
 
         model_output = {
             "summary": parsed_json.get("summary") or graph_output.get("technical_summary") or "Video analiz edildi, genel durum stabil.",
@@ -595,3 +741,4 @@ async def chat_with_agent(req: ChatRequest) -> dict:
             status_code=502,
             detail=f"Chat yanıtı üreti lemedi: {error}",
         ) from error
+

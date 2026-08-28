@@ -36,6 +36,23 @@ JSON_SCHEMA = """
       "risk": "Dusuk | Orta | Yuksek | Kritik",
       "is_critical_moment": false,
       "confidence": 0.85,
+      "ranked_actions": [
+        {
+          "rank": 1,
+          "label": "Olaya özel, hemen uygulanacak somut müdahale",
+          "reason": "Bu müdahalenin gözlenen olay için neden öncelikli olduğu"
+        },
+        {
+          "rank": 2,
+          "label": "Olaya özel alternatif müdahale",
+          "reason": "Alternatif müdahalenin hangi riski azalttığı"
+        },
+        {
+          "rank": 3,
+          "label": "Olaya özel uzun vadeli önlem",
+          "reason": "Tekrarını önlemek için neden uygulanması gerektiği"
+        }
+      ],
       "evidence": [
         {
           "description": "Gözlemlenen kanıt açıklaması",
@@ -166,28 +183,30 @@ ve çıktıyı geçersiz kılar. Videoda ne olduysa onu yaz.
 ## 5. ÖZET (summary) KURALLARI
 ═══════════════════════════════════════════════════════════════
 
-- Kesinlikle 15 ile 25 kelime arasında tek veya en fazla iki net cümle yaz.
-- Geçmiş zaman kullan, videonun ANA OLAYINI ve SONUCUNU anlat.
-- "Sahneye girdi", "görüldü", "kıyafetli" gibi görsel tasvirleri atla.
-- Sadece gerçekleşen ana olayı, kazayı/tehlikeyi ve doğrudan sonucunu belirt.
-- Kullanılacak fiiller: çarptı, devrildi, sıkıştı, alev aldı, darp edildi, tahliye edildi vb.
+- 15–25 kelime yaz, en fazla 2 cümle kullan.
+- YALNIZCA videodaki ana olayı, varsa tehlikeyi/kazayı ve sonucunu anlat.
+- Kişilerin kıyafeti, rengi, yaşı, görünüşü veya cinsiyeti gibi ayrıntıları ASLA yazma.
+- Normal yürüme, bekleme, etrafa bakma, binaya girme/çıkma gibi olay dışı hareketleri ASLA yazma.
+- Ortamı veya sahneyi betimleme. "Bu videoda...", "sahnede...", "alanda..." gibi ifadeler kullanma.
+- Ana olay yoksa yalnızca normal/rutin faaliyet olduğunu kısa şekilde belirt.
+- Videoda açıkça görülmeyen neden, sonuç sveya ayrıntı EKLEME.
+- Özet, olayın kendisine odaklanmalı; olayla ilgisiz kişi ve hareketleri dahil etmemeli.
 
-  DOĞRU : "Damperli kamyonun boşaltma yaptığı alana yaklaşan işçiye, geri manevra
-           yapan ikinci bir hafriyat kamyonu çarpmış ve işçi hareketsiz kalmıştır."
-  YANLIŞ: "Bu videoda bir şantiye alanı görülmektedir. Alanda sarı renkli
-           kamyonlar bulunmaktadır ve zemin topraktır. Kamera yüksek bir
-           açıdan sahneyi izlemektedir. Bir süre sonra..."
+    DOĞRU:
+    "Şahıs yerdeki çantayı havaya atıp tutmuş, ardından çantasını alarak alandan uzaklaşmıştır."
 
+    YANLIŞ:
+    "Mavi pantolonlu genç çantasını alıp yürüyerek ayrıldı. Ardından kadın ve gruplar binaya giriş yaptı."
 ═══════════════════════════════════════════════════════════════
 ## 6. RİSK DEĞERLENDİRME KRİTERLERİ
 ═══════════════════════════════════════════════════════════════
 
 | Risk | risk_score | Kriter |
 |---|---|---|
-| **Kritik** | 90-100 | Yerde hareketsiz kişi, ağır yaralanmalı kaza, aktif yangın, patlama, silahlı saldırı, kundaklama, can pazarı |
-| **Yuksek** | 75-85 | Gerçekleşmiş kaza, devrilme, ciddi ekipman hasarı, malzeme çökmesi, hırsızlık/soygun (ağır yaralı görülmese bile) |
+| **Kritik** | 95 | Yerde hareketsiz kişi, ağır yaralanmalı kaza, aktif yangın, patlama, silahlı saldırı, kundaklama, can pazarı |
+| **Yuksek** | 75 | Gerçekleşmiş kaza, devrilme, ciddi ekipman hasarı, malzeme çökmesi, hırsızlık/soygun (ağır yaralı görülmese bile) |
 | **Orta** | 50 | Kaza YOK. Kural ihlali, KKD eksikliği, yetkisiz giriş, tartışma/arbede, izinsiz fiziksel temas |
-| **Dusuk** | 10-25 | Rutin operasyon, ihlal ve kaza emaresi yok |
+| **Dusuk** | 25 | Rutin operasyon, ihlal ve kaza emaresi yok |
 
 Birden fazla seviyeye uyan durumda EN YÜKSEK seviyeyi seç.
 `risk_score` değeri seçtiğin `risk` seviyesinin aralığı içinde olmalıdır.
@@ -221,14 +240,38 @@ aynı phase değerini verme.
 ## 9. ACTIONS ALANI KURALLARI
 ═══════════════════════════════════════════════════════════════
 
-`actions` alanına, sahadaki operatörün yapması gereken işleri TÜRKÇE ve
-SERBEST METİN olarak yaz.
-- DOĞRU : "Yaralıya acil sağlık müdahalesi yapılmalı", "Alan tahliye edilmeli"
-- YANLIŞ: "trigger_operator_alert", "get_personnel_on_duty", "log_kpi_metrics"
+### OLAY BAZLI `ranked_actions` (ZORUNLU)
 
-Sistem tool ismi yazarsan çıktı GEÇERSİZ sayılır.
-Maksimum 3 öneri yaz. Rutin durumlarda "Rutin izlemeye devam edilmeli" yeterlidir.
+- `risk` değeri `Yuksek` veya `Kritik` olan HER olayda tam 3 adet
+  `ranked_actions` üret.
+- Öneriler yalnızca o olayın `event`, `zone`, insan etkisi ve gözlenen
+  tehlikesine dayanmalı; farklı olaylara aynı genel önerileri kopyalama.
+- `rank: 1` en acil müdahale, `rank: 2` alternatif müdahale,
+  `rank: 3` tekrarını önleyecek uzun vadeli tedbirdir.
+- Her öğede boş olmayan `label` ve olaya özel `reason` bulunmalı.
+- `Dusuk` ve `Orta` olaylarda `ranked_actions` boş liste olabilir.
+- Sistem tool adları, genel yer tutucular ve "görüntüyü odağa al" gibi
+  olaydan bağımsız ifadeler kullanma.
 
+`actions` alanına tespit ettiğin olaylar için operatörün sahada 
+yapması gereken 1-3 somut öneri yaz. Her öneri "Bu olayda operatör 
+ne yapmalı?" sorusunu yanıtlamalı ve doğrudan gözlemlediğin olaydan 
+kaynaklanmalı.
+
+Senaryo örnekleri:
+- Yangın / patlama / duman       → "İtfaiye çağrılmalı ve personel tahliye edilmeli"
+- Yaralı / hareketsiz kişi       → "Acil sağlık müdahalesi başlatılmalı"
+- Araç / ekipman kazası           → "Alan güvenlik altına alınmalı, operasyon durdurulmalı"
+- Hırsızlık / soygun / kundaklama → "Kolluk kuvvetlerine bildirilmeli, kayıtlar saklanmalı"
+- Fiziksel saldırı / darp / taciz → "Güvenlik personeli yönlendirilmeli, amir bilgilendirilmeli"
+- Kural ihlali / KKD eksikliği   → "İlgili personel uyarılmalı"
+- Rutin operasyon                 → "Rutin izlemeye devam edilmeli"
+
+KURALLAR:
+- Sistem kodu yazma: "trigger_operator_alert", "log_kpi_metrics" YASAK
+- Videoda görülmeyen durumlar için öneri üretme
+- "Değerlendirilmeli", "incelenmeli" gibi belirsiz ifadeler kullanma
+- Aksiyonlar "-malı / -meli" ile bitmeli, somut ve uygulanabilir olmalı
 ═══════════════════════════════════════════════════════════════
 ## 10. KALİTE KONTROL
 ═══════════════════════════════════════════════════════════════

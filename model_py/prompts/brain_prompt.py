@@ -63,10 +63,11 @@ TOOL_CONSTRAINTS = {
         "SADECE maddi hasarlı olaylarda (insansız araç çarpışması, insan etkilenmeyen devrilme) ve hırsızlıkta ÇAĞRILMAZ."
     ),
     "log_kpi_metrics": (
-        "SADECE hiçbir kaza, ihlal, suç veya risk emaresi bulunmayan RUTİN operasyonlarda çağrılır. "
-        "Kaza, anomali veya güvenlik ihlali içeren HİÇBİR olayda ÇAĞRILMAZ."
+        "ZORUNLU: SADECE VE SADECE risk seviyesi 'Düşük' (rutin ve hatasız operasyon) ise çağrılır ve bu durumda çağrılan TEK araç olmalıdır. "
+        "DİKKAT: Risk seviyesi 'Orta', 'Yüksek' veya 'Kritik' ise, olayda en ufak bir kaza, ihlal veya anomali varsa bu aracı KULLANMAK KESİNLİKLE YASAKTIR."
     ),
     "export_to_incident_management_system": (
+        "DİKKAT: Bu araç sadece veritabanına kayıt yapar, acil müdahale SAĞLAMAZ! "
         "Kaza, anomali, suç veya güvenlik ihlali tespit edilen HER olayda, "
         "submit_final_decision'dan HEMEN ÖNCE çağrılır. Olayı kurumsal olay yönetim sistemine kaydeder. "
         "SADECE rutin operasyonlarda (log_kpi_metrics çağrılan DÜŞÜK riskli durumlarda) ÇAĞRILMAZ."

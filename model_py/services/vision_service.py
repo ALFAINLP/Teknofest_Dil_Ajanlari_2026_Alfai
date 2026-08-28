@@ -8,7 +8,10 @@ import logging
 import time
 import subprocess
 from typing import Dict, Any, Optional, List
-
+# Dosyanın en üstünde mevcut importların yanına:
+import random
+import shutil
+import tempfile
 import cv2
 
 try:
@@ -526,9 +529,7 @@ def _extract_events_only(text: str) -> dict:
             "events": events_list,
             "risk": "Orta",
             "risk_score": 50,
-            "actions": [
-                "Analiz devam ediyor, detaylı rapor için yeniden dene."
-            ],
+            "actions": [],
         }
 
     raise ValueError("Geçerli events listesi bulunamadı")
@@ -576,7 +577,7 @@ def _create_fallback_response(video_duration: float = 0) -> dict:
         ],
         "risk": "Orta",
         "risk_score": 50,
-        "actions": ["log_kpi_metrics"],
+        "actions": [],
     }
 
 
@@ -620,7 +621,22 @@ def analyze_video(video_path: str) -> dict:
     )
 
     try:
-        base64_video = encode_video_to_base64(video_path)
+        # Cache kırıcı: her çalıştırmada benzersiz base64 üretmek için
+        # geçici kopyaya rastgele 4 byte ekle
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                delete=False,
+                suffix=os.path.splitext(video_path)[1]
+            ) as tmp:
+                temp_path = tmp.name
+            shutil.copy2(video_path, temp_path)
+            with open(temp_path, "ab") as f:
+                f.write(random.randbytes(4))
+            base64_video = encode_video_to_base64(temp_path)
+        finally:
+            if temp_path and os.path.exists(temp_path):
+                os.remove(temp_path)
     except Exception as e:
         logger.error(f"Video encode hatası: {e}")
         return _create_fallback_response(duration)
@@ -661,7 +677,7 @@ def analyze_video(video_path: str) -> dict:
                 },
             ],
             max_tokens=4096,
-            temperature=0.2,
+            temperature=0.0,
             extra_body={
                 "chat_template_kwargs": {
                     "enable_thinking": False
@@ -714,3 +730,4 @@ _MIME_MAP = {
     ".mkv": "video/x-matroska",
     ".webm": "video/webm",
 }
+

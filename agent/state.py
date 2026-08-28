@@ -39,3 +39,5 @@ class AgentState(TypedDict):
     messages: Annotated[list, add_messages]
 
     current_zone: str
+    
+    vision_actions: List[str]

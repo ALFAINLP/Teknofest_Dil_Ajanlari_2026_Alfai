@@ -15,7 +15,7 @@ import {
   BarChart3, Target, ArrowRightLeft, RotateCcw, RotateCw, Gauge,
 } from 'lucide-react'
 import { APP_CONFIG } from '@/config/appConfig'
-import { analyzeVideo, fetchPerformance } from '@/services/analysisApi'
+import { analyzeVideo, convertVideoToMp4, fetchKpiResults, fetchPerformance } from '@/services/analysisApi'
 import { eventToLog, normalizeAnalysisEvent } from '@/features/analysis/eventMapper'
 import { useOperatorFeedback } from '@/hooks/useOperatorFeedback'
 import ChatAssistant from '@/components/ChatAssistant'
@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { id: 'heatmap',   label: 'Isı Haritası' },
   { id: 'tactical',  label: 'Taktiksel Raporlar' },
   { id: 'reports',   label: 'Raporlar' },
+  { id: 'kpi',       label: 'KPI Analiz' },
   { id: 'json',      label: 'JSON Çıktısı' },
   { id: 'settings',  label: 'Ayarlar' },
 ]
@@ -52,8 +53,7 @@ function confidencePercent(value) {
   return numeric <= 1 ? numeric * 100 : numeric
 }
 
-const ACTION_RISK_THRESHOLD = 80
-const ACTION_EVENT_LIMIT = 2
+const ACTION_RISK_THRESHOLD = 75
 
 function numericRiskScore(value) {
   const numeric = Number.parseFloat(String(value ?? '').replace('%', '').replace(',', '.'))
@@ -64,6 +64,7 @@ function numericRiskScore(value) {
 function getPriorityActionEvents(events) {
   const riskWeight = { Kritik: 4, Yüksek: 3, Orta: 2, Düşük: 1 }
   return [...events]
+    .filter(event => ['Kritik', 'Yüksek'].includes(event.risk))
     .filter(event => (event.ranked_actions?.length ?? 0) > 0)
     .sort((first, second) => {
       const riskDifference = (riskWeight[second.risk] ?? 0) - (riskWeight[first.risk] ?? 0)
@@ -72,7 +73,6 @@ function getPriorityActionEvents(events) {
       if (confidenceDifference !== 0) return confidenceDifference
       return (first.start_time ?? 0) - (second.start_time ?? 0)
     })
-    .slice(0, ACTION_EVENT_LIMIT)
 }
 
 function formatTimelineTime(seconds) {
@@ -82,36 +82,14 @@ function formatTimelineTime(seconds) {
   return `${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`
 }
 
-function buildStrategicRecommendations(eventRows, modelActions = []) {
+function buildStrategicRecommendations(modelActions = []) {
   // Tool isimlerini filtrele: snake_case olan, Türkçe kelime içermeyen string'ler tool adıdır
   const isToolName = (s) => /^[a-z][a-z0-9_]{2,}$/.test(String(s).trim())
+  
+  // Sadece modelin ürettiği dinamik aksiyonları (human-readable olanları) alıyoruz
   const humanActions = modelActions.filter(action => String(action).trim() && !isToolName(action))
 
-  if (eventRows.length === 0) return humanActions
-
-  const recommendations = [...humanActions]
-  const criticalCount = eventRows.filter(event => event.risk === 'Kritik').length
-  const elevatedCount = eventRows.filter(event => event.risk === 'Yüksek' || event.risk === 'Orta').length
-  const zoneCounts = eventRows.reduce((counts, event) => {
-    counts[event.zone] = (counts[event.zone] ?? 0) + 1
-    return counts
-  }, {})
-  const primaryZone = Object.entries(zoneCounts).sort((a, b) => b[1] - a[1])[0]
-
-  if (criticalCount > 0) {
-    recommendations.push(`${criticalCount} kritik olay için ilgili zaman damgaları operatör tarafından öncelikli doğrulanmalı ve saha müdahale prosedürü başlatılmalıdır.`)
-  } else if (elevatedCount > 0) {
-    recommendations.push(`${elevatedCount} orta/yüksek riskli olayın kanıt kareleri incelenmeli; doğrulanan olaylar vardiya sorumlusuna aktarılmalıdır.`)
-  } else {
-    recommendations.push(`${eventRows.length} düşük riskli tespit örneklem yöntemiyle doğrulanmalı; yanlış pozitifler operatör geri bildirimiyle işaretlenmelidir.`)
-  }
-
-  if (primaryZone) {
-    recommendations.push(`${primaryZone[0]} bölgesinde ${primaryZone[1]} olay yoğunlaştı; bu bölgenin zaman aralığı ve kamera görüşü ayrıca incelenmelidir.`)
-  }
-
-  recommendations.push('Tespitler yalnızca karar desteğidir; fiziksel müdahale öncesinde video kanıtı ve saha koşulları yetkili personel tarafından doğrulanmalıdır.')
-  return [...new Set(recommendations)].slice(0, 5)
+  return [...new Set(humanActions)]
 }
 
 // Backend'in (agent.py) risk_score esikleriyle birebir eslesir: >=70 kritik, >=40 orta.
@@ -679,7 +657,7 @@ function TacticalReportsPage({ eventRows, analysis, isDark }) {
   const zoneList = Object.entries(zoneStats).sort((a, b) => b[1].total - a[1].total)
 
   const guidance = getRiskGuidance(analysis?.risk_score)
-  const recommendations = buildStrategicRecommendations(eventRows, analysis?.actions ?? [])
+  const recommendations = buildStrategicRecommendations(analysis?.actions ?? [])
 
   const now = new Date()
   const dateStr = now.toLocaleDateString('tr-TR')
@@ -760,6 +738,106 @@ function TacticalReportsPage({ eventRows, analysis, isDark }) {
             </div>
           </CardContent>
         </Card>
+      </div>
+    </div>
+  )
+}
+
+// ─── KPI Analiz ───────────────────────────────────────────────────────────────
+function KpiAnalysisPage({ benchmark, loading, error }) {
+  const aggregate = benchmark?.aggregate ?? {}
+  const run = benchmark?.run_summary ?? {}
+  const results = benchmark?.results ?? []
+  const percent = value => value == null ? '—' : `%${(Number(value) * 100).toFixed(1)}`
+  const terminalRows = [
+    ['Genel ağırlıklı başarı', percent(aggregate.overall_score), 'Ağırlıklı katman skoru'],
+    ['Olay tespit doğruluğu (F1)', percent(aggregate.event_f1_score), `Precision ${percent(aggregate.event_precision)} · Recall ${percent(aggregate.event_recall)}`],
+    ['Kritik olay yakalama oranı', percent(aggregate.critical_recall), 'Kritik GT olaylarının bulunma oranı'],
+    ['Özet kalitesi', percent(aggregate.summary_score), 'ROUGE ve özlülük birleşik skoru'],
+    ['Aksiyon önerisi doğruluğu', percent(aggregate.tool_jaccard_score), 'Beklenen ve seçilen aksiyon Jaccard skoru'],
+    ['Risk sınıfı doğruluğu', percent(aggregate.risk_accuracy), 'Tahmin edilen risk sınıfı doğruluğu'],
+    ['Ortalama işlem süresi', aggregate.processing_seconds == null ? '—' : `${Number(aggregate.processing_seconds).toFixed(1)} sn`, `RTF ${aggregate.real_time_factor == null ? '—' : Number(aggregate.real_time_factor).toFixed(2)}`],
+    ['Tepe GPU / RSS belleği', aggregate.peak_gpu_gb == null ? '—' : `${Number(aggregate.peak_gpu_gb).toFixed(2)} / ${aggregate.peak_rss_gb == null ? '—' : Number(aggregate.peak_rss_gb).toFixed(2)} GB`, 'Benchmark boyunca ölçülen tepe kullanım'],
+  ]
+
+  return (
+    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1">
+      <div className="mx-auto w-full max-w-6xl space-y-4 pb-8">
+        <div className="sticky top-0 z-10 -mx-1 border-b border-[#2a3540] bg-[#0b141c]/95 px-1 pb-3 backdrop-blur">
+          <h2 className="font-sans text-sm font-bold uppercase tracking-widest text-[#dae3ee]">KPI Analiz</h2>
+          <p className="mt-0.5 font-sans text-[11px] text-[#607086]">kpi_enhanced.py · benchmark değerlendirme çıktısı</p>
+        </div>
+
+        {loading ? (
+          <Card className="border-[#2a3540] bg-[#141c24]">
+            <CardContent className="flex min-h-56 flex-col items-center justify-center gap-2 p-8 text-center">
+              <Gauge className="h-8 w-8 text-[#2a3540]" />
+              <p className="font-sans text-sm font-semibold text-[#8b919d]">KPI sonuçları yükleniyor</p>
+            </CardContent>
+          </Card>
+        ) : error || !benchmark ? (
+          <Card className="border-[#ffb4ab]/30 bg-[#141c24]">
+            <CardContent className="flex min-h-56 flex-col items-center justify-center gap-2 p-8 text-center">
+              <p className="font-sans text-sm font-semibold text-[#ffb4ab]">KPI sonuçları alınamadı</p>
+              <p className="font-sans text-[11px] text-[#8b919d]">{error ?? 'Önce kpi_enhanced.py benchmark çalıştırılmalı.'}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <Card className="overflow-hidden border-[#2a3540] bg-[#090f16] shadow-xl">
+              <CardHeader className="border-b border-[#2a3540] bg-[#101820] px-4 py-3">
+                <CardTitle className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#a2c9ff]">KPI Değerlendirme Raporu</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 font-mono">
+                <div className="border-b border-[#1e2d3d] px-4 py-2 text-[9px] text-[#4ade80]">
+                  $ python kpi_enhanced.py --output benchmark_results_enhanced.json
+                </div>
+                <div className="divide-y divide-[#17222e] px-4 py-1">
+                  {terminalRows.map(([label, value, detail]) => (
+                    <div key={label} className="grid grid-cols-[minmax(210px,1fr)_110px_minmax(220px,1.4fr)] items-center gap-4 py-2.5">
+                      <span className="text-[11px] text-[#c0c7d4]">• {label}</span>
+                      <span className="text-right text-[12px] font-bold text-[#a2c9ff]">: {value}</span>
+                      <span className="truncate text-[9px] text-[#607086]">{detail}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-[#1e2d3d] px-4 py-2 font-mono text-[9px] text-[#4ade80]">
+                  ✓ {run.videos_evaluated ?? results.length}/{run.videos_total ?? results.length} video değerlendirildi · {run.videos_failed ?? 0} başarısız
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden border-[#2a3540] bg-[#090f16]">
+              <CardHeader className="border-b border-[#2a3540] bg-[#101820] px-4 py-3">
+                <CardTitle className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#a2c9ff]">Video Bazlı KPI Sonuçları · {results.length}</CardTitle>
+              </CardHeader>
+              <CardContent className="overflow-x-auto p-0">
+                <table className="w-full min-w-[760px] table-fixed border-collapse font-mono">
+                  <thead className="bg-[#0d151e]">
+                    <tr className="h-10 border-b border-[#2a3540]">
+                      <th className="w-44 px-4 text-left text-[9px] font-semibold uppercase tracking-wider text-[#a2c9ff]">Video</th>
+                      {['Genel','F1','Kritik','Özet','Aksiyon','Risk'].map(label => (
+                        <th key={label} className="w-20 px-2 text-center text-[9px] font-semibold uppercase tracking-wider text-[#a2c9ff]">{label}</th>
+                      ))}
+                      <th className="w-24 px-3 text-right text-[9px] font-semibold uppercase tracking-wider text-[#a2c9ff]">Süre</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {results.map((row, rowIndex) => (
+                      <tr key={row.video_id} className={cn('h-10 border-b border-[#1e2d3d] transition-colors hover:bg-[#14202c]', rowIndex % 2 === 1 && 'bg-[#0c141c]')}>
+                        <td className="w-44 overflow-hidden text-ellipsis whitespace-nowrap px-4 text-[10px] font-semibold text-[#a2c9ff]">{row.video_id}</td>
+                        {[row.overall_score,row.event_f1_score,row.critical_recall,row.summary_score,row.tool_jaccard_score,row.risk_accuracy].map((value, index) => (
+                          <td key={index} className="w-20 whitespace-nowrap px-2 text-center text-[10px] font-semibold text-[#dae3ee]">{percent(value)}</td>
+                        ))}
+                        <td className="w-24 whitespace-nowrap px-3 text-right text-[10px] font-semibold text-[#4ade80]">{row.processing_seconds == null ? '—' : `${Number(row.processing_seconds).toFixed(1)} sn`}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   )
@@ -1012,7 +1090,7 @@ function VideoView({ videoSrc, fileName, onFileSelect, onDeleteVideo, analyzing,
               ▶ {fileName}
             </span>
           )}
-          <Input ref={fileInputRef} type="file" accept="video/*" className="hidden"
+          <Input ref={fileInputRef} type="file" accept=".mp4,.avi,video/mp4,video/x-msvideo" className="hidden"
             onChange={e => { const f = e.target.files?.[0]; if (f) onFileSelect(f) }} />
           <Button size="sm" variant="outline"
             onClick={() => fileInputRef.current?.click()}
@@ -1250,6 +1328,9 @@ export default function Dashboard() {
   const [actionDrafts, setActionDrafts] = useState({})
   const [operationOrders, setOperationOrders] = useState({})
   const [actionCenterOpen, setActionCenterOpen] = useState(false)
+  const [kpiBenchmark, setKpiBenchmark] = useState(null)
+  const [kpiLoading, setKpiLoading] = useState(false)
+  const [kpiError, setKpiError] = useState(null)
   const eventIdCounter = useRef(1)
   const analysisStartedAt = useRef(null)
   const analysisAbortRef = useRef(null)
@@ -1258,6 +1339,22 @@ export default function Dashboard() {
   useEffect(() => {
     document.documentElement.classList.remove('light')
   }, [])
+
+  useEffect(() => {
+    if (activeNav !== 'kpi') return undefined
+    const controller = new AbortController()
+    setKpiLoading(true)
+    setKpiError(null)
+    fetchKpiResults({ signal: controller.signal })
+      .then(setKpiBenchmark)
+      .catch(error => {
+        if (error?.name !== 'AbortError') setKpiError(error instanceof Error ? error.message : 'KPI sonuçları alınamadı.')
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setKpiLoading(false)
+      })
+    return () => controller.abort()
+  }, [activeNav])
 
   useEffect(() => {
     let cancelled = false
@@ -1385,13 +1482,19 @@ export default function Dashboard() {
   }
 
   async function handleFileSelect(file) {
+    const extension = file.name.split('.').pop()?.toLowerCase()
+    if (!['mp4', 'avi'].includes(extension)) {
+      setAnalysisError('Yalnızca MP4 ve AVI video dosyaları desteklenmektedir.')
+      return
+    }
+
     if (actionCenterTimerRef.current) window.clearTimeout(actionCenterTimerRef.current)
     actionCenterTimerRef.current = null
     analysisAbortRef.current?.abort()
     const controller = new AbortController()
     analysisAbortRef.current = controller
     if (videoSrc) URL.revokeObjectURL(videoSrc)
-    setVideoSrc(URL.createObjectURL(file))
+    setVideoSrc(null)
     setVideoFileName(file.name)
     setLogs([])
     setEventRows([])
@@ -1411,7 +1514,13 @@ export default function Dashboard() {
     setAnalyzing(true)
 
     try {
-      const data = await analyzeVideo(file, { signal: controller.signal })
+      const analysisFile = extension === 'avi'
+        ? await convertVideoToMp4(file, { signal: controller.signal })
+        : file
+      setVideoSrc(URL.createObjectURL(analysisFile))
+      setVideoFileName(analysisFile.name)
+
+      const data = await analyzeVideo(analysisFile, { signal: controller.signal })
       const acceptedEvents = (data.events ?? []).filter(
         event => confidencePercent(event.confidence) >= settings.detectionThreshold,
       )
@@ -1501,7 +1610,7 @@ export default function Dashboard() {
 
 
       {/* ── Sidebar ────────────────────────────────────────────────── */}
-      <aside className="t-sidebar w-60 shrink-0 flex flex-col overflow-y-auto overscroll-contain bg-[#0d1520] border-r border-[#2a3540]">
+      <aside className="t-sidebar min-h-0 w-60 shrink-0 flex flex-col overflow-y-auto overscroll-contain bg-[#0d1520] border-r border-[#2a3540]">
         <div className="px-5 py-5 t-border border-b border-[#2a3540]">
           <div className="flex items-center gap-2.5">
             <BarChart3 className="w-8 h-8 shrink-0 text-[#a2c9ff] drop-shadow-[0_0_6px_rgba(162,201,255,0.55)]" strokeWidth={2.25} />
@@ -1581,6 +1690,7 @@ export default function Dashboard() {
             )}
             {activeNav === 'tactical' && <TacticalReportsPage eventRows={eventRows} analysis={analysis} isDark={isDark} />}
             {activeNav === 'reports'  && <ReportsPage eventRows={eventRows} analysis={reportAnalysis} feedbackMap={feedbackMap} operationOrders={operationOrders} isDark={isDark} />}
+            {activeNav === 'kpi'      && <KpiAnalysisPage benchmark={kpiBenchmark} loading={kpiLoading} error={kpiError} />}
             {activeNav === 'json'     && <JsonPage jsonOutput={jsonOutput} />}
             {activeNav === 'settings' && <SettingsPage settings={settings} onChange={updateSettings} />}
 

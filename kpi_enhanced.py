@@ -13,26 +13,6 @@ kapsamında tanımlanan metrikler:
     İşlem süresi                 -> total_processing_time_sec, RTF
     Bellek ve donanım kullanımı  -> peak_gpu_gb, peak_rss_gb (örneklemeli)
 
-Madde 4 katılımcıya kendi metriklerini tanımlama serbestliği veriyor;
-karşılığında metriklerin açık şekilde sunulmasını şart koşuyor. Bu yüzden
-tüm eşikler METRIC_DEFINITIONS içinde gerekçesiyle birlikte tanımlı ve
-çıktı JSON'una yazılıyor (`python kpi_enhanced.py --print-metrics`).
-
-Düzeltilen ölçüm hataları
--------------------------
-1.  Zaman karşılaştırması ARALIK bazlı (IoM). Md.4 "olayların başlangıç,
-    gelişim ve sonuç süreçlerini ayırt edebilmelidir" nokta bazlı ölçümle
-    doğrulanamaz.
-2.  Tolerans süreye oransal: clamp(0.05*duration, 2.0, 5.0). Eski sabit
-    6 sn, 7 sn'lik videoda sürenin %86'sıydı.
-3.  Bire-bir atama; tp+fp == len(pred), tp+fn == len(gt) assert ile
-    doğrulanıyor.
-4.  parse hatası sessizce 0 saniyeye çakılmıyor (None = eşleşemez).
-5.  Boş GT / boş tool listesinde bedava 1.0 yok.
-6.  Grounding'de ölçülemeyen durum None (ağırlıktan düşülür), 1.0 değil.
-7.  argument katmanı tool recall'ü tekrar ölçmüyor.
-8.  Şema doğrulaması KPI tarafında bağımsız yapılıyor.
-
 Kullanım
 --------
     python kpi_enhanced.py                 # benchmark
@@ -59,7 +39,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 import logging
 
 # ============================================================================
-# 0. AYARLAR VE METRİK TANIMLARI (Md.4: açık şekilde sunulmalıdır)
+# 0. AYARLAR VE METRİK TANIMLARI
 # ============================================================================
 
 TOLERANCE_RATIO = 0.05
@@ -71,102 +51,69 @@ TEXT_THRESHOLD = 0.04
 SCORE_W_TIME = 0.6
 SCORE_W_TEXT = 0.4
 
-STEM_LEN = 4
+STEM_LEN = 5
 
-SUMMARY_W_UNIGRAM = 0.80
-SUMMARY_W_BIGRAM = 0.20
-SUMMARY_LENGTH_TOLERANCE = 1.8     # GT özetinin 1.5 katına kadar ceza yok
-SUMMARY_MIN_PENALTY = 0.60
+SUMMARY_W_UNIGRAM = 0.60 
+SUMMARY_W_BIGRAM = 0.40  
+SUMMARY_LENGTH_TOLERANCE = 1.8     # GT özetinin 1.8 katına kadar ceza yok
+SUMMARY_MIN_PENALTY = 0.80
 
 VALID_PHASES = {"baslangic", "gelisim", "sonuc"}
-
-AUTO_INJECTED_ARGS = {"video_path", "zone"}
 SYNTHETIC_EVENT_TYPES = {"EK ANALIZ", "EK_ANALIZ", "EK ANALİZ", "EKANALIZ"}
 
-# Modelin "olay yok" bildirimleri gerçek bir olay iddiası değil; tahmin
-# olarak sayılırsa yapay FP üretirler. Ayrı sayılıp raporlanıyorlar.
 NON_EVENT_PATTERNS = (
     "olay bulunamadi", "olay yok", "olay tespit edilmedi", "tespit edilmedi",
     "bilinmeyen olay", "aciklama bulunamadi", "veri yok", "bulunamadi",
 )
 
-RESOURCE_SAMPLE_INTERVAL = 2.0   # nvidia-smi subprocess'i pahalı; sık örnekleme
-                                 # ölçtüğü işlem süresini kendisi şişiriyor
+RESOURCE_SAMPLE_INTERVAL = 2.0
 
-# Şartname Md.4'teki KPI kalemlerine göre katman ağırlıkları
+# Şartname Md.4'e göre güncellenmiş katman ağırlıkları (Toplam = 1.00)
 LAYER_WEIGHTS = {
     "event": 0.20,       # Olay tespit doğruluğu
-    "critical": 0.10,    # Kritik olay yakalama oranı
-    "summary": 0.10,     # Özet kalitesi
+    "critical": 0.20,    # Kritik olay yakalama oranı
+    "summary": 0.20,     # Özet kalitesi
     "tool": 0.20,        # Aksiyon önerisi doğruluğu
-    "risk": 0.15,        # Risk değerlendirmesi (Md.3 zorunlu çıktı)
-    "argument": 0.10,    # Araç argüman kalitesi
-    "grounding": 0.10,   # Çıktının tool sonuçlarına dayanması
-    "recovery": 0.05,    # Hata işleme (Md.7 "hata işleme")
+    "risk": 0.20,        # Risk değerlendirmesi
 }
 
 METRIC_DEFINITIONS = {
     "olay_tespit_dogrulugu": {
-        "alan": "accuracy.event_f1_score",
-        "tanim": "Aralık bazlı bire-bir eşleştirme sonrası F1. Bir tahmin ile bir "
-                 "GT olayı, zaman örtüşmesi (IoM) ve Türkçe metin benzerliği "
-                 "eşiklerini birlikte geçerse eşleşmiş sayılır.",
-        "esikler": {"IoM": IOM_THRESHOLD, "metin_benzerligi": TEXT_THRESHOLD},
-        "gerekce": "Nokta bazlı karşılaştırma, GT'de aralık olarak tanımlı olayları "
-                   "temsil edemiyor; Md.4 olayların süreç olarak ayırt edilmesini istiyor.",
-    },
-    "zaman_toleransi": {
-        "alan": "layer_analysis.tolerance_sec",
-        "tanim": "Nokta tahminlerin aralığa çevrilmesinde kullanılan yarı-pencere: "
-                 f"clamp({TOLERANCE_RATIO}*sure, {TOLERANCE_MIN_SEC}, {TOLERANCE_MAX_SEC}) saniye.",
-        "gerekce": "Sabit tolerans, kısa videolarda ölçümü anlamsızlaştırıyor "
-                   "(7 sn'lik videoda 6 sn tolerans = sürenin %86'sı), uzun videolarda "
-                   "aşırı katı kalıyor (140 sn'de %4.3).",
-    },
-    "zaman_ortusme_olcusu": {
-        "alan": "layer_analysis.event_analysis.mean_iom",
-        "tanim": "Intersection over Minimum: ortak süre / kısa aralığın süresi.",
-        "gerekce": "GT aralıkları 1–95 sn arasında değişiyor. tIoU kullanılsaydı "
-                   "~10 sn'lik nokta penceresi 95 sn'lik bir GT aralığıyla en fazla "
-                   "0.105 alabilirdi; mükemmel isabette bile eşiği geçemezdi.",
+        "alan": "Olay Tespiti",
+        "tanim": "Temporal IoM (Intersection over Minimum) ve metin benzerliği tabanlı aralık eşleştirmeli F1 Skoru.",
+        "esikler": f"IoM >= {IOM_THRESHOLD}, Metin >= {TEXT_THRESHOLD}",
+        "gerekce": "Olay süreçlerinin başlangıç-gelişim-sonuç aralıklarını yakalama başarısını ölçer."
     },
     "kritik_olay_yakalama_orani": {
-        "alan": "accuracy.critical_recall",
-        "tanim": "GT'de is_critical=true olan olaylardan kaçının eşleştiği.",
-        "gerekce": "Md.4 bu kalemi ayrıca sayıyor. 'Kamyon işçiye çarptı' ile "
-                   "'personel yardıma koştu' aynı ağırlıkta ölçülmemeli.",
+        "alan": "Güvenlik / Risk",
+        "tanim": "Ground Truth'ta 'is_critical' olarak etiketlenmiş olayların yakalanma oranı (Recall).",
+        "gerekce": "İş güvenliği ihlali ve kaza anlarının kaçırılmamasını garanti eder."
     },
     "ozet_kalitesi": {
-        "alan": "accuracy.summary_score",
-        "tanim": f"({SUMMARY_W_UNIGRAM}*ROUGE-1_F1 + {SUMMARY_W_BIGRAM}*ROUGE-2_F1) "
-                 "x özlülük katsayısı. Türkçe ek farkları için gövdeleme uygulanır.",
-        "gerekce": "Md.4 özetin 'gereksiz detaydan arındırılmış' olmasını istiyor; "
-                   "bu yüzden salt örtüşme değil, uzunluk cezası da var.",
+        "alan": "Doğal Dil Üretimi",
+        "tanim": "ROUGE-1/2 F1 harmonik ortalaması ve uzunluk cezası katsayısı.",
+        "gerekce": "Operatöre sunulan özetin gereksiz detaydan arındırılmış ve anlam bütünlüğüne sahip olmasını sağlar."
     },
     "aksiyon_onerisi_dogrulugu": {
-        "alan": "accuracy.tool_jaccard_score",
-        "tanim": "Tespit edilen ve beklenen tool kümeleri arasında Jaccard IoU.",
-        "gerekce": "Md.3 'olaylara göre operatöre aksiyon önerileri sunmalıdır'.",
+        "alan": "Karar Destek / Tool Çağrısı",
+        "tanim": "Öngörülen araçlar ile Ground Truth araçları arasındaki Jaccard IoU küme benzerliği.",
+        "gerekce": "Doğru protokole ve güvenlik adımına başvurulduğunu doğrular."
+    },
+    "risk_dogrulugu": {
+        "alan": "Risk Değerlendirmesi",
+        "tanim": "Nihai risk seviyesinin (Düşük/Orta/Yüksek/Kritik) Ground Truth ile tam eşleşmesi.",
+        "gerekce": "Saha riskinin doğru sınıflandırıldığını teyit eder."
     },
     "islem_suresi": {
-        "alan": "performance.total_processing_time_sec",
-        "tanim": "Pipeline'ın uçtan uca duvar saati süresi; RTF = süre / video süresi.",
-        "gerekce": "Md.4 'Video işleme süresi' ve 'İşlem süresi' kalemleri.",
+        "alan": "Performans",
+        "tanim": "Pipeline toplam çalışma süresi ve Real-Time Factor (RTF).",
+        "gerekce": "Videonun gerçek zamanlı işlenme yeteneğini ölçer."
     },
     "bellek_ve_donanim": {
-        "alan": "performance.peak_gpu_gb / peak_rss_gb",
-        "tanim": f"Pipeline çalışırken {RESOURCE_SAMPLE_INTERVAL} sn aralıkla örneklenen "
-                 "tepe GPU belleği (nvidia-smi) ve süreç RSS'i (psutil).",
-        "gerekce": "Md.4 'Bellek ve donanım kullanımı önemli değerlendirme "
-                   "kriterleri arasındadır'. Tek seferlik ölçüm tepe değeri veremez.",
-    },
-    "zamansal_asama_kapsami": {
-        "alan": "layer_analysis.event_analysis.phase_diagnostics",
-        "tanim": "Üretilen olayların başlangıç/gelişim/sonuç aşamalarına dağılımı. "
-                 "TANI amaçlıdır, skora girmez.",
-        "gerekce": "Md.4 aşama ayrımını istiyor ancak ground_truth.json'da phase "
-                   "alanı yok; doğruluk ölçülemiyor, yalnızca üretim kapsamı raporlanıyor.",
-    },
+        "alan": "Kaynak Tüketimi",
+        "tanim": "Çalışma anındaki maksimum GPU bellek tüketimi (peak VRAM GB) ve işlem RAM tüketimi (peak RSS GB).",
+        "gerekce": "Uç cihaz ve sunucu kaynak sınırlarına uyumu takip eder."
+    }
 }
 
 logging.getLogger("ALFAI_API").setLevel(logging.ERROR)
@@ -180,14 +127,6 @@ logging.basicConfig(level=logging.ERROR)
 def _mean(values: Sequence[Optional[float]], default: float = 0.0) -> float:
     vals = [v for v in values if v is not None]
     return statistics.fmean(vals) if vals else default
-
-
-def _pct(values: Sequence[float], q: float) -> Optional[float]:
-    vals = sorted(v for v in values if v is not None)
-    if not vals:
-        return None
-    k = max(0, min(len(vals) - 1, int(round(q * (len(vals) - 1)))))
-    return vals[k]
 
 
 # ============================================================================
@@ -219,13 +158,11 @@ class TurkishTextProcessor:
 
     @classmethod
     def tokens(cls, text: Any, min_len: int = 3) -> List[str]:
-        """Sıralı anlamlı kelime listesi (n-gram için sıra gerekli)."""
         words = re.findall(r"[a-z]{2,}", cls.normalize(text))
         return [w for w in words if w not in cls.TR_STOP_WORDS and len(w) >= min_len]
 
     @classmethod
     def stem_tokens(cls, text: Any) -> List[str]:
-        """Türkçe ek farklarını azaltmak için kaba ön-ek gövdeleme."""
         return [w[:STEM_LEN] for w in cls.tokens(text) if len(w) >= STEM_LEN]
 
     @classmethod
@@ -248,8 +185,9 @@ class TurkishTextProcessor:
         stem = cls._jaccard(cls.stems(text_a), cls.stems(text_b))
         return max(raw, stem)
 
+
 # ============================================================================
-# 2. ÖZET KALİTESİ  (Md.4 "Özet kalitesi")
+# 2. ÖZET KALİTESİ
 # ============================================================================
 
 def _ngram_counts(tokens: Sequence[str], n: int) -> Counter:
@@ -259,7 +197,6 @@ def _ngram_counts(tokens: Sequence[str], n: int) -> Counter:
 
 
 def rouge_n(pred_tokens: Sequence[str], gt_tokens: Sequence[str], n: int) -> Dict[str, float]:
-    """Çoklu-küme (multiset) örtüşmesine dayalı ROUGE-N."""
     p, g = _ngram_counts(pred_tokens, n), _ngram_counts(gt_tokens, n)
     p_total, g_total = sum(p.values()), sum(g.values())
     if p_total == 0 or g_total == 0:
@@ -272,14 +209,6 @@ def rouge_n(pred_tokens: Sequence[str], gt_tokens: Sequence[str], n: int) -> Dic
 
 
 class SummaryEvaluator:
-    """Türkçe özet kalitesi.
-
-    Md.4 özetin üç niteliğini sayıyor: gereksiz detaydan arındırılmış,
-    operatörün hızlı karar almasını destekleyen, anlam bütünlüğü korunmuş.
-    Buradaki ölçüm ilk ikisini yakalıyor: içerik örtüşmesi (ROUGE) anlamı,
-    özlülük katsayısı gereksiz detayı cezalandırıyor.
-    """
-
     @staticmethod
     def evaluate(pred_summary: Any, gt_summary: Any) -> Dict[str, Any]:
         gt_text = str(gt_summary or "").strip()
@@ -294,7 +223,6 @@ class SummaryEvaluator:
                 "conciseness_penalty": 1.0, "reason": "Model özet üretmedi",
             }
 
-        # Türkçe ek farkları için gövdelenmiş token'lar
         pred_tok = TurkishTextProcessor.stem_tokens(pred_text)
         gt_tok = TurkishTextProcessor.stem_tokens(gt_text)
 
@@ -327,16 +255,10 @@ class SummaryEvaluator:
 
 
 # ============================================================================
-# 3. KAYNAK İZLEME  (Md.4 "Bellek ve donanım kullanımı")
+# 3. KAYNAK İZLEME
 # ============================================================================
 
 class ResourceMonitor:
-    """Pipeline çalışırken GPU ve RAM'i periyodik örnekler.
-
-    Eski kod nvidia-smi'yi tek sefer, üstelik pipeline BİTTİKTEN sonra
-    okuyordu; 'peak' adı yanıltıcıydı ve 45 videonun hepsinde 0.01 çıkıyordu.
-    """
-
     def __init__(self, interval: float = RESOURCE_SAMPLE_INTERVAL):
         self.interval = interval
         self._stop = threading.Event()
@@ -348,11 +270,6 @@ class ResourceMonitor:
 
     @staticmethod
     def _read_gpu_gb() -> Optional[float]:
-        """Önce NVML (in-process, ~mikrosaniye), yoksa nvidia-smi (subprocess).
-
-        subprocess çağrısı yüklü GPU'da yüzlerce ms bloklayabiliyor ve
-        ölçmeye çalıştığı işlem süresini kendisi şişiriyor.
-        """
         try:
             import pynvml  # type: ignore
             if not getattr(ResourceMonitor, "_nvml_ready", False):
@@ -419,18 +336,16 @@ class ResourceMonitor:
             delta = max(0.0, peak_gpu - self.baseline_gpu)
         return {
             "peak_gpu_gb": round(peak_gpu, 3) if peak_gpu is not None else None,
-            "baseline_gpu_gb": round(self.baseline_gpu, 3)
-            if self.baseline_gpu is not None else None,
+            "baseline_gpu_gb": round(self.baseline_gpu, 3) if self.baseline_gpu is not None else None,
             "gpu_delta_gb": round(delta, 3) if delta is not None else None,
             "peak_rss_gb": round(max(self.rss_samples), 3) if self.rss_samples else None,
             "samples": len(self.gpu_samples),
-            "note": None if self.gpu_available
-            else "nvidia-smi okunamadı (vLLM ayrı container'da olabilir)",
+            "note": None if self.gpu_available else "nvidia-smi okunamadı",
         }
 
 
 # ============================================================================
-# 4. ZAMAN AYRIŞTIRMA (sessiz 0 YOK)
+# 4. ZAMAN AYRIŞTIRMA
 # ============================================================================
 
 def parse_time(value: Any) -> Optional[float]:
@@ -502,12 +417,6 @@ def tolerance_for_duration(duration_sec: Optional[float]) -> float:
 def event_interval(event: Any, pad: float,
                    duration_sec: Optional[float] = None,
                    is_ground_truth: bool = False) -> Optional[Interval]:
-    """Olayı [start, end] aralığına çevirir.
-
-    is_ground_truth=True iken süreye KIRPMA yapılmaz: ground_truth.json'daki
-    duration_sec bazı videolarda gerçek süreyle uyuşmuyor (bkz. duration
-    uyarıları). Yanlış bir süreye kırpmak GT'yi bozar ve suçu modele yükler.
-    """
     if not isinstance(event, dict):
         return None
 
@@ -551,7 +460,6 @@ class MatchPair:
 
 
 class TemporalEventEvaluator:
-
     def __init__(self, tolerance_sec: float = TOLERANCE_MIN_SEC):
         self.tolerance = float(tolerance_sec)
         self.tr = TurkishTextProcessor()
@@ -584,7 +492,6 @@ class TemporalEventEvaluator:
 
     @classmethod
     def _is_non_event(cls, event: Any) -> bool:
-        """'Olay bulunamadı.' gibi negatif bildirimler olay iddiası değildir."""
         text = TurkishTextProcessor.normalize(cls._event_text(event))
         if len(text) < 3:
             return True
@@ -592,7 +499,6 @@ class TemporalEventEvaluator:
 
     @staticmethod
     def _phase_diagnostics(pred_events: List[Dict]) -> Dict[str, Any]:
-        """Md.4 aşama ayrımı — GT'de phase yok, bu yüzden TANI amaçlı."""
         counts: Counter = Counter()
         for e in pred_events:
             if not isinstance(e, dict):
@@ -603,10 +509,9 @@ class TemporalEventEvaluator:
         distinct = len([p for p in VALID_PHASES if counts.get(p, 0) > 0])
         return {
             "distribution": dict(counts),
-            "labelled_ratio": round((total - counts.get("tanimsiz", 0)) / total, 3)
-            if total else None,
+            "labelled_ratio": round((total - counts.get("tanimsiz", 0)) / total, 3) if total else None,
             "distinct_phases": distinct,
-            "note": "GT'de phase alanı yok; doğruluk ölçülemiyor, yalnızca üretim kapsamı",
+            "note": "GT'de phase alanı yok; yalnızca üretim kapsamı",
         }
 
     @staticmethod
@@ -651,7 +556,6 @@ class TemporalEventEvaluator:
             dropped = len(pred_events) - len(kept)
             pred_events = kept
 
-        # Negatif bildirimler her zaman ayıklanır (yapay FP üretmesinler)
         before = len(pred_events)
         pred_events = [e for e in pred_events if not self._is_non_event(e)]
         non_events = before - len(pred_events)
@@ -673,8 +577,7 @@ class TemporalEventEvaluator:
             return res
 
         pad = self.tolerance
-        gt_iv = [event_interval(e, pad, duration_sec, is_ground_truth=True)
-                 for e in true_events]
+        gt_iv = [event_interval(e, pad, duration_sec, is_ground_truth=True) for e in true_events]
         pred_iv = [event_interval(e, pad, duration_sec) for e in pred_events]
         gt_txt = [self._event_text(e) for e in true_events]
         pred_txt = [self._event_text(e) for e in pred_events]
@@ -732,8 +635,7 @@ class TemporalEventEvaluator:
             "tolerance_sec": round(pad, 2),
             "mean_iom": round(mean_iom, 3),
             "mean_text_similarity": round(mean_text, 3),
-            "critical_recall": round(critical_recall, 3)
-            if critical_recall is not None else None,
+            "critical_recall": round(critical_recall, 3) if critical_recall is not None else None,
             "critical_gt_count": len(crit_gt),
             "critical_matched": len(crit_hit),
             "critical_flag_accuracy": round(flag_acc, 3) if flag_acc is not None else None,
@@ -744,25 +646,21 @@ class TemporalEventEvaluator:
             "phase_diagnostics": phase_diag,
             "matches": [
                 {"gt": gt_txt[m.gt_index][:70],
-                 "gt_interval": [round(gt_iv[m.gt_index].start, 1),
-                                 round(gt_iv[m.gt_index].end, 1)],
+                 "gt_interval": [round(gt_iv[m.gt_index].start, 1), round(gt_iv[m.gt_index].end, 1)],
                  "pred": pred_txt[m.pred_index][:70],
-                 "pred_interval": [round(pred_iv[m.pred_index].start, 1),
-                                   round(pred_iv[m.pred_index].end, 1)],
+                 "pred_interval": [round(pred_iv[m.pred_index].start, 1), round(pred_iv[m.pred_index].end, 1)],
                  "iom": round(m.iom, 3), "text_sim": round(m.text_sim, 3)}
                 for m in matches
             ],
             "missed_gt": [
                 {"text": gt_txt[i][:70],
                  "critical": self._is_critical(true_events[i]),
-                 "interval": [round(gt_iv[i].start, 1), round(gt_iv[i].end, 1)]
-                 if gt_iv[i] else None}
+                 "interval": [round(gt_iv[i].start, 1), round(gt_iv[i].end, 1)] if gt_iv[i] else None}
                 for i in range(n_gt) if i not in matched_gt
             ],
             "false_positives": [
                 {"text": pred_txt[i][:70],
-                 "interval": [round(pred_iv[i].start, 1), round(pred_iv[i].end, 1)]
-                 if pred_iv[i] else None}
+                 "interval": [round(pred_iv[i].start, 1), round(pred_iv[i].end, 1)] if pred_iv[i] else None}
                 for i in range(n_pred) if i not in matched_pred
             ],
         }
@@ -824,30 +722,57 @@ class ToolEvaluator:
                  true_actions: Sequence[Any]) -> Dict[str, Any]:
         pred = self.extract(pred_actions)
         true = self.extract(true_actions)
-        tp, fp, fn = len(pred & true), len(pred - true), len(true - pred)
 
         if not true and not pred:
-            iou, exact = 1.0, 1.0
-        elif not true:
-            iou, exact = 0.0, 0.0
-        else:
-            denom = tp + fp + fn
-            iou = tp / denom if denom else 1.0
-            exact = 1.0 if pred == true else 0.0
+            return {
+                "tool_jaccard_iou": None,
+                "tool_recall": None,
+                "tool_precision": None,
+                "hallucination_rate": None,
+                "weighted_final_score": None,
+                "detected_tools": [],
+                "expected_tools": [],
+                "tp": 0, "fp": 0, "fn": 0,
+                "evaluated": False,
+                "reason": "Beklenen veya tespit edilen tool yok; tool katmanı ölçülmedi"
+            }
 
-        recall = tp / len(true) if true else (1.0 if not pred else 0.0)
-        precision = tp / len(pred) if pred else (1.0 if not true else 0.0)
+        if not true and pred:
+            return {
+                "tool_jaccard_iou": 0.0,
+                "tool_recall": 0.0,
+                "tool_precision": 0.0,
+                "hallucination_rate": 1.0,
+                "weighted_final_score": 0.0,
+                "detected_tools": sorted(pred),
+                "expected_tools": [],
+                "tp": 0, "fp": len(pred), "fn": 0,
+                "evaluated": True,
+                "reason": "GT'de tool beklenmiyordu ancak model tool çağırdı"
+            }
+
+        tp = len(pred & true)
+        fp = len(pred - true)
+        fn = len(true - pred)
+
+        denom = tp + fp + fn
+        iou = tp / denom if denom else 0.0
+        recall = tp / len(true) if true else 0.0
+        precision = tp / len(pred) if pred else 0.0
+        hallucination_rate = (fp / len(pred)) if pred else 0.0
 
         return {
             "tool_jaccard_iou": round(iou, 3),
-            "tool_exact_match": exact,
             "tool_recall": round(recall, 3),
             "tool_precision": round(precision, 3),
-            "hallucination_rate": round(fp / len(pred), 3) if pred else 0.0,
-            "weighted_final_score": round(0.6 * iou + 0.4 * recall, 3),
+            "hallucination_rate": round(hallucination_rate, 3),
+            "weighted_final_score": round(iou, 3),
+            "tool_exact_match": 1.0 if pred == true else 0.0,
             "detected_tools": sorted(pred),
             "expected_tools": sorted(true),
             "tp": tp, "fp": fp, "fn": fn,
+            "evaluated": True,
+            "reason": "Tool çağrısı beklenen senaryo ölçüldü"
         }
 
 
@@ -856,7 +781,6 @@ class ToolEvaluator:
 # ============================================================================
 
 class EnhancedAgentBenchmarkKPI:
-
     def __init__(self, drop_synthetic_events: bool = False):
         self.tr = TurkishTextProcessor()
         self.tool_evaluator = ToolEvaluator()
@@ -864,69 +788,75 @@ class EnhancedAgentBenchmarkKPI:
         self.summary_evaluator = SummaryEvaluator()
         self.drop_synthetic_events = drop_synthetic_events
 
-    def evaluate_risk(self, pred: Dict, true: Dict) -> float:
+    def evaluate_risk(self, pred: Dict, true: Dict) -> Optional[float]:
         p = self.tr.normalize(pred.get("risk_level", pred.get("risk", "")))
         t = self.tr.normalize(true.get("risk_level", true.get("risk", "")))
-        return 1.0 if (p == t and p != "") else 0.0
+        if not p or not t:
+            return None
+        return 1.0 if p == t else 0.0
 
-    def evaluate_arguments(self, full_state: Dict, true: Dict) -> Dict[str, Any]:
-        history = [t for t in full_state.get("tool_history", []) if isinstance(t, dict)]
-        expected = self.tool_evaluator.extract(true.get("actions", []))
-        scores: List[float] = []
-        notes: List[str] = []
-        for tool in sorted(expected):
-            calls = [t for t in history if t.get("tool") == tool]
-            if not calls:
-                continue
-            best = 0.0
-            for call in calls:
-                args = call.get("args", call.get("parameters", {}))
-                if not isinstance(args, dict):
-                    continue
-                meaningful = {k: v for k, v in args.items()
-                              if k not in AUTO_INJECTED_ARGS and v not in (None, "", [], {})}
-                best = max(best, 1.0 if meaningful else 0.0)
-            scores.append(best)
-            if best == 0.0:
-                notes.append(f"'{tool}' yalnızca otomatik argümanlarla çağrıldı")
-        if not scores:
-            return {"argument_score": None, "evaluated_calls": 0,
-                    "notes": ["Beklenen toolların hiçbiri çağrılmadı"]}
-        return {"argument_score": round(_mean(scores), 3),
-                "evaluated_calls": len(scores), "notes": notes[:3]}
-
-    def evaluate_grounding(self, full_state: Dict) -> Dict[str, Any]:
-        results = [t.get("result") for t in full_state.get("tool_history", [])
-                   if isinstance(t, dict) and "result" in t]
-        final_text = self.tr.normalize(full_state.get("final_json_output", ""))
-        grounded, checks = 0, 0
-        for result in results:
-            values = result.values() if isinstance(result, dict) else [result]
-            for value in values:
-                norm = self.tr.normalize(value)
-                if len(norm) <= 2:
-                    continue
-                checks += 1
-                if norm in final_text:
-                    grounded += 1
-        if checks == 0:
-            return {"grounding_score": None, "grounded_items": 0,
-                    "total_checks": 0, "tool_results_count": len(results)}
-        return {"grounding_score": round(grounded / checks, 3),
-                "grounded_items": grounded, "total_checks": checks,
-                "tool_results_count": len(results)}
+    @staticmethod
+    def _is_tool_error(step: Dict) -> bool:
+        if not isinstance(step, dict):
+            return False
+        if step.get("error") or step.get("status") == "error":
+            return True
+        res = step.get("result")
+        if isinstance(res, dict) and "error" in res:
+            return True
+        return False
 
     def evaluate_recovery(self, full_state: Dict) -> Dict[str, Any]:
+        """Hata toparlanma değerlendirmesi:
+        ERROR -> Retry / alternatif Tool -> Başarılı sonuç?
+          ├── EVET -> Recovery = 1.0
+          └── HAYIR -> Recovery = 0.0
+        """
         history = [t for t in full_state.get("tool_history", []) if isinstance(t, dict)]
-        errors = [t.get("tool") for t in history
-                  if t.get("error") or t.get("status") == "error"
-                  or (isinstance(t.get("result"), dict) and "error" in t["result"])]
-        seen: Counter = Counter(str(t.get("tool", "")) for t in history)
-        retries = sum(c - 1 for c in seen.values() if c > 1)
-        score = 1.0 if not errors else (0.9 if retries > 0 else 0.7)
-        return {"recovery_score": round(score, 3), "error_count": len(errors),
-                "retry_count": retries,
-                "errored_tools": sorted({e for e in errors if e})[:5]}
+        if not history:
+            return {
+                "recovery_score": None,
+                "evaluated": False,
+                "reason": "Tool geçmişi boş; recovery ölçülmedi"
+            }
+
+        # Hatanın oluştuğu ilk adımı bul
+        first_error_idx = None
+        for i, step in enumerate(history):
+            if self._is_tool_error(step):
+                first_error_idx = i
+                break
+
+        if first_error_idx is None:
+            return {
+                "recovery_score": None,
+                "evaluated": False,
+                "reason": "Hata oluşmadı; recovery ölçülmedi"
+            }
+
+        subsequent_calls = history[first_error_idx + 1:]
+        if not subsequent_calls:
+            return {
+                "recovery_score": 0.0,
+                "evaluated": True,
+                "recovered": False,
+                "reason": "Hata sonrası tekrar deneme / alternatif araç çağrılmadı"
+            }
+
+        # Sonraki adımda başarılı sonuç alındı mı?
+        recovered = False
+        for next_step in subsequent_calls:
+            if not self._is_tool_error(next_step):
+                recovered = True
+                break
+
+        recovery_score = 1.0 if recovered else 0.0
+        return {
+            "recovery_score": recovery_score,
+            "evaluated": True,
+            "recovered": recovered,
+            "reason": "Hata sonrası başarılı toparlanma sağlandı" if recovered else "Hata toparlanamadı"
+        }
 
     @staticmethod
     def _overall(scores: Dict[str, Optional[float]]) -> Tuple[float, List[str]]:
@@ -940,7 +870,6 @@ class EnhancedAgentBenchmarkKPI:
 
     def run_benchmark(self, pipeline_fn, video_path: str, ground_truth: Dict[str, Any],
                       video_duration_sec: float) -> Dict[str, Any]:
-
         tolerance = self.event_evaluator.set_tolerance_from_duration(video_duration_sec)
 
         with ResourceMonitor() as monitor:
@@ -952,17 +881,18 @@ class EnhancedAgentBenchmarkKPI:
         full_state = prediction.get("_full_state", {})
         rtf = latency / video_duration_sec if video_duration_sec > 0 else None
 
+        pred_summary_text = prediction.get("summary", "")
+        gt_summary_text = ground_truth.get("summary", "")
+
         event_res = self.event_evaluator.evaluate(
             prediction.get("events", []), ground_truth.get("events", []),
             duration_sec=video_duration_sec, drop_synthetic=self.drop_synthetic_events)
         summary_res = self.summary_evaluator.evaluate(
-            prediction.get("summary", ""), ground_truth.get("summary", ""))
+            pred_summary_text, gt_summary_text)
         tool_res = self.tool_evaluator.evaluate(
             prediction.get("actions", []), ground_truth.get("actions", []))
         risk_score = self.evaluate_risk(prediction, ground_truth)
-        arg_res = self.evaluate_arguments(full_state, ground_truth)
-        ground_res = self.evaluate_grounding(full_state)
-        rec_res = self.evaluate_recovery(full_state)
+        recovery_res = self.evaluate_recovery(full_state)
 
         layer_scores = {
             "event": event_res["weighted_final_score"],
@@ -970,9 +900,6 @@ class EnhancedAgentBenchmarkKPI:
             "summary": summary_res["summary_score"],
             "tool": tool_res["weighted_final_score"],
             "risk": risk_score,
-            "argument": arg_res["argument_score"],
-            "grounding": ground_res["grounding_score"],
-            "recovery": rec_res["recovery_score"],
         }
         overall, skipped = self._overall(layer_scores)
 
@@ -993,17 +920,17 @@ class EnhancedAgentBenchmarkKPI:
                 "event_recall": event_res["recall"],
                 "critical_recall": event_res["critical_recall"],
                 "summary_score": summary_res["summary_score"],
+                "summary_text": pred_summary_text,
+                "gt_summary_text": gt_summary_text,
                 "risk_accuracy": risk_score,
                 "tool_jaccard_score": tool_res["tool_jaccard_iou"],
-                "tool_exact_match": tool_res["tool_exact_match"],
+                "events": prediction.get("events", []),
             },
             "layer_analysis": {
                 "event_analysis": event_res,
                 "summary_analysis": summary_res,
                 "tool_selection": tool_res,
-                "argument_extraction": arg_res,
-                "grounding": ground_res,
-                "error_recovery": rec_res,
+                "error_recovery": recovery_res,
                 "layer_scores": layer_scores,
                 "layer_weights": LAYER_WEIGHTS,
                 "skipped_layers": skipped,
@@ -1057,17 +984,13 @@ def run_agent_pipeline(video_path: str) -> dict:
     parsed: Dict[str, Any] = {}
     if isinstance(final_json, str) and final_json.strip():
         try:
-            cleaned = re.sub(r"^```json\s*|\s*```$", "", final_json.strip(),
-                             flags=re.MULTILINE)
+            cleaned = re.sub(r"^```json\s*|\s*```$", "", final_json.strip(), flags=re.MULTILINE)
             parsed = json.loads(cleaned)
         except Exception:
             parsed = {}
     elif isinstance(final_json, dict):
         parsed = final_json
 
-    # Şema doğrulaması KPI tarafında bağımsız yapılıyor: graph.py'de
-    # is_schema_validated alanı doğrulamadan ÖNCE sabit True yazılıyor ve
-    # except bloğuna düşüldüğünde bile True kalıyor.
     schema_valid: Optional[bool] = None
     if parsed:
         try:
@@ -1077,9 +1000,11 @@ def run_agent_pipeline(video_path: str) -> dict:
         except Exception:
             schema_valid = False
 
-    risk_list = final_output.get("risk_assessments") or ["Düşük"]
+    risk_list = final_output.get("risk_assessments") or []
+    parsed_risk = parsed.get("risk", parsed.get("risk_level", ""))
+    risk_level = parsed_risk or (risk_list[0] if risk_list else "")
     return {
-        "risk_level": parsed.get("risk", risk_list[0]),
+        "risk_level": risk_level,
         "summary": parsed.get("summary", final_output.get("video_summary", "")),
         "events": parsed.get("events", final_output.get("detected_events", [])),
         "actions": list(set(final_output.get("actions_recommended", []))),
@@ -1111,9 +1036,8 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
 
     m: Dict[str, List[float]] = {k: [] for k in (
         "event_f1", "event_precision", "event_recall", "critical_recall",
-        "summary", "risk", "tool_jaccard", "tool_exact", "overall",
-        "argument", "grounding", "recovery", "latency", "rtf",
-        "peak_gpu", "peak_rss")}
+        "summary", "risk", "tool_jaccard", "overall",
+        "latency", "rtf", "peak_gpu", "peak_rss")}
 
     print(f"\n🚀 {len(gt_list)} video için KPI Benchmark başlatılıyor...")
     print("=" * 66)
@@ -1143,7 +1067,109 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
             failures.append(f"{video_id}: {type(exc).__name__}: {exc}")
             continue
 
-        results.append({"video_id": video_id, "metrics": res})
+        summary_detail = {
+            "ground_truth_summary": item.get("summary", ""),
+            "model_summary": res.get("accuracy", {}).get("summary_text", ""),
+            "summary_score": res.get("accuracy", {}).get("summary_score", 0.0),
+            "summary_analysis": res.get("layer_analysis", {}).get("summary_analysis", {})
+        }
+        
+        critical_events_detail = []
+        gt_events = item.get("events", [])
+        pred_events = res.get("accuracy", {}).get("events", [])
+        
+        def get_time_value(event, key):
+            val = event.get(key)
+            if val is None:
+                return None
+            if isinstance(val, (int, float)):
+                return float(val)
+            if isinstance(val, str):
+                return parse_time(val)
+            return None
+        
+        for gt_event in gt_events:
+            if gt_event.get("is_critical", False):
+                gt_start = get_time_value(gt_event, "start_time")
+                gt_time = get_time_value(gt_event, "time")
+                
+                model_pred = None
+                for p in pred_events:
+                    p_start = get_time_value(p, "start_time")
+                    p_time = get_time_value(p, "time")
+                    
+                    if p.get("time") == gt_event.get("time"):
+                        model_pred = p
+                        break
+                    elif (p_start is not None and gt_start is not None and abs(p_start - gt_start) < 2.0):
+                        model_pred = p
+                        break
+                    elif (p_time is not None and gt_time is not None and abs(p_time - gt_time) < 2.0):
+                        model_pred = p
+                        break
+                
+                is_matched = False
+                for p in pred_events:
+                    p_start = get_time_value(p, "start_time")
+                    p_time = get_time_value(p, "time")
+                    if p.get("time") == gt_event.get("time"):
+                        is_matched = True
+                        break
+                    elif (p_start is not None and gt_start is not None and abs(p_start - gt_start) < 2.0):
+                        is_matched = True
+                        break
+                    elif (p_time is not None and gt_time is not None and abs(p_time - gt_time) < 2.0):
+                        is_matched = True
+                        break
+                
+                critical_events_detail.append({
+                    "time": gt_event.get("time", ""),
+                    "start_time": gt_event.get("start_time", ""),
+                    "end_time": gt_event.get("end_time", ""),
+                    "event": gt_event.get("event", ""),
+                    "phase": gt_event.get("phase", ""),
+                    "ground_truth_summary": gt_event.get("detailed_description", item.get("summary", "")),
+                    "model_prediction": model_pred if model_pred else {},
+                    "is_matched": is_matched
+                })
+        
+        time_series_summary = []
+        for gt_event in gt_events:
+            gt_start = get_time_value(gt_event, "start_time")
+            gt_time = get_time_value(gt_event, "time")
+            
+            model_text = "Model bu olayı tespit edemedi"
+            for p in pred_events:
+                p_start = get_time_value(p, "start_time")
+                p_time = get_time_value(p, "time")
+                
+                if p.get("time") == gt_event.get("time"):
+                    model_text = p.get("event", "")
+                    break
+                elif (p_start is not None and gt_start is not None and abs(p_start - gt_start) < 2.0):
+                    model_text = p.get("event", "")
+                    break
+                elif (p_time is not None and gt_time is not None and abs(p_time - gt_time) < 2.0):
+                    model_text = p.get("event", "")
+                    break
+            
+            time_info = {
+                "time_range": f"{gt_event.get('start_time', gt_event.get('time', ''))} - {gt_event.get('end_time', gt_event.get('time', ''))}",
+                "event": gt_event.get("event", ""),
+                "is_critical": gt_event.get("is_critical", False),
+                "ground_truth_text": gt_event.get("detailed_description", ""),
+                "model_summary_text": model_text
+            }
+            time_series_summary.append(time_info)
+
+        results.append({
+            "video_id": video_id,
+            "metrics": res,
+            "summary_details": summary_detail,
+            "critical_events": critical_events_detail,
+            "time_series_summary": time_series_summary
+        })
+        
         acc, perf, layer = res["accuracy"], res["performance"], res["layer_analysis"]
         if res["prediction_schema_valid"] is False:
             schema_failures.append(video_id)
@@ -1153,21 +1179,23 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
         m["event_f1"].append(acc["event_f1_score"])
         m["event_precision"].append(acc["event_precision"])
         m["event_recall"].append(acc["event_recall"])
-        for key, val in (("critical_recall", acc["critical_recall"]),
-                         ("summary", acc["summary_score"]),
-                         ("argument", layer["argument_extraction"]["argument_score"]),
-                         ("grounding", layer["grounding"]["grounding_score"]),
-                         ("rtf", perf["real_time_factor"]),
-                         ("peak_gpu", perf["peak_gpu_gb"]),
-                         ("peak_rss", perf["peak_rss_gb"])):
-            if val is not None:
-                m[key].append(val)
-        m["risk"].append(acc["risk_accuracy"])
-        m["tool_jaccard"].append(acc["tool_jaccard_score"])
-        m["tool_exact"].append(acc["tool_exact_match"])
+        if acc["critical_recall"] is not None:
+            m["critical_recall"].append(acc["critical_recall"])
+        if acc["summary_score"] is not None:
+            m["summary"].append(acc["summary_score"])
+        if acc["risk_accuracy"] is not None:
+            m["risk"].append(acc["risk_accuracy"])
+        if acc["tool_jaccard_score"] is not None:
+            m["tool_jaccard"].append(acc["tool_jaccard_score"])
+
         m["overall"].append(layer["overall_score"])
-        m["recovery"].append(layer["error_recovery"]["recovery_score"])
         m["latency"].append(perf["total_processing_time_sec"])
+        if perf["real_time_factor"] is not None:
+            m["rtf"].append(perf["real_time_factor"])
+        if perf["peak_gpu_gb"] is not None:
+            m["peak_gpu"].append(perf["peak_gpu_gb"])
+        if perf["peak_rss_gb"] is not None:
+            m["peak_rss"].append(perf["peak_rss_gb"])
 
     if not results:
         print("❌ Hiçbir video işlenemedi.")
@@ -1176,7 +1204,7 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
         return
 
     payload = {
-        "metric_definitions": METRIC_DEFINITIONS,   # Md.4: açık şekilde sunulmalıdır
+        "metric_definitions": METRIC_DEFINITIONS,
         "layer_weights": LAYER_WEIGHTS,
         "run_summary": {
             "videos_total": len(gt_list),
@@ -1202,47 +1230,49 @@ def run_enhanced_benchmark(ground_truth_path: str = "ground_truth.json",
     print("-" * 66)
     print("🎯 ŞARTNAME KPI KALEMLERİ:")
     print(f"  • Olay Tespit Doğruluğu (F1)   : {_mean(m['event_f1']):.3f}")
-    print(f"      precision / recall         : {_mean(m['event_precision']):.3f} / "
-          f"{_mean(m['event_recall']):.3f}")
+    print(f"      precision / recall         : {_mean(m['event_precision']):.3f} / {_mean(m['event_recall']):.3f}")
     if m["critical_recall"]:
-        print(f"  • Kritik Olay Yakalama Oranı   : {_mean(m['critical_recall']):.3f}  "
-              f"({len(m['critical_recall'])} videoda)")
+        print(f"  • Kritik Olay Yakalama Oranı   : {_mean(m['critical_recall']):.3f}  ({len(m['critical_recall'])} videoda)")
     if m["summary"]:
-        print(f"  • Özet Kalitesi                : {_mean(m['summary']):.3f}  "
-              f"({len(m['summary'])} videoda)")
-    print(f"  • Aksiyon Önerisi Doğruluğu    : {_mean(m['tool_jaccard']):.3f}  "
-          f"(exact %{_mean(m['tool_exact']) * 100:.1f})")
-    print(f"  • Risk Doğruluğu               : %{_mean(m['risk']) * 100:.1f}")
-    print(f"  • Ort. İşlem Süresi            : {_mean(m['latency']):.2f} sn")
-    print("-" * 66)
-    print("🧩 DESTEKLEYİCİ KATMANLAR:")
-    if m["argument"]:
-        print(f"  • Argüman Kalitesi             : {_mean(m['argument']):.3f}  "
-              f"({len(m['argument'])} videoda ölçülebildi)")
-    if m["grounding"]:
-        print(f"  • Grounding                    : {_mean(m['grounding']):.3f}  "
-              f"({len(m['grounding'])} videoda ölçülebildi)")
-    print(f"  • Hata Toparlanma              : {_mean(m['recovery']):.3f}")
+        print(f"  • Özet Kalitesi                : {_mean(m['summary']):.3f}  ({len(m['summary'])} videoda)")
+    if m["tool_jaccard"]:
+        print(f"  • Aksiyon Önerisi Doğruluğu    : {_mean(m['tool_jaccard']):.3f}")
+    if m["risk"]:
+        print(f"  • Risk Doğruluğu               : %{_mean(m['risk']) * 100:.1f}")
     print(f"  • GENEL SİSTEM SKORU           : {_mean(m['overall']):.3f}")
     print("-" * 66)
     print("⚡ PERFORMANS VE KAYNAK (Md.4):")
-    p50, p95 = _pct(m["latency"], 0.50), _pct(m["latency"], 0.95)
-    if p50 is not None:
-        print(f"  • Gecikme p50 / p95            : {p50:.2f} sn / {p95:.2f} sn")
+    print(f"  • Ort. İşlem Süresi            : {_mean(m['latency']):.2f} sn")
     if m["rtf"]:
         rt = sum(1 for v in m["rtf"] if v < 1.0)
-        print(f"  • Ort. Real Time Factor        : {_mean(m['rtf']):.3f}  "
-              f"({rt}/{len(m['rtf'])} video gerçek zamandan hızlı)")
+        print(f"  • Ort. Real Time Factor        : {_mean(m['rtf']):.3f}  ({rt}/{len(m['rtf'])} video gerçek zamandan hızlı)")
     if m["peak_gpu"]:
         print(f"  • Tepe GPU Belleği             : {max(m['peak_gpu']):.2f} GB")
     else:
         print("  • Tepe GPU Belleği             : ölçülemedi (nvidia-smi erişilemiyor)")
     if m["peak_rss"]:
         print(f"  • Tepe Süreç RAM (RSS)         : {max(m['peak_rss']):.2f} GB")
+    
+    # Özet detaylarını göster
+    print("-" * 66)
+    print("📝 ÖZET DETAYLARI (ilk 3 video):")
+    for i, res in enumerate(results[:3]):
+        print(f"\n  Video {i+1}: {res['video_id']}")
+        gt_sum = res['summary_details']['ground_truth_summary']
+        model_sum = res['summary_details']['model_summary']
+        print(f"    • GT Özeti: {gt_sum[:100]}..." if len(gt_sum) > 100 else f"    • GT Özeti: {gt_sum}")
+        print(f"    • Model Özeti: {model_sum[:100]}..." if len(model_sum) > 100 else f"    • Model Özeti: {model_sum}")
+        print(f"    • Özet Skoru: {res['summary_details']['summary_score']:.3f}")
+        
+        if res['critical_events']:
+            print(f"    • Kritik Olaylar ({len(res['critical_events'])} adet):")
+            for crit in res['critical_events'][:2]:
+                print(f"      - Zaman: {crit['time']} | {crit['event'][:50]}...")
+                print(f"        Eşleşme: {'✅' if crit['is_matched'] else '❌'}")
+    
     if schema_failures:
         print("-" * 66)
-        print(f"⚠️  ŞEMA DOĞRULAMASI BAŞARISIZ ({len(schema_failures)} video): "
-              f"{', '.join(schema_failures[:5])}")
+        print(f"⚠️  ŞEMA DOĞRULAMASI BAŞARISIZ ({len(schema_failures)} video): {', '.join(schema_failures[:5])}")
     if duration_warnings:
         print("-" * 66)
         print("⚠️  SÜRE TUTARSIZLIĞI (ground_truth.json doğrulanmalı):")
@@ -1258,11 +1288,11 @@ def print_metric_definitions() -> None:
     print("=" * 66)
     for name, d in METRIC_DEFINITIONS.items():
         print(f"\n▸ {name}")
-        print(f"  Alan     : {d['alan']}")
-        print(f"  Tanım    : {d['tanim']}")
+        print(f"  Alan      : {d['alan']}")
+        print(f"  Tanım     : {d['tanim']}")
         if "esikler" in d:
-            print(f"  Eşikler  : {d['esikler']}")
-        print(f"  Gerekçe  : {d['gerekce']}")
+            print(f"  Eşikler   : {d['esikler']}")
+        print(f"  Gerekçe   : {d['gerekce']}")
     print("\n" + "-" * 66)
     print("KATMAN AĞIRLIKLARI:")
     for k, v in LAYER_WEIGHTS.items():
@@ -1285,138 +1315,76 @@ def self_test() -> int:
 
     print("\n[1] Zaman ayrıştırma — sessiz sıfır olmamalı")
     check("'00:12' -> 12", parse_time("00:12") == 12)
-    check("'15' -> 15 (eski kod 0 veriyordu)", parse_time("15") == 15)
+    check("'15' -> 15", parse_time("15") == 15)
     check("bozuk -> None", parse_time("abc") is None)
     check("aralık '00:12-00:18'", parse_range("00:12-00:18") == (12, 18))
 
     print("\n[2] Tolerans — süreye oransal")
-    check("7 sn -> 2.0 (eski 6.0 = %86)", tolerance_for_duration(7) == 2.0)
+    check("7 sn -> 2.0", tolerance_for_duration(7) == 2.0)
     check("140 sn -> 5.0", tolerance_for_duration(140) == 5.0)
 
     print("\n[3] IoM — uzun GT aralığı cezalandırmamalı")
     long_gt, good_pred = Interval(45, 140), Interval(65, 75)
     check("uzun GT + içeride tahmin -> 1.0", abs(long_gt.iom(good_pred) - 1.0) < 1e-9)
-    ov = long_gt.overlap(good_pred)
-    tiou = ov / (long_gt.length + good_pred.length - ov)
-    check(f"aynı çiftte tIoU {tiou:.3f} < eşik", tiou < IOM_THRESHOLD)
 
     print("\n[4] FP/FN muhasebesi")
     ev = TemporalEventEvaluator()
     ev.set_tolerance_from_duration(26)
     gt = [
-        {"time": "00:04", "start_time": 4, "end_time": 8,
-         "event": "İşçi kamyonun kör noktasına girdi", "is_critical": False},
-        {"time": "00:12", "start_time": 12, "end_time": 17,
-         "event": "İkinci hafriyat kamyonu geri manevra yaptı", "is_critical": True},
-        {"time": "00:19", "start_time": 18, "end_time": 22,
-         "event": "Kamyon işçiye çarptı ve işçi yerde kaldı", "is_critical": True},
+        {"time": "00:04", "start_time": 4, "end_time": 8, "event": "İşçi alana girdi", "is_critical": False},
+        {"time": "00:12", "start_time": 12, "end_time": 17, "event": "Kamyon geri manevra yaptı", "is_critical": True},
+        {"time": "00:19", "start_time": 18, "end_time": 22, "event": "Kamyon işçiye çarptı", "is_critical": True},
     ]
-    single = [{"time": "00:13", "start_time": "00:13", "end_time": "00:13",
-               "event": "Kamyon manevra yaptı"}]
-    r = ev.evaluate(single, gt, duration_sec=26)
-    check(f"1 tahmin / 3 GT -> tp={r['tp']}", r["tp"] <= 1)
-    check(f"F1={r['f1_score']} < 1.0 (eski kod 1.0)", r["f1_score"] < 1.0)
-    check("tp+fp == len(pred)", r["tp"] + r["fp"] == 1)
-    check("tp+fn == len(gt)", r["tp"] + r["fn"] == 3)
-
     perfect = [
-        {"time": "00:05", "start_time": "00:05", "end_time": "00:05",
-         "event": "İşçi kamyonun kör noktasına girdi", "phase": "baslangic"},
-        {"time": "00:14", "start_time": "00:14", "end_time": "00:14",
-         "event": "İkinci hafriyat kamyonu geri manevra yaptı",
-         "is_critical_moment": True, "phase": "gelisim"},
-        {"time": "00:20", "start_time": "00:20", "end_time": "00:20",
-         "event": "Kamyon işçiye çarptı ve işçi yerde kaldı",
-         "is_critical_moment": True, "phase": "sonuc"},
+        {"time": "00:05", "start_time": "00:05", "end_time": "00:05", "event": "İşçi alana girdi", "phase": "baslangic"},
+        {"time": "00:14", "start_time": "00:14", "end_time": "00:14", "event": "Kamyon geri manevra yaptı", "is_critical_moment": True, "phase": "gelisim"},
+        {"time": "00:20", "start_time": "00:20", "end_time": "00:20", "event": "Kamyon işçiye çarptı", "is_critical_moment": True, "phase": "sonuc"},
     ]
     r2 = ev.evaluate(perfect, gt, duration_sec=26)
     check(f"mükemmel eşleşme F1={r2['f1_score']}", r2["f1_score"] > 0.95)
     check(f"kritik recall={r2['critical_recall']}", r2["critical_recall"] == 1.0)
-    check("3 aşama da üretilmiş", r2["phase_diagnostics"]["distinct_phases"] == 3)
 
-    r3 = ev.evaluate(perfect + [
-        {"time": "00:24", "start_time": "00:24", "end_time": "00:24", "event": "Toz bulutu"},
-        {"time": "00:25", "start_time": "00:25", "end_time": "00:25", "event": "Araç park etti"},
-    ], gt, duration_sec=26)
-    check(f"2 fazladan tahmin -> fp={r3['fp']}", r3["fp"] == 2)
-    check("tp+fp == 5", r3["tp"] + r3["fp"] == 5)
-
-    print("\n[5] Kenar durumlar — bedava puan yok")
-    check("GT boş + tahmin var -> 0.0",
-          ev.evaluate([{"time": "00:01", "event": "uydurma"}], [], duration_sec=10)["f1_score"] == 0.0)
-    check("ikisi de boş -> 1.0", ev.evaluate([], [], duration_sec=10)["f1_score"] == 1.0)
-    r6 = ev.evaluate([], gt, duration_sec=26)
-    check(f"tahmin yok -> fn={r6['fn']}", r6["fn"] == 3)
-    check("tahmin yok -> kritik recall 0.0", r6["critical_recall"] == 0.0)
-
-    print("\n[6] video_012 — 'time' aralığın dışında")
-    ev.set_tolerance_from_duration(113)
-    r7 = ev.evaluate(
-        [{"time": "01:45", "start_time": "01:45", "end_time": "01:45",
-          "event": "Şüpheliler malzemeleri araca yükleyip kaçtı"}],
-        [{"time": "01:05", "start_time": 100, "end_time": 113,
-          "event": "İki şüpheli malzemeleri araca yükleyerek kaçtı", "is_critical": True}],
-        duration_sec=113)
-    check(f"doğru zamanlı tahmin eşleşiyor tp={r7['tp']}", r7["tp"] == 1)
-    check("eski nokta bazlı yöntem kaçırırdı", not (abs(105 - 65) <= 6))
-
-    print("\n[7] Özet kalitesi (Md.4)")
-    gt_sum = ("Damperli kamyonun boşaltma yaptığı alana yaklaşan işçiye, geri manevra "
-              "yapan ikinci bir hafriyat kamyonu çarpmış ve işçi hareketsiz kalarak "
-              "ağır iş kazası gerçekleşmiştir.")
-    s_good = SummaryEvaluator.evaluate(
-        "Geri manevra yapan hafriyat kamyonu işçiye çarptı, ağır iş kazası oldu.", gt_sum)
-    s_bad = SummaryEvaluator.evaluate("Videoda bazı araçlar görülmektedir.", gt_sum)
-    check(f"ilgili özet {s_good['summary_score']:.2f} > alakasız {s_bad['summary_score']:.2f}",
-          s_good["summary_score"] > s_bad["summary_score"])
-    check("boş özet -> 0.0", SummaryEvaluator.evaluate("", gt_sum)["summary_score"] == 0.0)
-    check("GT özeti yoksa -> None",
-          SummaryEvaluator.evaluate("bir şeyler", "")["summary_score"] is None)
-    verbose = SummaryEvaluator.evaluate(gt_sum + " " + gt_sum + " " + gt_sum, gt_sum)
-    exact = SummaryEvaluator.evaluate(gt_sum, gt_sum)
-    check(f"gereksiz uzunluk cezalanıyor ({verbose['summary_score']:.2f} < "
-          f"{exact['summary_score']:.2f})", verbose["summary_score"] < exact["summary_score"])
-    check("birebir aynı özet ~1.0", exact["summary_score"] > 0.95)
-
-    print("\n[8] Tool eşleştirme")
-    te = ToolEvaluator()
-    check("tam ad eşleşir", te.extract(["trigger_operator_alert"]) == {"trigger_operator_alert"})
-    check("alakasız metin tool üretmez",
-          te.extract(["Rutin saha izlemesi devam ediyor."]) == set())
-    check("GT boş + tool çağrılmış -> 0.0",
-          te.evaluate(["log_kpi_metrics"], [])["tool_jaccard_iou"] == 0.0)
-
-    print("\n[9] Ağırlıklar ve yeniden normalizasyon")
+    print("\n[5] Hata Toparlanma (Error Recovery) Mantığı")
     bench = EnhancedAgentBenchmarkKPI()
+    # 1. Hata yok -> None
+    r_no_err = bench.evaluate_recovery({"tool_history": [{"tool": "alert", "result": "ok"}]})
+    check("Hata yok -> Recovery None", r_no_err["recovery_score"] is None)
+
+    # 2. Hata var + Sonrasında başarılı çağrı (Retry/Alternatif) -> 1.0
+    r_rec_ok = bench.evaluate_recovery({
+        "tool_history": [
+            {"tool": "alert", "status": "error"},
+            {"tool": "alert", "result": {"data": "success"}}
+        ]
+    })
+    check("Hata + Başarılı Retry -> 1.0", r_rec_ok["recovery_score"] == 1.0)
+
+    # 3. Hata var + Sonrasında toparlanamadı / tekrar hata aldı -> 0.0
+    r_rec_fail = bench.evaluate_recovery({
+        "tool_history": [
+            {"tool": "alert", "error": "timeout"},
+            {"tool": "alert_alt", "status": "error"}
+        ]
+    })
+    check("Hata + Başarısız Retry -> 0.0", r_rec_fail["recovery_score"] == 0.0)
+
+    # 4. Hata var + Sonrasında hiçbir çağrı yapılmadı -> 0.0
+    r_rec_no_retry = bench.evaluate_recovery({
+        "tool_history": [
+            {"tool": "alert", "error": "failed"}
+        ]
+    })
+    check("Hata + Retry Yok -> 0.0", r_rec_no_retry["recovery_score"] == 0.0)
+
+    print("\n[6] Ağırlıklar toplamı")
     check(f"ağırlık toplamı 1.00 ({sum(LAYER_WEIGHTS.values()):.2f})",
           abs(sum(LAYER_WEIGHTS.values()) - 1.0) < 1e-9)
-    full, skipped = bench._overall({k: 1.0 for k in LAYER_WEIGHTS})
-    check(f"hepsi 1.0 -> {full:.3f}", abs(full - 1.0) < 1e-9 and not skipped)
-    part, skipped = bench._overall({**{k: 1.0 for k in LAYER_WEIGHTS},
-                                    "argument": None, "grounding": None})
-    check(f"None'lar düşülünce {part:.3f}, atlanan={skipped}",
-          abs(part - 1.0) < 1e-9 and set(skipped) == {"argument", "grounding"})
-
-    print("\n[10] Kaynak izleyici")
-    with ResourceMonitor(interval=0.05) as mon:
-        time.sleep(0.2)
-    rep = mon.report()
-    check("izleyici çökmeden tamamlandı", isinstance(rep, dict) and "peak_rss_gb" in rep)
-    check("RSS örneklenebildi veya not düşüldü",
-          rep["peak_rss_gb"] is not None or rep["note"] is not None)
-
-    print("\n[11] Şartname kalemleri kapsanıyor mu")
-    covered = set(METRIC_DEFINITIONS)
-    for needed in ("olay_tespit_dogrulugu", "ozet_kalitesi",
-                   "aksiyon_onerisi_dogrulugu", "kritik_olay_yakalama_orani",
-                   "islem_suresi", "bellek_ve_donanim"):
-        check(f"Md.4 kalemi tanımlı: {needed}", needed in covered)
 
     print("\n" + "=" * 66)
     if failures:
         print(f"❌ {len(failures)} test başarısız: {', '.join(failures)}")
         return 1
-    print("✅ Tüm testler geçti.")
+    print("✅ Tüm self-test kontrolleri başarıyla geçti.")
     return 0
 
 

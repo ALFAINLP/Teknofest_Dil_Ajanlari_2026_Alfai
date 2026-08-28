@@ -31,6 +31,24 @@ export async function analyzeVideo(file, { signal } = {}) {
   return response.json()
 }
 
+export async function convertVideoToMp4(file, { signal } = {}) {
+  const formData = new FormData()
+  formData.append('file', file)
+  let response
+  try {
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/convert-video`, { method: 'POST', body: formData, signal })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new AnalysisApiError('AVI dosyası MP4 formatına dönüştürülürken backend bağlantısı kurulamadı.')
+  }
+  if (!response.ok) {
+    throw new AnalysisApiError(await readError(response, `Video dönüştürme hatası ${response.status}`), response.status)
+  }
+  const mp4Blob = await response.blob()
+  const outputName = file.name.replace(/\.avi$/i, '.mp4')
+  return new File([mp4Blob], outputName, { type: 'video/mp4' })
+}
+
 export async function fetchPerformance({ signal } = {}) {
   let response
   try {
@@ -40,6 +58,18 @@ export async function fetchPerformance({ signal } = {}) {
     throw new AnalysisApiError('Performans telemetrisi alınamadı.')
   }
   if (!response.ok) throw new AnalysisApiError(await readError(response, `Telemetri hatası ${response.status}`), response.status)
+  return response.json()
+}
+
+export async function fetchKpiResults({ signal } = {}) {
+  let response
+  try {
+    response = await fetch(`${APP_CONFIG.apiBaseUrl}/api/kpi-results`, { signal })
+  } catch (error) {
+    if (error.name === 'AbortError') throw error
+    throw new AnalysisApiError('KPI benchmark sonuçları alınamadı.')
+  }
+  if (!response.ok) throw new AnalysisApiError(await readError(response, `KPI servisi hatası ${response.status}`), response.status)
   return response.json()
 }
 
@@ -78,3 +108,4 @@ export async function sendChatMessage({ message, analysisContext = null, history
   if (!payload.reply || typeof payload.reply !== 'string') throw new AnalysisApiError('Chat servisi geçerli bir yanıt döndürmedi.')
   return payload
 }
+

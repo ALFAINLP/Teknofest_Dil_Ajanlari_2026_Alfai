@@ -791,8 +791,9 @@ def query_previous_incidents(incident_keywords: str) -> List[dict]:
 
 @tool
 def export_to_incident_management_system(report_json: str) -> bool:
-    """Gelişmiş LangGraph ve vLLM süreçlerinden çıkan Pydantic onaylı nihai kurumsal rapor JSON string verisini alır; 
-    şirketin iç ağındaki Vaka Yönetim veya Kurumsal Biletleme (Ticketing) sistemine otonom aktarır."""
+    """DİKKAT: Bu araç bir acil müdahale veya alarm aracı DEĞİLDİR, sadece veritabanı kayıt aracıdır.
+    Gelişmiş süreçlerden çıkan onaylı kurumsal rapor JSON verisini alır ve sisteme aktarır. Kaza anında 
+    'trigger_operator_alert' gibi birincil müdahale araçları çağrılmadan SADECE bu araç kullanılamaz."""
     
     cms_url = getattr(settings, "CMS_EXPORT_URL", "http://localhost:8080/v1/incident/export")
     

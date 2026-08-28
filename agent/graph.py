@@ -139,6 +139,7 @@ def extract_video_info_node(state: AgentState) -> AgentState:
             if isinstance(vision_result, dict):
                 detected = vision_result.get("events", [])
                 state["video_summary"] = vision_result.get("summary", "")
+                state["vision_actions"] = vision_result.get("actions", [])
                 root_risk = vision_result.get("risk")
                 root_score = vision_result.get("risk_score")
                 if root_risk in RISK_ORDER:
@@ -481,9 +482,20 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             break
 
     if not decision_made and impact_desc:
-        text = impact_desc.lower()
-        brain_text_risk = "Kritik" if "kritik" in text else "Yüksek" if ("yüksek" in text or "yuksek" in text) else "Orta" if "orta" in text else "Düşük"
+        # Brain'in serbest metninden risk seviyesi çıkarmıyoruz.
+        # Çünkü "kritik değil", "kritik bir durum yok" gibi ifadelerde
+        # sadece kelime aramak yanlışlıkla riski yükseltebilir.
+        #
+        # submit_final_decision çağrısı yapılmadıysa Brain için yeni bir
+        # yapısal risk kararı elimizde yoktur. Bu durumda mevcut Vision
+        # riskini koruyoruz.
+        brain_text_risk = vision_risk
         highest_risk = higher_risk(vision_risk, brain_text_risk)
+
+        logger.info(
+            f"🛡️ Brain serbest metin risk çıkarımı atlandı | "
+            f"Vision={vision_risk} | Final={highest_risk}"
+        )
 
     highest_risk = higher_risk(highest_risk, vision_risk)
 
@@ -664,7 +676,9 @@ def compile_report_node(state: AgentState) -> AgentState:
             "query_previous_incidents", "detect_motion_density"
         }
         raw_tools -= _akcyon_toollari
-        raw_tools.add("log_kpi_metrics")
+    else:
+        # 🔥 GÜVENLİK KALKANI: Risk Düşük DEĞİLSE, Llama yanlışlıkla KPI çağırdıysa onu iptal et.
+        raw_tools.discard("log_kpi_metrics")
 
     _total_events = len(cleaned_events)
     _critical_events = sum(1 for e in cleaned_events if e.get("is_critical_moment"))
@@ -690,14 +704,14 @@ def compile_report_node(state: AgentState) -> AgentState:
         "total_processing_seconds": round(state.get("total_processing_seconds", 0.0), 2),
         "action_recommendation_count": len(raw_tools) if raw_tools else 0,
     }
-
+    vision_actions = state.get("vision_actions", [])
     report_data = {
         "summary": base_summary,
         "events": cleaned_events,
         "risk": highest_risk,
         "risk_score": calculated_score,
         "risk_trend": state.get("risk_trend", "Bilinmiyor"),
-        "actions": list(raw_tools) if raw_tools else ["Rutin saha izlemesi devam ediyor."],
+        "actions": vision_actions if vision_actions else ["Rutin saha izlemesi devam ediyor."],
         "kpi_metrics": kpi_metrics_data,
     }
 
@@ -732,22 +746,6 @@ def compile_report_node(state: AgentState) -> AgentState:
         except Exception as e:
             logger.warning(f"⚠️ CMS export hatası: {e}")
 
-    # ---- 🔥 3. log_kpi_metrics çağrısı (fix: json_report tanımlandı) ----
-    if "log_kpi_metrics" in raw_tools:
-        try:
-            kpi_result = log_kpi_metrics.invoke({
-                "metrics_data": {
-                    "processed_segments_count": len(cleaned_events),
-                    "highest_risk_detected": highest_risk,
-                    "risk_score": calculated_score,
-                    "vision_risk": vision_risk,
-                    "vision_risk_score": state.get("vision_risk_score", calculated_score),
-                    "is_schema_validated": "error" not in json_report  # ✅ Artık tanımlı
-                }
-            })
-            logger.info("📊 KPI metrikleri loglandı")
-        except Exception as e:
-            logger.warning(f"⚠️ KPI log hatası: {e}")
 
     state["risk_assessments"] = [highest_risk]
     state["risk_score"] = calculated_score
