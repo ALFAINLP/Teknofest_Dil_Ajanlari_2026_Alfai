@@ -235,45 +235,12 @@ def extract_video_info_node(state: AgentState) -> AgentState:
     )
     return state
 
-
-def _build_required_tools_hint(events: list, vision_risk: str = "Düşük") -> str:
-    lines = []
-    event_texts = " ".join(
-        str(e.get("event", "")).lower() if isinstance(e, dict) else str(e).lower()
-        for e in events
-    )
-    risk_level = normalize_risk(vision_risk)
-    is_high = risk_level in ["Kritik", "Yüksek"]
-
-    if is_high or any(k in event_texts for k in [
-        "işçi", "personel", "kişi", "çalışan", "şahıs", "yaralı",
-        "müşteri", "tahliye", "kaç", "yardım", "koştu"
-    ]):
-        lines.append("- Sahadaki personelin durumu ve can güvenliği değerlendirilmeli")
-
-    if is_high or any(k in event_texts for k in [
-        "kaza", "çarpış", "devril", "yangın", "patlama", "saldırı", "silah"
-    ]):
-        lines.append("- Kritik olay nedeniyle operatörün bilgilendirilmesi gerekip gerekmediği değerlendirilmeli")
-
-    if any(k in event_texts for k in [
-        "yangın", "alev", "duman", "patlama", "kimyasal", "gaz",
-        "çöktü", "çökme", "yıkıl", "enkaz", "parlama", "ateş"
-    ]):
-        lines.append("- Yangın, patlama veya yapısal hasar nedeniyle çevresel tehlike değerlendirmesi yapılmalı")
-
-    if any(k in event_texts for k in [
-        "hırsız", "soygun", "maskeli", "şüpheli", "kasıtlı", "kundak"
-    ]):
-        lines.append("- Kasıtlı/planlı bir olay şüphesi var, geçmiş benzer vakalar incelenmeli")
-
-    if not lines:
-        return ""
-
+def _build_context_block(state, highest_risk, critical_count):
     return (
-        "\nOlay içeriğine göre aşağıdaki konuları analiz etmeni öneririm:\n"
-        + "\n".join(lines)
-        + "\nHangilerinin bu senaryo için gerekli olduğuna sen karar ver."
+        f"Bölge: {state.get('current_zone')}\n"
+        f"Vision risk: {highest_risk} (%{state.get('vision_risk_score')})\n"
+        f"Kritik işaretli an sayısı: {critical_count}\n"
+        f"Geçmiş benzer olay kaydı mevcut: {bool(state.get('event_history'))}\n"
     )
 
 def evaluate_risks_node(state: AgentState) -> AgentState:
@@ -283,10 +250,13 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     vision_risk = normalize_risk(state.get("vision_risk", "Düşük"))
     highest_risk = vision_risk
     events = []
+    critical_count = 0
 
     for item in state.get("detected_events", []):
         risk = normalize_risk(item.get("risk", "Düşük"))
         highest_risk = higher_risk(highest_risk, risk)
+        if item.get('is_critical_moment') or item.get('is_critical'):
+            critical_count += 1
         content = item.get("event", "Açıklama bulunamadı.")
         if isinstance(content, dict):
             content = content.get("description", str(content))
@@ -318,8 +288,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
     tool_history_entries = []
     impact_desc = "Otonom yapay zeka analizi devrede."
 
-    required_tools_hint = _build_required_tools_hint(events, vision_risk=vision_risk)
-
+    required_tools_hint = _build_context_block(state, highest_risk, critical_count)
     react_messages = [
         {"role": "system", "content": BRAIN_SYSTEM_PROMPT},
         {"role": "user", "content": prompt + f"\n\n{required_tools_hint}"}
@@ -350,7 +319,7 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
             tool_name = tc.function.name
             
             # ---- Tool validasyonu ----
-            is_valid, reason = _validate_tool_choice(tool_name, state)
+            is_valid, reason = _validate_tool_choice(tool_name, state, highest_risk, executed_tools)
             if not is_valid:
                 logger.warning(f"⛔ Geçersiz tool seçimi: '{tool_name}' - {reason}")
                 react_messages.append({
@@ -412,26 +381,19 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
                     "status": "Karar sisteme başarıyla kaydedildi.",
                     "vision_risk": vision_risk,
                     "brain_risk": brain_risk,
-                    "final_risk": highest_risk
+                    "final_risk": highest_risk,
                 }
                 executed_tools.add(tool_name)
-                # 🔥 SADECE BİR APPEND - normalized_args ile
-                tool_history_entries.append({
-                    "tool": tool_name,
-                    "args": normalized_args,
-                    "result": tool_result
-                })
-                logger.info(
-                    f"⏱️ TOOL SÜRESİ | {tool_name}: "
-                    f"{time.time() - tool_start:.2f} saniye"
+                tool_history_entries.append(
+                    {"tool": tool_name, "args": normalized_args, "result": tool_result}
                 )
-                logger.info(f"🛡️ Risk koruma | Vision={vision_risk} | Brain={brain_risk} | Final={highest_risk}")
                 react_messages.append({
-                    "role": "tool", "tool_call_id": tc.id,
+                    "role": "tool",
+                    "tool_call_id": tc.id,
                     "name": tool_name,
-                    "content": json.dumps(tool_result, ensure_ascii=False)
+                    "content": json.dumps(tool_result, ensure_ascii=False),
                 })
-                break
+                continue  # break yerine continue kullanarak diğer paralel tool'ları da işletin
 
             try:
                 if tool_name == "detect_motion_density":
@@ -478,8 +440,6 @@ def evaluate_risks_node(state: AgentState) -> AgentState:
                 "name": tool_name, "content": content[:1500]
             })
 
-        if decision_made:
-            break
 
     if not decision_made and impact_desc:
         # Brain'in serbest metninden risk seviyesi çıkarmıyoruz.
@@ -572,10 +532,11 @@ def normalize_phase(value: str) -> str:
         return "baslangic"
 
 
-def _validate_tool_choice(tool_name: str, state: AgentState) -> tuple[bool, str]:
+def _validate_tool_choice(
+    tool_name: str, state: AgentState, current_risk: str, executed_tools: set
+) -> tuple[bool, str]:
     events = state.get("detected_events", [])
-    risk = state.get("vision_risk", "Düşük")
-    
+    risk = normalize_risk(current_risk)
     # Dinamik State Değişkenleri
     critical_count = sum(1 for e in events if e.get("is_critical_moment") or e.get("is_critical"))
     
@@ -583,31 +544,34 @@ def _validate_tool_choice(tool_name: str, state: AgentState) -> tuple[bool, str]
     event_types = [str(e.get("event_type", "")).upper() for e in events]
     has_anomaly = "ANOMALI" in event_types or "KAZA" in event_types
     
+    # ---- YENİ: DİNAMİK FALLBACK (HATA TELAFİSİ) KALKANI ----
+    if tool_name == "submit_final_decision":
+        # Risk yüksekse ama export unutulduysa görevi bitirmesini reddet!
+        if risk != "Düşük" and "export_to_incident_management_system" not in executed_tools:
+            return False, "EKSİK İŞLEM: Olayda anomali/kaza var ancak 'export_to_incident_management_system' aracını çağırmayı unuttun. Sistemi bu şekilde kapatamazsın, lütfen önce export aracını çağır!"
+        
+        # Risk düşükse ama log_kpi unutulduysa görevi bitirmesini reddet!
+        if risk == "Düşük" and critical_count == 0 and not has_anomaly:
+            if "log_kpi_metrics" not in executed_tools:
+                return False, "EKSİK İŞLEM: Rutin ve sorunsuz bir durum tespit ettin ancak 'log_kpi_metrics' aracını çağırmayı unuttun. Lütfen önce KPI log aracını çağır, ardından kararı bildir!"
+
     # ---- 1. log_kpi_metrics ----
     if tool_name == "log_kpi_metrics":
-        if risk in ["Kritik", "Yüksek"] or critical_count > 0:
+        if risk in ["Kritik", "Yüksek"]:
             return False, "Tehlike anında log_kpi_metrics çağrılamaz."
         return True, "Rutin durum - log_kpi_metrics onaylandı."
     
     # ---- 2. DİĞER TÜM AKSİYON ARAÇLARI İÇİN ORTAK DİNAMİK BARAJ ----
-    # KURAL: Eğer risk "Düşük" ise, kritik olay (critical_count) yoksa ve 
-    # Vision modeli olayı KAZA/ANOMALI olarak etiketlemediyse, bu tam bir RUTİN durumdur.
     if risk == "Düşük" and critical_count == 0 and not has_anomaly:
         action_tools = [
-            "trigger_operator_alert", 
-            "get_personnel_on_duty", 
-            "assess_environmental_hazards", 
-            "query_previous_incidents",
-            "export_to_incident_management_system",
-            "detect_motion_density"
+            "trigger_operator_alert", "get_personnel_on_duty", 
+            "assess_environmental_hazards", "query_previous_incidents",
+            "export_to_incident_management_system", "detect_motion_density"
         ]
         if tool_name in action_tools:
             return False, f"Sahada tehlike tespit edilmediği için (Düşük Risk) '{tool_name}' aracı engellendi."
     
-    # ---- 3. BEYNE (LLAMA) GÜVEN ----
-    # Eğer sistem yukarıdaki rutin barajına takılmadıysa (Yani risk Orta/Yüksek/Kritik ise veya Kaza varsa)
-    # Hangi aracın seçileceği konusunda kararı tamamen Llama modelinin muhakeme yeteneğine bırakıyoruz.
-    return True, f"'{tool_name}' seçimi dinamik olarak onaylandı."
+    return True, f"'{tool_name}' onaylandı."
 
 def compile_report_node(state: AgentState) -> AgentState:
     node_start = time.time()
@@ -668,17 +632,6 @@ def compile_report_node(state: AgentState) -> AgentState:
     raw_tools.discard("submit_final_decision")
     raw_tools.discard("generate_final_report")
 
-    # ---- Düşük risk durumunda tool temizleme ----
-    if highest_risk == "Düşük":
-        _akcyon_toollari = {
-            "export_to_incident_management_system", "trigger_operator_alert",
-            "get_personnel_on_duty", "assess_environmental_hazards",
-            "query_previous_incidents", "detect_motion_density"
-        }
-        raw_tools -= _akcyon_toollari
-    else:
-        # 🔥 GÜVENLİK KALKANI: Risk Düşük DEĞİLSE, Llama yanlışlıkla KPI çağırdıysa onu iptal et.
-        raw_tools.discard("log_kpi_metrics")
 
     _total_events = len(cleaned_events)
     _critical_events = sum(1 for e in cleaned_events if e.get("is_critical_moment"))
@@ -722,30 +675,6 @@ def compile_report_node(state: AgentState) -> AgentState:
     except Exception as e:
         logger.error(f"🚨 Pydantic şema doğrulama hatası: {e}")
         json_report = json.dumps(report_data, ensure_ascii=False, indent=2)
-
-    _should_export = True
-    
-    # Düşük risk durumunda (rutin video) export yapma
-    if highest_risk == "Düşük":
-        _should_export = False
-        logger.info("📤 Rutin video - Düşük riskte Export atlanıyor")
-    
-    # Eğer risk Düşük değilse veya olay sayısı fazlaysa export yap
-    if _should_export:
-        try:
-            export_result = export_to_incident_management_system.invoke({"report_json": json_report})
-            raw_tools.add("export_to_incident_management_system")
-            logger.info("📤 Export zorunlu olarak çağrıldı (GT uyumluluğu)")
-            
-            # Export sonucunu tool_history'e ekle
-            state["tool_history"] = state.get("tool_history", []) + [{
-                "tool": "export_to_incident_management_system",
-                "args": {"report_json": json_report[:200] + "..."},
-                "result": export_result
-            }]
-        except Exception as e:
-            logger.warning(f"⚠️ CMS export hatası: {e}")
-
 
     state["risk_assessments"] = [highest_risk]
     state["risk_score"] = calculated_score

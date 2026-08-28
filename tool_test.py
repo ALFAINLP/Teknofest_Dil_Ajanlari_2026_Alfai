@@ -60,6 +60,13 @@ def main():
     duration = get_video_duration(video_path, fallback=gt_duration) or gt_duration
     
     if not gt_entry:
+        # Memory sıfırla — her test öncesi temiz başlangıç
+        import json as _json, os as _os
+        _mem_path = "memory/memory.json"
+        if _os.path.exists(_mem_path):
+            with open(_mem_path, "w") as _f:
+                _json.dump({"event_history": [], "risk_history": [], "tool_history": []}, _f)
+                
         start_time = time.perf_counter()
         raw_output = run_agent_pipeline(video_path)
         elapsed = time.perf_counter() - start_time
