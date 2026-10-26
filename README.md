@@ -176,13 +176,13 @@ python kpi_enhanced.py
 
 ## VİDEO LİNKLERİ
 
-https://www.kaggle.com/datasets/minmints/ufc-crime-full-dataset/data
+•https://www.kaggle.com/datasets/minmints/ufc-crime-full-dataset/data
 
 
-https://www.youtube.com/watch?v=WjZB-g01JLE&list=PLz05EIQjBV2J8nRtbRgOouEJ0pAvdzPEq
+•https://www.youtube.com/watch?v=WjZB-g01JLE&list=PLz05EIQjBV2J8nRtbRgOouEJ0pAvdzPEq
 
 
-https://www.cse.cuhk.edu.hk/leojia/projects/detectabnormal/dataset.html
+•https://www.cse.cuhk.edu.hk/leojia/projects/detectabnormal/dataset.html
 
 ---
 
@@ -192,5 +192,6 @@ https://www.cse.cuhk.edu.hk/leojia/projects/detectabnormal/dataset.html
 - **Lisans:** [Apache 2.0]
 
 ---
+
 
 *TEKNOFEST 2026 Yapay Zeka Dil Ajanları Yarışması kapsamında geliştirilmiştir.*
